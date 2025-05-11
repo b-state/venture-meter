@@ -5,7 +5,7 @@
 </script>
 
 {#if darkMode}
-	<img src="VentureMeterLogoWhite.svg" alt="Venture Meter Logo" />
+	<img src="/VentureMeterLogoWhite.svg" alt="Venture Meter Logo" />
 {:else}
-	<img src="VentureMeterLogo.svg" alt="Venture Meter Logo" />
+	<img src="/VentureMeterLogo.svg" alt="Venture Meter Logo" />
 {/if}

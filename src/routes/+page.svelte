@@ -1,7 +1,8 @@
 <script>
 	import VentureMeterLogo from '$lib/assets/VentureMeterLogo.svelte';
-import { Button } from '$lib/components/ui/button/index.js';
+	import { Button } from '$lib/components/ui/button';
 	import { ArrowRight, CheckCircle2, ChartColumn, Target, Rocket } from 'lucide-svelte';
+	import { goto } from '$app/navigation';
 </script>
 
 <div class="min-h-screen bg-gradient-to-b from-background to-muted">
@@ -11,17 +12,19 @@ import { Button } from '$lib/components/ui/button/index.js';
 			<div class="w-80">
 				<VentureMeterLogo></VentureMeterLogo>
 			</div>
-			<p class="mt-6 text-lg leading-8 text-muted-foreground max-w-2xl">
-				Messbarer Erfolg für Ihr Startup. Unser umfassender Reifegrad-Check hilft Ihnen, 
-				den aktuellen Status Ihres Unternehmens zu bewerten und den Weg zum Erfolg zu planen.
+			<p class="mt-6 max-w-2xl text-lg leading-8 text-muted-foreground">
+				Messbarer Erfolg für Ihr Startup. Unser umfassender Reifegrad-Check hilft Ihnen, den
+				aktuellen Status Ihres Unternehmens zu bewerten und den Weg zum Erfolg zu planen.
 			</p>
 			<div class="mt-10 flex items-center gap-x-6">
-				<a href="/questionnaire">
-					<Button size="lg" class="gap-2">
-						Jetzt Starten
-						<ArrowRight size="20" />
-					</Button>
-				</a>
+				<Button
+					size="lg"
+					class="gap-2"
+					href="/questionnaire"
+				>
+					Jetzt Starten
+					<ArrowRight size="20" />
+				</Button>
 			</div>
 		</div>
 	</div>
@@ -61,17 +64,11 @@ import { Button } from '$lib/components/ui/button/index.js';
 
 	<!-- Categories Preview -->
 	<div class="container mx-auto px-4 py-20">
-		<h2 class="text-3xl font-bold text-center mb-12">Unsere Bewertungskategorien</h2>
+		<h2 class="mb-12 text-center text-3xl font-bold">Unsere Bewertungskategorien</h2>
 		<div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-			{#each [
-				{ title: 'Vision & Opportunity Check', description: 'Bewertung Ihrer Geschäftsidee und Marktchancen' },
-				{ title: 'Viability-Analysis', description: 'Analyse der wirtschaftlichen Tragfähigkeit' },
-				{ title: 'Solution-Market-Fit', description: 'Überprüfung der Marktakzeptanz Ihrer Lösung' },
-				{ title: 'Transition to Launch', description: 'Vorbereitung auf den Markteintritt' },
-				{ title: 'Launch and Scale-Up', description: 'Strategien für Wachstum und Skalierung' }
-			] as category}
+			{#each [{ title: 'Vision & Opportunity Check', description: 'Bewertung Ihrer Geschäftsidee und Marktchancen' }, { title: 'Viability-Analysis', description: 'Analyse der wirtschaftlichen Tragfähigkeit' }, { title: 'Solution-Market-Fit', description: 'Überprüfung der Marktakzeptanz Ihrer Lösung' }, { title: 'Transition to Launch', description: 'Vorbereitung auf den Markteintritt' }, { title: 'Launch and Scale-Up', description: 'Strategien für Wachstum und Skalierung' }] as category}
 				<div class="rounded-lg border bg-card p-6 shadow-sm">
-					<h3 class="text-xl font-semibold mb-2">{category.title}</h3>
+					<h3 class="mb-2 text-xl font-semibold">{category.title}</h3>
 					<p class="text-muted-foreground">{category.description}</p>
 				</div>
 			{/each}
@@ -81,16 +78,15 @@ import { Button } from '$lib/components/ui/button/index.js';
 	<!-- CTA Section -->
 	<div class="container mx-auto px-4 py-20">
 		<div class="rounded-2xl bg-primary/5 p-8 text-center">
-			<h2 class="text-3xl font-bold mb-4">Bereit für den nächsten Schritt?</h2>
-			<p class="text-muted-foreground mb-8 max-w-2xl mx-auto">
-				Starten Sie jetzt mit der Bewertung Ihres Startups und erhalten Sie wertvolle Einblicke für Ihre weitere Entwicklung.
+			<h2 class="mb-4 text-3xl font-bold">Bereit für den nächsten Schritt?</h2>
+			<p class="mx-auto mb-8 max-w-2xl text-muted-foreground">
+				Starten Sie jetzt mit der Bewertung Ihres Startups und erhalten Sie wertvolle Einblicke für
+				Ihre weitere Entwicklung.
 			</p>
-			<a href="/questionnaire">
-				<Button size="lg" class="gap-2">
+				<Button size="lg" class="gap-2" href="/questionnaire">
 					Jetzt Starten
 					<ArrowRight size="20" />
 				</Button>
-			</a>
 		</div>
 	</div>
 </div>

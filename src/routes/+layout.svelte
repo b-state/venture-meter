@@ -3,14 +3,14 @@
 	import { ModeWatcher } from 'mode-watcher';
 	import DarkModeToggle from '$lib/components/DarkModeToggle.svelte';
 	import VentureMeterLogo from '$lib/assets/VentureMeterLogo.svelte';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 
 	let { children } = $props();
-	let currentPath = $derived($page.url.pathname);
+	let currentPath = $derived(page.url.pathname);
 </script>
 
 <ModeWatcher />
-<header class="flex w-full items-center justify-between border-b h-16 px-5">
+<header class="flex w-full items-center justify-between border-b h-16 px-5 sticky top-0 backdrop-blur-lg bg-background/80">
 	<div class="w-48">
 		<a href="/" class="w-40">
 			<VentureMeterLogo />
