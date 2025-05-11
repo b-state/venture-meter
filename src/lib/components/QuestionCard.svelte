@@ -19,13 +19,13 @@
 </script>
 
 <div class="flex w-full flex-col gap-2">
-	<h2 class="rounded bg-muted py-4 mb-4 px-4 text-2xl font-bold ring-1 ring-muted">
+	<h2 class="rounded bg-muted py-4 mb-4 px-4 text-2xl font-bold ring-1 ring-muted text-wrap">
 		{question}
 	</h2>
 	{#each options as option, index}
 		<Button 
 			variant={selectedScore === index + 1 ? "default" : "outline"}
-			class="justify-start pl-10 text-lg hover:bg-muted"
+			class="justify-start px-10 text-lg hover:bg-muted text-wrap h-fit text-left"
 			onclick={() => handleAnswer(index)}
 		>
 			{option}

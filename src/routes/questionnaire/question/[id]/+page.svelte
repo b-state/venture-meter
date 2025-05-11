@@ -40,7 +40,7 @@
         {/each}
     </aside>
     <main class="my-10 flex w-screen flex-col items-center justify-center px-40">
-        <div class="flex h-full w-full flex-col justify-center">
+        <div class="flex h-full w-full flex-col justify-center max-w-4xl">
             {#if currentQuestion}
                 <QuestionCard
                     question={currentQuestion.question}
