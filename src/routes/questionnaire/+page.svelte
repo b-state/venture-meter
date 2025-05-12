@@ -1,14 +1,14 @@
 <script lang="ts">
 	import type { PageData } from './$types';
-	import { Button } from '$lib/components/ui/button/index.js';
+	import { Button } from '$lib/components/ui/button';
 	import { ArrowRight, Play } from 'lucide-svelte';
-	import VentureMeterLogo from '$lib/assets/VentureMeterLogo.svelte';
 	import { goto } from '$app/navigation';
+	import { STORAGE_KEY } from '$lib/constants';
 
 	let { data }: { data: PageData } = $props();
 
-	const handleClick = () => {
-		console.log('clicked');
+	const handleStart = () => {
+		localStorage.removeItem(STORAGE_KEY);
 		goto('/questionnaire/question/1');
 	};
 </script>
@@ -24,7 +24,7 @@
 					<h2 class="mb-2 text-xl font-semibold">Von vorne starten</h2>
 					<p class="text-muted-foreground">Beginnen Sie einen neuen Fragebogen.</p>
 				</div>
-				<Button size="lg" class="gap-2" href="/questionnaire/question/1">
+				<Button size="lg" class="gap-2" on:click={handleStart}>
 					Jetzt starten
 					<Play size="20" />
 				</Button>

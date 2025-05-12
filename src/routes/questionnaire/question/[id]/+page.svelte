@@ -4,7 +4,9 @@
     import { Button } from '$lib/components/ui/button';
     import { page } from '$app/state';
     import { CircleCheckBig } from 'lucide-svelte';
-	import { goToNextQuestion, goToPreviousQuestion } from '$lib/utils/questionHelpers.js';
+    import { goToNextQuestion, goToPreviousQuestion } from '$lib/utils/questionHelpers.js';
+    import { getCategoryStats } from '$lib/utils/questionnaire';
+    import { onMount } from 'svelte';
 
     let { data } = $props();
     let currentQuestion = $derived(data.question);
@@ -13,26 +15,23 @@
     let currentId = $derived(parseInt(page.params.id));
     let progress = $derived((currentId / totalQuestions) * 100);
     let allQuestions = $derived(data.allQuestions);
+    let categories: { title: string; questionCount: number; answeredCount: number }[] = $state([]);
 
-    const categories = [
-        { title: 'Vision Opportunity Check', questionCount: 15 },
-        { title: 'Viability-Analysis', questionCount: 15 },
-        { title: 'Solution-Market-Fit', questionCount: 15 },
-        { title: 'Transition to Launch', questionCount: 15 },
-        { title: 'Launch and Scale-Up', questionCount: 15 }
-    ];
+    onMount(async () => {
+        categories = await getCategoryStats();
+    });
 </script>
 
 <div class="flex">
     <aside class="flex min-h-[calc(100vh-64px)] w-1/4 flex-col justify-start ring-1 ring-muted">
-        {#each categories as category, i}
+        {#each categories as category}
             <div
                 class="py-5 flex h-28 flex-col justify-center gap-2 px-5 ring-1 ring-muted transition hover:bg-muted"
             >
                 <a class="text-xl font-bold" href="/">{category.title}</a>
                 <div class="flex items-center gap-1 text-muted-foreground">
-                    <p class="text-sm">1 von {category.questionCount} Fragen</p>
-                    {#if i === 0}
+                    <p class="text-sm">{category.answeredCount} von {category.questionCount} Fragen</p>
+                    {#if category.answeredCount === category.questionCount}
                         <CircleCheckBig size="18" color="#32CD32" />
                     {/if}
                 </div>

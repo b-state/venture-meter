@@ -7,7 +7,12 @@ interface Question {
     selectedScore?: number;
 }
 
-const STORAGE_KEY = 'questionnaire-data';
+interface CategoryStats {
+    title: string;
+    questionCount: number;
+    answeredCount: number;
+}
+
 
 // Check if we're in a browser environment
 const isBrowser = typeof window !== 'undefined';
@@ -176,5 +181,38 @@ export async function updateQuestionnaire(): Promise<void> {
     });
 
     storeData(newQuestions, '1.1'); // Increment version number
+}
+
+export async function getCategoryStats(): Promise<CategoryStats[]> {
+    if (!isBrowser) {
+        const questions = await loadQuestionsFromCSV();
+        return calculateCategoryStats(questions);
+    }
+
+    const stored = getStoredData();
+    if (!stored) {
+        await initializeQuestionnaire();
+        return getCategoryStats();
+    }
+    return calculateCategoryStats(stored.questions);
+}
+
+function calculateCategoryStats(questions: Question[]): CategoryStats[] {
+    const categoryMap = new Map<string, { total: number; answered: number }>();
+    
+    questions.forEach(question => {
+        const current = categoryMap.get(question.category) || { total: 0, answered: 0 };
+        current.total += 1;
+        if (question.selectedScore !== undefined) {
+            current.answered += 1;
+        }
+        categoryMap.set(question.category, current);
+    });
+
+    return Array.from(categoryMap.entries()).map(([title, stats]) => ({
+        title,
+        questionCount: stats.total,
+        answeredCount: stats.answered
+    }));
 }
 
