@@ -7,12 +7,12 @@
 	import { STORAGE_KEY } from '$lib/constants';
 	import CategoryScore from '$lib/components/CategoryScore.svelte';
 	import RadarChart from '$lib/components/RadarChart.svelte';
-	import BarChart from '$lib/components/BarChart.svelte';
+	import DetailedAnalysis from '$lib/components/DetailedAnalysis.svelte';
 	import { generatePDF } from '$lib/utils/pdfGenerator';
 	import { getStoredData } from '$lib/utils/questionnaire';
 
-	let results: Record<string, number> = {};
 	let loading = true;
+	let results: Record<string, number> = {};
 
 	onMount(() => {
 		const storedData = getStoredData();
@@ -38,7 +38,6 @@
 			);
 		}
 		loading = false;
-		
 	});
 
 	const handleDownloadPDF = async () => {
@@ -101,9 +100,10 @@
 						<Card.Title>Detaillierte Analyse</Card.Title>
 					</Card.Header>
 					<Card.Content>
-						<div class="h-[400px]">
-							<BarChart data={results} />
-						</div>
+						<p class="text-sm text-muted-foreground pb-6">
+							Hier sehen Sie eine detaillierte Aufschlüsselung Ihrer Antworten nach Kategorien. Fragen mit einer Bewertung von 1-3 zeigen Verbesserungspotenzial, während Fragen mit einer Bewertung von 4-5 Ihre Stärken darstellen.
+						</p>
+						<DetailedAnalysis />
 					</Card.Content>
 				</Card.Root>
 			</div>

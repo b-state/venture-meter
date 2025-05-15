@@ -3,7 +3,7 @@
 	import Chart from 'chart.js/auto';
 	import { mode } from 'mode-watcher';
 
-	let { data }: Record<string, number> = $props();
+	let { data }: { data: Record<string, number> } = $props();
 
 	let canvas: HTMLCanvasElement;
 	let isDarkMode = $derived($mode === 'dark');
