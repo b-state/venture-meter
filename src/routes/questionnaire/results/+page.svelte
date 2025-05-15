@@ -29,11 +29,11 @@
 				}
 			});
 
-			// Convert to percentage scores
+			// Convert to 1-5 scale scores
 			results = Object.fromEntries(
 				Array.from(categoryScores.entries()).map(([category, { total, count }]) => [
 					category,
-					Math.round((total / (count * 4)) * 100) // Assuming max score is 4
+					Math.round((total / count) * 10) / 10 // Round to 1 decimal place
 				])
 			);
 		}
@@ -69,6 +69,9 @@
 						<Card.Title>Gesamtbewertung</Card.Title>
 					</Card.Header>
 					<Card.Content>
+						<p class="text-sm text-muted-foreground pb-6">
+							Hier kannst du deine Gesamtbewertung sehen. Je höher die Bewertung, desto besser ist die Kategorie für dich. Ein Score von unter 3 bedeutet, dass du in dieser Kategorie noch Verbesserungspotenzial hast. 4-5 bedeutet, dass du in dieser Kategorie sehr gut abschneidest.
+						</p>
 						<div class="aspect-square">
 							<RadarChart data={results} />
 						</div>
@@ -81,6 +84,9 @@
 						<Card.Title>Kategoriebewertungen</Card.Title>
 					</Card.Header>
 					<Card.Content>
+						<p class="text-sm text-muted-foreground pb-6">
+							Hier kannst du deine die durchschnittlichen Bewertungen für jede Kategorie sehen. Je höher die Bewertung, desto besser ist die Kategorie für dich. Ein Score von unter 3 bedeutet, dass du in dieser Kategorie noch Verbesserungspotenzial hast. 4-5 bedeutet, dass du in dieser Kategorie sehr gut abschneidest.
+						</p>
 						<div class="space-y-4">
 							{#each Object.entries(results) as [category, score]}
 								<CategoryScore {category} {score} />
