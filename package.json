@@ -44,6 +44,9 @@
 		"vitest": "^3.0.0"
 	},
 	"dependencies": {
+		"chart.js": "^4.4.9",
+		"html2canvas": "^1.4.1",
+		"jspdf": "^3.0.1",
 		"mode-watcher": "^0.5.1"
 	}
 }
