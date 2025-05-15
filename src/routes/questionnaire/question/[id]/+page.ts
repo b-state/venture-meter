@@ -1,4 +1,4 @@
-import { getQuestion, getTotalQuestions, getAllQuestions } from '$lib/utils/questionnaire';
+import { getQuestion, getTotalQuestions, getAllQuestions } from '$lib/utils/questionHelpers';
 import type { PageLoad } from './$types';
 
 export const load: PageLoad = async ({ params, fetch }) => {

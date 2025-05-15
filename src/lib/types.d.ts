@@ -9,7 +9,7 @@ interface Question {
     question: string;
     options: string[];
     followUpId: string | null;
-    selectedScore?: number;
+    selectedScore: number | null;
 }
 
 interface CategoryStats {

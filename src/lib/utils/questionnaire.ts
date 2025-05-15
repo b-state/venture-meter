@@ -3,7 +3,7 @@ import { STORAGE_KEY } from "$lib/constants";
 // Check if we're in a browser environment
 const isBrowser = typeof window !== 'undefined';
 
-async function loadQuestionsFromCSV(fetch: fetch): Promise<Question[]> {
+export async function loadQuestionsFromCSV(fetch: fetch): Promise<Question[]> {
     try {
         const response = await fetch('/questionnaire.csv');
         const csvText = await response.text();
@@ -21,7 +21,8 @@ async function loadQuestionsFromCSV(fetch: fetch): Promise<Question[]> {
                 category,
                 question,
                 options: options.slice(0, 5),
-                followUpId: options[5] || null
+                followUpId: options[5] || null,
+                selectedScore: null
             });
         }
         return questions;
@@ -31,7 +32,7 @@ async function loadQuestionsFromCSV(fetch: fetch): Promise<Question[]> {
     }
 }
 
-function getStoredData(): { questions: Question[], version: string } | null {
+export function getStoredData(): { questions: Question[], version: string } | null {
     if (!isBrowser) return null;
 
     const stored = localStorage.getItem(STORAGE_KEY);
@@ -59,47 +60,7 @@ export async function initializeQuestionnaire(): Promise<void> {
     }
 }
 
-export async function getQuestion(fetch: fetch, id: number): Promise<Question | null> {
-    if (!isBrowser) {
-        // On server, just load from CSV without storing
-        const questions = await loadQuestionsFromCSV(fetch);
-        return questions.find(q => q.id === id) || null;
-    }
 
-    const stored = getStoredData();
-    if (!stored) {
-        await initializeQuestionnaire();
-        return getQuestion(fetch, id);
-    }
-    return stored.questions.find(q => q.id === id) || null;
-}
-
-export async function getTotalQuestions(fetch: fetch): Promise<number> {
-    if (!isBrowser) {
-        const questions = await loadQuestionsFromCSV(fetch);
-        return questions.length;
-    }
-
-    const stored = getStoredData();
-    if (!stored) {
-        await initializeQuestionnaire();
-        return getTotalQuestions(fetch);
-    }
-    return stored.questions.length;
-}
-
-export async function getAllQuestions(fetch: fetch): Promise<Question[]> {
-    if (!isBrowser) {
-        return loadQuestionsFromCSV(fetch);
-    }
-
-    const stored = getStoredData();
-    if (!stored) {
-        await initializeQuestionnaire();
-        return getAllQuestions(fetch);
-    }
-    return stored.questions;
-}
 
 export async function saveProgress(questionId: number, score: number): Promise<void> {
     if (!isBrowser) return;
@@ -136,15 +97,7 @@ export function importProgress(data: string): void {
     }
 }
 
-export function getNextUnansweredQuestion(): number | null {
-    if (!isBrowser) return null;
 
-    const stored = getStoredData();
-    if (!stored) return null;
-
-    const unansweredQuestion = stored.questions.find(q => q.selectedScore === undefined);
-    return unansweredQuestion ? unansweredQuestion.id : null;
-}
 
 export async function updateQuestionnaire(): Promise<void> {
     if (!isBrowser) return;

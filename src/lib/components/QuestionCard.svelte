@@ -7,7 +7,7 @@
 		question: string;
 		options: string[];
 		questionId: number;
-		selectedScore?: number;
+		selectedScore: number | null;
 	}>();
 
 	async function handleAnswer(optionIndex: number) {

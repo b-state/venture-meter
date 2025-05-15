@@ -7,7 +7,7 @@
 	import { goToNextQuestion, goToPreviousQuestion } from '$lib/utils/questionHelpers.js';
 	import { getCategoryStats, exportProgress } from '$lib/utils/questionnaire';
 	import { onMount } from 'svelte';
-    import * as Dialog from "$lib/components/ui/dialog";
+	import * as Dialog from '$lib/components/ui/dialog';
 
 	let { data } = $props();
 	let currentQuestion = $derived(data.question);
@@ -51,27 +51,29 @@
 			</div>
 		{/each}
 
-		<div
-			class="flex   flex-col justify-center gap-2 px-5 py-10 ring-1 ring-muted transition mt-auto"
-		>
+		<div class="mt-auto flex flex-col justify-center gap-2 px-5 py-10 ring-1 ring-muted transition">
 			<div class="flex flex-col items-center gap-2 text-muted-foreground">
-				<Button class="text-sm w-full">Zur Auswertung</Button>
-                <Dialog.Root>
-                    <Dialog.Trigger>
-                        <Button variant="outline" class="text-sm w-full" onclick={downloadProgress}>Fragebogen speichern</Button>
-
-                    </Dialog.Trigger>
-                    <Dialog.Content>
-                        <Dialog.Header>
-                            <Dialog.Title>Fragebogen speichern</Dialog.Title>
-                            <Dialog.Description>
-                                <p>
-                                    Der Fortschritt des Fragebogens wurde erfolgreich gespeichert. Sie können ihn jederzeit under dem Menüpunkt "Fragebogen" wieder laden.
-                                </p>
-                            </Dialog.Description>
-                        </Dialog.Header>
-                    </Dialog.Content>
-                </Dialog.Root>
+				<Button class="w-full text-sm">Zur Auswertung</Button>
+				<Dialog.Root>
+					<Dialog.Trigger class="w-full">
+						<Button variant="outline" class="w-full ">Fortschritt speichern</Button>
+					</Dialog.Trigger>
+					<Dialog.Content>
+						<Dialog.Header>
+							<Dialog.Title>Fortschritt speichern</Dialog.Title>
+							<Dialog.Description>
+								<p class="my-5">
+									Sie können den Fortschrtitt des Fragebogens als Datei herunterladen und ihn somit
+									speichern. Wenn Sie den Fragebogen zu einem späteren Zeitpunkt fortsetzen möchten,
+									können Sie ihn unter dem Menüpunkt "Fragebogen" jederzeit hochladen.
+								</p>
+								<Button variant="outline" class="w-full text-sm" onclick={downloadProgress}
+									>Fortschritt herunterladen</Button
+								>
+							</Dialog.Description>
+						</Dialog.Header>
+					</Dialog.Content>
+				</Dialog.Root>
 			</div>
 		</div>
 	</aside>
@@ -82,7 +84,7 @@
 					question={currentQuestion.question}
 					options={currentQuestion.options}
 					questionId={currentQuestion.id}
-					selectedScore={currentQuestion.selectedScore}
+					selectedScore={currentQuestion.selectedScore ?? null}
 				/>
 			{:else}
 				<p>Frage nicht gefunden</p>

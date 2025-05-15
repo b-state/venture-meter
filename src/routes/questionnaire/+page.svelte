@@ -4,7 +4,8 @@
 	import { ArrowRight, Play, Upload } from 'lucide-svelte';
 	import { goto } from '$app/navigation';
 	import { STORAGE_KEY } from '$lib/constants';
-	import { importProgress, getNextUnansweredQuestion } from '$lib/utils/questionnaire';
+	import { getNextUnansweredQuestion } from '$lib/utils/questionHelpers';
+	import { importProgress } from '$lib/utils/questionnaire';
 
 	let { data }: { data: PageData } = $props();
 	let fileInput: HTMLInputElement;
