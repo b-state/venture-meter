@@ -13,21 +13,31 @@
 
 	let loading = true;
 	let results: Record<string, number> = {};
+	let totalScore: number = 0;
 
 	onMount(() => {
 		const storedData = getStoredData();
 		if (storedData) {
 			// Calculate average score per category
 			const categoryScores = new Map<string, { total: number; count: number }>();
-			
-			storedData.questions.forEach(question => {
+			let totalQuestions = 0;
+			let totalScoreSum = 0;
+
+			storedData.questions.forEach((question) => {
 				if (question.selectedScore !== null) {
 					const current = categoryScores.get(question.category) || { total: 0, count: 0 };
 					current.total += question.selectedScore;
 					current.count += 1;
 					categoryScores.set(question.category, current);
+
+					// Add to total score calculation
+					totalScoreSum += question.selectedScore;
+					totalQuestions += 1;
 				}
 			});
+
+			// Calculate total average score
+			totalScore = totalQuestions > 0 ? Math.round((totalScoreSum / totalQuestions) * 10) / 10 : 0;
 
 			// Convert to 1-5 scale scores
 			results = Object.fromEntries(
@@ -43,6 +53,9 @@
 	const handleDownloadPDF = async () => {
 		await generatePDF();
 	};
+
+	$: scoreColor =
+		totalScore >= 4 ? 'text-green-500' : totalScore >= 3 ? 'text-lime-500' : 'text-blue-700';
 </script>
 
 <div class="min-h-screen bg-gradient-to-b from-background to-muted p-6">
@@ -61,47 +74,116 @@
 			</div>
 		{:else}
 			<!-- Main Content -->
-			<div class="grid gap-8 md:grid-cols-2">
-				<!-- Overall Score -->
-				<Card.Root>
-					<Card.Header>
-						<Card.Title>Gesamtbewertung</Card.Title>
-					</Card.Header>
-					<Card.Content>
-						<p class="text-sm text-muted-foreground pb-6">
-							Hier kannst du deine Gesamtbewertung sehen. Je höher die Bewertung, desto besser ist die Kategorie für dich. Ein Score von unter 3 bedeutet, dass du in dieser Kategorie noch Verbesserungspotenzial hast. 4-5 bedeutet, dass du in dieser Kategorie sehr gut abschneidest.
-						</p>
-						<div class="aspect-square">
-							<RadarChart data={results} />
-						</div>
-					</Card.Content>
-				</Card.Root>
+			<div class="flex flex-col gap-8">
+				<div class="flex gap-8">
+					<!-- Overall Score -->
+					<Card.Root>
+						<Card.Header>
+							<Card.Title>Ergebnis</Card.Title>
+						</Card.Header>
+						<Card.Content>
+							<div class="">
+								<p class="text-sm text-muted-foreground">
+									{#if totalScore >= 4.5}
+										Eure Antworten zeigen: Ihr arbeitet datenbasiert, nutzerzentriert und mit einem
+										klaren Lernansatz. Ihr lebt kontinuierliche Verbesserung und passt euch aktiv an
+										neue Erkenntnisse und Entwicklungen an – stark!
+									{:else if totalScore >= 4}
+										Ihr habt klare Prozesse, überprüft eure Annahmen regelmäßig und optimiert aktiv.
+										Nutzerfeedback, Daten und Reflexion fließen systematisch in eure Entscheidungen
+										ein – das ist ein starkes Fundament für Wachstum.
+									{:else if totalScore >= 3}
+										Euer Startup verfolgt einen klareren Plan – Prozesse, Ziele und Modelle sind
+										ausgearbeitet. Jetzt geht es darum, eure Methoden zu überprüfen und belastbarer
+										zu machen, z. B. durch Nutzerfeedback oder Marktvalidierung.
+									{:else if totalScore >= 2}
+										Ihr habt euch bereits Gedanken gemacht und erste Abläufe oder Annahmen
+										entwickelt. Um auf das nächste Level zu kommen, solltet ihr diese nun
+										systematisieren, dokumentieren und im Team abstimmen.
+									{:else}
+										Eure Antworten zeigen, dass ihr viele Themen noch nicht strukturiert angegangen
+										seid. Das ist ganz normal in einer frühen Phase. Jetzt ist ein guter Moment, um
+										erste Zuständigkeiten, Zielbilder und Hypothesen zu definieren.
+									{/if}
+								</p>
+								<p class="text-sm text-muted-foreground">
+									Aktuell befindet sich euer Startup in der Stufe:
+								</p>
+								<div class="my-3 text-center text-8xl font-bold {scoreColor}">
+									{totalScore.toFixed(1).toString().replace(".", ",")}
+								</div>
+							</div>
+							<div class="space-y-4">
+								<div class=" rounded-2xl p-2">
+									<h3 class="font-semibold">Stufe 1 – Initial</h3>
+									<p class="text-sm">
+										Es gibt noch keine klaren Prozesse, Strukturen oder Routinen. Alles ist ad hoc
+										und stark abhängig von einzelnen Personen.
+									</p>
+								</div>
 
-				<!-- Category Scores -->
-				<Card.Root>
-					<Card.Header>
-						<Card.Title>Kategoriebewertungen</Card.Title>
-					</Card.Header>
-					<Card.Content>
-						<p class="text-sm text-muted-foreground pb-6">
-							Hier kannst du deine die durchschnittlichen Bewertungen für jede Kategorie sehen. Je höher die Bewertung, desto besser ist die Kategorie für dich. Ein Score von unter 3 bedeutet, dass du in dieser Kategorie noch Verbesserungspotenzial hast. 4-5 bedeutet, dass du in dieser Kategorie sehr gut abschneidest.
-						</p>
-						<div class="space-y-4">
-							{#each Object.entries(results) as [category, score]}
-								<CategoryScore {category} {score} />
-							{/each}
-						</div>
-					</Card.Content>
-				</Card.Root>
+								<div class=" rounded-2xl p-2">
+									<h3 class="font-semibold">Stufe 2 – Definiert</h3>
+									<p class="text-sm">
+										Erste Vorstellungen, Modelle oder Zuständigkeiten sind vorhanden. Dinge sind
+										teilweise dokumentiert, aber noch nicht konsequent umgesetzt.
+									</p>
+								</div>
 
+								<div class=" rounded-2xl p-2">
+									<h3 class="font-semibold">Stufe 3 – Systematisiert</h3>
+									<p class="text-sm">
+										Prozesse und Vorgehensweisen sind etabliert, regelmäßig im Einsatz und im Team
+										abgestimmt.
+									</p>
+								</div>
+
+								<div class=" rounded-2xl p-2">
+									<h3 class="font-semibold">Stufe 4 – Validiert & Reflektiert</h3>
+									<p class="text-sm">
+										Das Vorgehen wird aktiv überprüft, z. B. durch Nutzerfeedback, Daten oder
+										strukturierte Rückmeldeschleifen, und bei Bedarf angepasst.
+									</p>
+								</div>
+
+								<div class=" rounded-2xl p-2">
+									<h3 class="font-semibold">Stufe 5 – Lernend & Optimierend</h3>
+									<p class="text-sm">
+										Kontinuierliche Verbesserung ist fester Bestandteil der Arbeitsweise.
+										Entscheidungen basieren auf fundierten Erkenntnissen, und Lernen findet aktiv
+										statt – z. B. durch Co-Creation, Experimente oder datenbasierte Optimierung.
+									</p>
+								</div>
+							</div>
+						</Card.Content>
+					</Card.Root>
+					<Card.Root>
+						<Card.Header>
+							<Card.Title>Kategoriebewertungen</Card.Title>
+						</Card.Header>
+						<Card.Content>
+							<p class="pb-6 text-sm text-muted-foreground">
+								Hier kannst du deine Gesamtbewertung sehen. Je höher die Bewertung, desto besser ist
+								die Kategorie für dich. Ein Score von unter 3 bedeutet, dass du in dieser Kategorie
+								noch Verbesserungspotenzial hast. 4-5 bedeutet, dass du in dieser Kategorie sehr gut
+								abschneidest.
+							</p>
+							<div class="aspect-square">
+								<RadarChart data={results} />
+							</div>
+						</Card.Content>
+					</Card.Root>
+				</div>
 				<!-- Detailed Analysis -->
 				<Card.Root class="col-span-2">
 					<Card.Header>
 						<Card.Title>Detaillierte Analyse</Card.Title>
 					</Card.Header>
 					<Card.Content>
-						<p class="text-sm text-muted-foreground pb-6">
-							Hier sehen Sie eine detaillierte Aufschlüsselung Ihrer Antworten nach Kategorien. Fragen mit einer Bewertung von 1-3 zeigen Verbesserungspotenzial, während Fragen mit einer Bewertung von 4-5 Ihre Stärken darstellen.
+						<p class="pb-6 text-sm text-muted-foreground">
+							Hier sehen Sie eine detaillierte Aufschlüsselung Ihrer Antworten nach Kategorien.
+							Fragen mit einer Bewertung von 1-3 zeigen Verbesserungspotenzial, während Fragen mit
+							einer Bewertung von 4-5 Ihre Stärken darstellen.
 						</p>
 						<DetailedAnalysis />
 					</Card.Content>
@@ -109,4 +191,4 @@
 			</div>
 		{/if}
 	</div>
-</div> 
+</div>

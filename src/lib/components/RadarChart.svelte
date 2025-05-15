@@ -6,17 +6,16 @@
 	let { data }: { data: Record<string, number> } = $props();
 
 	let canvas: HTMLCanvasElement;
-	let isDarkMode = $derived($mode === 'dark');
 	let chart: Chart | null = $state(null);
 
-	$effect(() => {
+	onMount(() => {
 		const ctx = canvas.getContext('2d');
 		if (!ctx) return;
 
 		const categories = Object.keys(data);
 		const scores = Object.values(data);
 
-		chart = new Chart(ctx, {
+		chart = new Chart(ctx, { 
 			type: 'radar',
 			data: {
 				labels: categories,
@@ -40,12 +39,20 @@
 						beginAtZero: true,
 						max: 5,
 						ticks: {
-							stepSize: 1
+							stepSize: 1,
+							font: {
+								size: 14,
+							}
+						},
+						pointLabels: {
+							font: {
+								size: 14,
+							}
 						},
 						grid: {
 							display: true,
 							circular: true,
-							color: isDarkMode ? '#fff' : '#000'
+							color: '#45556C' 
 						}
 					}
 				},
@@ -54,7 +61,8 @@
 						display: false
 					}
 				},
-				maintainAspectRatio: false
+				maintainAspectRatio: false,
+
 			}
 		});
 
@@ -64,4 +72,4 @@
 	});
 </script>
 
-<canvas bind:this={canvas}></canvas>
+<canvas bind:this={canvas} class="max-w-3xl"></canvas>

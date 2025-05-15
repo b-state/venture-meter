@@ -59,7 +59,7 @@
                 <div class="grid gap-6 md:grid-cols-2">
                     <!-- Low Scores (1-3) -->
                     <div class="space-y-4">
-                        <h3 class="text-lg font-semibold text-red-500">Verbesserungspotenzial (1-3)</h3>
+                        <h3 class="text-lg font-semibold text-blue-500">Verbesserungspotenzial (1-3)</h3>
                         {#if category.lowScores.length === 0}
                             <p class="text-sm text-muted-foreground">Keine Fragen in diesem Bereich</p>
                         {:else}
