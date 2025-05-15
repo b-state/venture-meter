@@ -38,21 +38,8 @@
 			);
 		}
 		loading = false;
+		
 	});
-
-	const handleShare = async () => {
-		if (navigator.share) {
-			try {
-				await navigator.share({
-					title: 'Meine Venture Meter Ergebnisse',
-					text: 'Schau dir meine Venture Meter Ergebnisse an!',
-					url: window.location.href
-				});
-			} catch (err) {
-				console.error('Error sharing:', err);
-			}
-		}
-	};
 
 	const handleDownloadPDF = async () => {
 		await generatePDF();
@@ -63,20 +50,10 @@
 	<div class="mx-auto max-w-6xl">
 		<!-- Header -->
 		<div class="mb-8 flex items-center justify-between">
-			<Button variant="ghost" onclick={() => goto('/questionnaire')} class="gap-2">
+			<Button variant="ghost" onclick={() => history.back()} class="gap-2">
 				<ArrowLeft size="20" />
 				Zurück
 			</Button>
-			<div class="flex gap-4">
-				<Button variant="outline" onclick={handleShare} class="gap-2">
-					<Share2 size="20" />
-					Teilen
-				</Button>
-				<Button onclick={handleDownloadPDF} class="gap-2">
-					<Download size="20" />
-					PDF herunterladen
-				</Button>
-			</div>
 		</div>
 
 		{#if loading}
