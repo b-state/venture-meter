@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import { Button } from '$lib/components/ui/button';
 	import { saveProgress } from '$lib/utils/questionnaire';
 
@@ -14,18 +15,18 @@
 		const score = optionIndex + 1;
 		await saveProgress(questionId, score);
 		selectedScore = score;
-			window.location.href = `/questionnaire/question/${questionId + 1}`;
+		goto(`/questionnaire/question/${questionId + 1}`);
 	}
 </script>
 
 <div class="flex w-full flex-col gap-2">
-	<h2 class="rounded bg-muted py-4 mb-4 px-4 text-2xl font-bold ring-1 ring-muted text-wrap">
+	<h2 class="mb-4 text-wrap rounded bg-muted px-4 py-4 text-2xl font-bold ring-1 ring-muted">
 		{question}
 	</h2>
 	{#each options as option, index}
-		<Button 
-			variant={selectedScore === index + 1 ? "default" : "outline"}
-			class="justify-start px-10 text-lg hover:bg-muted text-wrap h-fit text-left"
+		<Button
+			variant={selectedScore === index + 1 ? 'default' : 'outline'}
+			class="h-fit justify-start text-wrap px-10 text-left text-lg hover:bg-muted"
 			onclick={() => handleAnswer(index)}
 		>
 			{option}

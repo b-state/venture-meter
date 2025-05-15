@@ -5,7 +5,7 @@ const isBrowser = typeof window !== 'undefined';
 
 async function loadQuestionsFromCSV(fetch: fetch): Promise<Question[]> {
     try {
-        const response = await fetch('/src/lib/assets/questionnaire/questionnaire.csv');
+        const response = await fetch('/questionnaire.csv');
         const csvText = await response.text();
         const lines = csvText.split('\n');
         const questions: Question[] = [];

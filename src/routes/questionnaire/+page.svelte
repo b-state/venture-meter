@@ -4,13 +4,38 @@
 	import { ArrowRight, Play, Upload } from 'lucide-svelte';
 	import { goto } from '$app/navigation';
 	import { STORAGE_KEY } from '$lib/constants';
+	import { importProgress, getNextUnansweredQuestion } from '$lib/utils/questionnaire';
 
 	let { data }: { data: PageData } = $props();
+	let fileInput: HTMLInputElement;
 
 	const handleStart = () => {
 		localStorage.removeItem(STORAGE_KEY);
 		goto('/questionnaire/question/1');
 	};
+
+	function handleFileSelect(event: Event) {
+		const input = event.target as HTMLInputElement;
+		const file = input.files?.[0];
+		
+		if (file) {
+			const reader = new FileReader();
+			reader.onload = (e) => {
+				const content = e.target?.result as string;
+				importProgress(content);
+				
+				// Get the next unanswered question and navigate to it
+				const nextQuestionId = getNextUnansweredQuestion();
+				if (nextQuestionId) {
+					goto(`/questionnaire/question/${nextQuestionId}`);
+				} else {
+					// If all questions are answered, go to the first question
+					goto('/questionnaire/question/1');
+				}
+			};
+			reader.readAsText(file);
+		}
+	}
 </script>
 
 <div class="flex h-screen justify-center bg-gradient-to-b from-background to-muted">
@@ -41,10 +66,24 @@
 						fort.
 					</p>
 				</div>
-				<Button size="lg" class="gap-2" variant="outline">
-					Zum Upload
-					<Upload size="20" />
-				</Button>
+				<div class="flex flex-col items-center gap-4">
+					<input
+						type="file"
+						accept=".json"
+						class="hidden"
+						bind:this={fileInput}
+						onchange={handleFileSelect}
+					/>
+					<Button 
+						size="lg" 
+						class="gap-2" 
+						variant="outline"
+						onclick={() => fileInput.click()}
+					>
+						Zum Upload
+						<Upload size="20" />
+					</Button>
+				</div>
 			</div>
 		</div>
 	</div>
