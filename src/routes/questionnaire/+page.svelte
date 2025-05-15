@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { PageData } from './$types';
 	import { Button } from '$lib/components/ui/button';
-	import { ArrowRight, Play } from 'lucide-svelte';
+	import { ArrowRight, Play, Upload } from 'lucide-svelte';
 	import { goto } from '$app/navigation';
 	import { STORAGE_KEY } from '$lib/constants';
 
@@ -42,8 +42,8 @@
 					</p>
 				</div>
 				<Button size="lg" class="gap-2" variant="outline">
-					Fortsetzen
-					<ArrowRight size="20" />
+					Zum Upload
+					<Upload size="20" />
 				</Button>
 			</div>
 		</div>
