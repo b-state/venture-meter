@@ -18,7 +18,7 @@
 	let categories: { title: string; questionCount: number; answeredCount: number }[] = $state([]);
 
 	onMount(async () => {
-		updateCategories()
+		updateCategories();
 	});
 
 	async function updateCategories() {
@@ -43,7 +43,10 @@
 	<aside class="flex min-h-[calc(100vh-64px)] w-1/4 flex-col justify-start ring-1 ring-muted">
 		{#each categories as category}
 			<div
-				class="flex h-28 flex-col justify-center gap-2 px-5 py-5 ring-1 ring-muted transition hover:bg-muted"
+				class="flex h-28 flex-col justify-center gap-2 px-5 py-5 ring-1 ring-muted transition hover:bg-muted {currentQuestion?.category ===
+				category.title
+					? 'bg-muted'
+					: ''}"
 			>
 				<a class="text-xl font-bold" href="/">{category.title}</a>
 				<div class="flex items-center gap-1 text-muted-foreground">
@@ -57,7 +60,12 @@
 
 		<div class="mt-auto flex flex-col justify-center gap-2 px-5 py-10 ring-1 ring-muted transition">
 			<div class="flex flex-col items-center gap-2 text-muted-foreground">
-				<Button class="w-full text-sm">Zur Auswertung</Button>
+				<Button
+					variant="outline"
+					class="w-full text-sm {categories.every((c) => c.answeredCount === c.questionCount)
+						? 'bg-[#32CD32] text-background hover:bg-[#37E637] hover:text-background'
+						: ' '}">Zur Auswertung</Button
+				>
 				<Dialog.Root>
 					<Dialog.Trigger class="w-full">
 						<Button variant="outline" class="w-full ">Fortschritt speichern</Button>
@@ -71,7 +79,7 @@
 									speichern. Wenn Sie den Fragebogen zu einem späteren Zeitpunkt fortsetzen möchten,
 									können Sie ihn unter dem Menüpunkt "Fragebogen" jederzeit hochladen.
 								</p>
-								<Button variant="outline" class="w-full text-sm" onclick={downloadProgress}
+								<Button class="w-full text-sm" onclick={downloadProgress}
 									>Fortschritt herunterladen</Button
 								>
 							</Dialog.Description>
