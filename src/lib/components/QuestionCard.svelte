@@ -3,11 +3,12 @@
 	import { Button } from '$lib/components/ui/button';
 	import { saveProgress } from '$lib/utils/questionnaire';
 
-	let { question, options, questionId, selectedScore } = $props<{
+	let { question, options, questionId, selectedScore, onAnswer } = $props<{
 		question: string;
 		options: string[];
 		questionId: number;
 		selectedScore: number | null;
+		onAnswer: () => void;
 	}>();
 
 	async function handleAnswer(optionIndex: number) {
@@ -15,6 +16,7 @@
 		const score = optionIndex + 1;
 		await saveProgress(questionId, score);
 		selectedScore = score;
+		onAnswer();
 		goto(`/questionnaire/question/${questionId + 1}`);
 	}
 </script>
@@ -26,7 +28,7 @@
 	{#each options as option, index}
 		<Button
 			variant={selectedScore === index + 1 ? 'default' : 'outline'}
-			class="h-fit justify-start text-wrap px-10 text-left text-lg hover:bg-muted"
+			class="h-fit justify-start text-wrap px-10 text-left text-lg {selectedScore !== index + 1 ? 'hover:bg-muted' : ''}"
 			onclick={() => handleAnswer(index)}
 		>
 			{option}

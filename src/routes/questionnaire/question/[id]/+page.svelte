@@ -18,8 +18,12 @@
 	let categories: { title: string; questionCount: number; answeredCount: number }[] = $state([]);
 
 	onMount(async () => {
-		categories = await getCategoryStats();
+		updateCategories()
 	});
+
+	async function updateCategories() {
+		categories = await getCategoryStats();
+	}
 
 	function downloadProgress() {
 		const progressData = exportProgress();
@@ -85,6 +89,7 @@
 					options={currentQuestion.options}
 					questionId={currentQuestion.id}
 					selectedScore={currentQuestion.selectedScore ?? null}
+					onAnswer={updateCategories}
 				/>
 			{:else}
 				<p>Frage nicht gefunden</p>

@@ -142,7 +142,7 @@ function calculateCategoryStats(questions: Question[]): CategoryStats[] {
     questions.forEach(question => {
         const current = categoryMap.get(question.category) || { total: 0, answered: 0 };
         current.total += 1;
-        if (question.selectedScore !== undefined) {
+        if (question.selectedScore) {
             current.answered += 1;
         }
         categoryMap.set(question.category, current);
