@@ -9,6 +9,7 @@ export async function loadQuestionsFromCSV(fetch: fetch): Promise<Question[]> {
         const csvText = await response.text();
         const lines = csvText.split('\n');
         const questions: Question[] = [];
+        const usedIds = new Set<number>();
 
         // Skip header row
         for (let i = 1; i < lines.length; i++) {
@@ -16,8 +17,29 @@ export async function loadQuestionsFromCSV(fetch: fetch): Promise<Question[]> {
             if (!line) continue;
 
             const [questionId, category, question, ...options] = line.split(';');
+            const id = parseInt(questionId);
+
+            // Validate question structure
+            if (isNaN(id)) {
+                console.error(`Invalid question ID at line ${i + 1}: ${questionId}`);
+                continue;
+            }
+            if (usedIds.has(id)) {
+                console.error(`Duplicate question ID at line ${i + 1}: ${id}`);
+                continue;
+            }
+            if (!question?.trim()) {
+                console.error(`Missing question text at line ${i + 1}`);
+                continue;
+            }
+            if (options.length < 5) {
+                console.error(`Question ${id} has only ${options.length} answers, expected 5`);
+                continue;
+            }
+
+            usedIds.add(id);
             questions.push({
-                id: parseInt(questionId),
+                id,
                 category,
                 question,
                 options: options.slice(0, 5),
@@ -25,6 +47,11 @@ export async function loadQuestionsFromCSV(fetch: fetch): Promise<Question[]> {
                 selectedScore: null
             });
         }
+
+        if (questions.length === 0) {
+            throw new Error('No valid questions found in CSV');
+        }
+
         return questions;
     } catch (error) {
         console.error('Error loading questions from CSV:', error);
