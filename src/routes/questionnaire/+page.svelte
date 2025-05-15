@@ -24,7 +24,7 @@
 					<h2 class="mb-2 text-xl font-semibold">Von vorne starten</h2>
 					<p class="text-muted-foreground">Beginnen Sie einen neuen Fragebogen.</p>
 				</div>
-				<Button size="lg" class="gap-2" on:click={handleStart}>
+				<Button size="lg" class="gap-2" onclick={handleStart}>
 					Jetzt starten
 					<Play size="20" />
 				</Button>

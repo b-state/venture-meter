@@ -10,7 +10,6 @@
 
     let { data } = $props();
     let currentQuestion = $derived(data.question);
-    $inspect(currentQuestion);
     let totalQuestions = $derived(data.totalQuestions);
     let currentId = $derived(parseInt(page.params.id));
     let progress = $derived((currentId / totalQuestions) * 100);
@@ -20,6 +19,7 @@
     onMount(async () => {
         categories = await getCategoryStats();
     });
+
 </script>
 
 <div class="flex">

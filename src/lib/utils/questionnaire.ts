@@ -1,23 +1,9 @@
-interface Question {
-    id: number;
-    category: string;
-    question: string;
-    options: string[];
-    followUpId: string | null;
-    selectedScore?: number;
-}
-
-interface CategoryStats {
-    title: string;
-    questionCount: number;
-    answeredCount: number;
-}
-
+import { STORAGE_KEY } from "$lib/constants";
 
 // Check if we're in a browser environment
 const isBrowser = typeof window !== 'undefined';
 
-async function loadQuestionsFromCSV(): Promise<Question[]> {
+async function loadQuestionsFromCSV(fetch: fetch): Promise<Question[]> {
     try {
         const response = await fetch('/src/lib/assets/questionnaire/questionnaire.csv');
         const csvText = await response.text();
@@ -47,7 +33,7 @@ async function loadQuestionsFromCSV(): Promise<Question[]> {
 
 function getStoredData(): { questions: Question[], version: string } | null {
     if (!isBrowser) return null;
-    
+
     const stored = localStorage.getItem(STORAGE_KEY);
     if (!stored) return null;
     try {
@@ -64,53 +50,53 @@ function storeData(questions: Question[], version: string): void {
 
 export async function initializeQuestionnaire(): Promise<void> {
     if (!isBrowser) return;
-    
+
     const stored = getStoredData();
     if (!stored) {
         // First time load - get from CSV and store
-        const questions = await loadQuestionsFromCSV();
+        const questions = await loadQuestionsFromCSV(fetch);
         storeData(questions, '1.0');
     }
 }
 
-export async function getQuestion(id: number): Promise<Question | null> {
+export async function getQuestion(fetch: fetch, id: number): Promise<Question | null> {
     if (!isBrowser) {
         // On server, just load from CSV without storing
-        const questions = await loadQuestionsFromCSV();
+        const questions = await loadQuestionsFromCSV(fetch);
         return questions.find(q => q.id === id) || null;
     }
 
     const stored = getStoredData();
     if (!stored) {
         await initializeQuestionnaire();
-        return getQuestion(id);
+        return getQuestion(fetch, id);
     }
     return stored.questions.find(q => q.id === id) || null;
 }
 
-export async function getTotalQuestions(): Promise<number> {
+export async function getTotalQuestions(fetch: fetch): Promise<number> {
     if (!isBrowser) {
-        const questions = await loadQuestionsFromCSV();
+        const questions = await loadQuestionsFromCSV(fetch);
         return questions.length;
     }
 
     const stored = getStoredData();
     if (!stored) {
         await initializeQuestionnaire();
-        return getTotalQuestions();
+        return getTotalQuestions(fetch);
     }
     return stored.questions.length;
 }
 
-export async function getAllQuestions(): Promise<Question[]> {
+export async function getAllQuestions(fetch: fetch): Promise<Question[]> {
     if (!isBrowser) {
-        return loadQuestionsFromCSV();
+        return loadQuestionsFromCSV(fetch);
     }
 
     const stored = getStoredData();
     if (!stored) {
         await initializeQuestionnaire();
-        return getAllQuestions();
+        return getAllQuestions(fetch);
     }
     return stored.questions;
 }
@@ -131,7 +117,7 @@ export async function saveProgress(questionId: number, score: number): Promise<v
 
 export function exportProgress(): string {
     if (!isBrowser) return '{}';
-    
+
     const stored = getStoredData();
     if (!stored) return '{}';
     return JSON.stringify(stored);
@@ -152,10 +138,10 @@ export function importProgress(data: string): void {
 
 export function getNextUnansweredQuestion(): number | null {
     if (!isBrowser) return null;
-    
+
     const stored = getStoredData();
     if (!stored) return null;
-    
+
     const unansweredQuestion = stored.questions.find(q => q.selectedScore === undefined);
     return unansweredQuestion ? unansweredQuestion.id : null;
 }
@@ -169,7 +155,7 @@ export async function updateQuestionnaire(): Promise<void> {
         return;
     }
 
-    const newQuestions = await loadQuestionsFromCSV();
+    const newQuestions = await loadQuestionsFromCSV(fetch);
     const oldQuestions = stored.questions;
 
     // Preserve scores for questions that still exist
@@ -185,7 +171,7 @@ export async function updateQuestionnaire(): Promise<void> {
 
 export async function getCategoryStats(): Promise<CategoryStats[]> {
     if (!isBrowser) {
-        const questions = await loadQuestionsFromCSV();
+        const questions = await loadQuestionsFromCSV(fetch);
         return calculateCategoryStats(questions);
     }
 
@@ -199,7 +185,7 @@ export async function getCategoryStats(): Promise<CategoryStats[]> {
 
 function calculateCategoryStats(questions: Question[]): CategoryStats[] {
     const categoryMap = new Map<string, { total: number; answered: number }>();
-    
+
     questions.forEach(question => {
         const current = categoryMap.get(question.category) || { total: 0, answered: 0 };
         current.total += 1;

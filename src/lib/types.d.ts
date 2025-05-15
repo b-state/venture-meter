@@ -1,3 +1,8 @@
+interface fetch {
+    (input: RequestInfo | URL, init?: RequestInit): Promise<Response>;
+    (input: string | URL | globalThis.Request, init?: RequestInit): Promise<Response>;
+}
+
 interface Question {
     id: number;
     category: string;
@@ -5,4 +10,10 @@ interface Question {
     options: string[];
     followUpId: string | null;
     selectedScore?: number;
+}
+
+interface CategoryStats {
+    title: string;
+    questionCount: number;
+    answeredCount: number;
 }

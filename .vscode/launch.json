@@ -5,6 +5,12 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "command": "npm run dev",
+            "name": "Run Svelte Dev",
+            "request": "launch",
+            "type": "node-terminal"
+        },
+        {
             "name": "Run Sevelte Dev",
             "request": "launch",
             "runtimeArgs": [
