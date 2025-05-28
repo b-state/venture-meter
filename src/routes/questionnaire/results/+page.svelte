@@ -73,6 +73,57 @@
 				<div class="text-lg">Lade Ergebnisse...</div>
 			</div>
 		{:else}
+			<!-- Journey Card -->
+			<Card.Root class="mb-8">
+				<Card.Header>
+					<Card.Title>Startup Journey - Deine Position</Card.Title>
+				</Card.Header>
+				<Card.Content>
+					<div class="relative rounded-xl p-8">
+						<div class="flex items-end">
+							{#each Object.entries(results) as [category, score], i}
+								<div class="relative flex w-full flex-col items-center">
+									<!-- Category Box -->
+									<div
+										class="ring-1 relative z-10 flex w-full flex-col items-center justify-center p-4 text-foreground transition-transform duration-300 hover:scale-105 bg-background {i ===
+										0
+											? 'ring-slate-300'
+											: i === 1
+												? 'ring-sky-300'
+												: i === 2
+													? 'ring-sky-500'
+													: i === 3
+														? 'ring-teal-500'
+														: 'ring-emerald-500'}"
+										style="height: {120 + i * 20}px;"
+									>
+										<span
+											class="text-center text-sm font-semibold ">{category}</span
+										>
+									</div>
+
+									<!-- Marker -->
+									{#if i === Math.floor(totalScore) - 1}
+										<div class="absolute -bottom-20 left-1/2 -translate-x-1/2">
+											<div class="flex flex-col items-center">
+												<div
+													class="h-0 w-0 border-x-8 border-b-8 border-x-transparent border-b-blue-400"
+												></div>
+												<div
+													class="mt-1 rounded-full bg-blue-400 px-3 py-1 text-xs font-semibold text-black"
+												>
+													Deine Position
+												</div>
+											</div>
+										</div>
+									{/if}
+								</div>
+							{/each}
+						</div>
+					</div>
+				</Card.Content>
+			</Card.Root>
+
 			<!-- Main Content -->
 			<div class="flex flex-col gap-8">
 				<div class="flex gap-8">
@@ -110,7 +161,7 @@
 									Aktuell befindet sich euer Startup in der Stufe:
 								</p>
 								<div class="my-3 text-center text-8xl font-bold {scoreColor}">
-									{totalScore.toFixed(1).toString().replace(".", ",")}
+									{totalScore.toFixed(1).toString().replace('.', ',')}
 								</div>
 							</div>
 							<div class="space-y-4">
