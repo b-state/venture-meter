@@ -10,6 +10,7 @@
 	import DetailedAnalysis from '$lib/components/DetailedAnalysis.svelte';
 	import { generatePDF } from '$lib/utils/pdfGenerator';
 	import { getStoredData } from '$lib/utils/questionnaire';
+	import { Progress } from '$lib/components/ui/progress';
 
 	let loading = true;
 	let results: Record<string, number> = {};
@@ -76,7 +77,7 @@
 			<!-- Journey Card -->
 			<Card.Root class="mb-8">
 				<Card.Header>
-					<Card.Title>Startup Journey - Deine Position</Card.Title>
+					<Card.Title>Deine Position in der Startup Journey</Card.Title>
 				</Card.Header>
 				<Card.Content>
 					<div class="relative rounded-xl p-8">
@@ -85,40 +86,34 @@
 								<div class="relative flex w-full flex-col items-center">
 									<!-- Category Box -->
 									<div
-										class="ring-1 relative z-10 flex w-full flex-col items-center justify-center p-4 text-foreground transition-transform duration-300 hover:scale-105 bg-background {i ===
-										0
-											? 'ring-slate-300'
-											: i === 1
-												? 'ring-sky-300'
-												: i === 2
-													? 'ring-sky-500'
-													: i === 3
-														? 'ring-teal-500'
-														: 'ring-emerald-500'}"
+										class="relative rounded-t-md z-10 flex w-full flex-col items-center justify-center bg-background p-4 text-foreground ring-1 {score < 3 
+											? ' ring-gray-400'
+											: i === 0
+												? 'bg-gradient-to-t from-blue-200/10 to-transparent ring-blue-200'
+												: i === 1
+													? 'bg-gradient-to-t from-sky-300/10 to-transparent ring-sky-300'
+													: i === 2
+														? 'bg-gradient-to-t from-sky-500/10 to-transparent ring-sky-500'
+														: i === 3
+															? 'bg-gradient-to-t from-teal-500/10 to-transparent ring-teal-500'
+															: 'bg-gradient-to-t from-emerald-500/10 to-transparent ring-emerald-500'}"
 										style="height: {120 + i * 20}px;"
 									>
-										<span
-											class="text-center text-sm font-semibold ">{category}</span
-										>
+										<span class="text-center text-sm font-semibold">{category score funktioniert nicht, wenn score bei 3,9 dann sind trotzdem alle balken farbig}</span>
 									</div>
-
-									<!-- Marker -->
-									{#if i === Math.floor(totalScore) - 1}
-										<div class="absolute -bottom-20 left-1/2 -translate-x-1/2">
-											<div class="flex flex-col items-center">
-												<div
-													class="h-0 w-0 border-x-8 border-b-8 border-x-transparent border-b-blue-400"
-												></div>
-												<div
-													class="mt-1 rounded-full bg-blue-400 px-3 py-1 text-xs font-semibold text-black"
-												>
-													Deine Position
-												</div>
-											</div>
-										</div>
-									{/if}
 								</div>
 							{/each}
+						</div>
+						<div class="mt-8 text-center text-sm text-muted-foreground">
+							{#if totalScore >= 4}
+								Ihr seid bereits sehr weit in eurer Startup Journey! Eure Prozesse sind ausgereift und ihr arbeitet systematisch an der Weiterentwicklung.
+							{:else if totalScore >= 3}
+								Ihr seid auf einem guten Weg in eurer Startup Journey. Mit weiterer Systematisierung und Validierung könnt ihr das nächste Level erreichen.
+							{:else if totalScore >= 2}
+								Ihr steht am Anfang eurer Startup Journey. Jetzt ist der richtige Zeitpunkt, um eure Prozesse zu strukturieren und zu dokumentieren.
+							{:else}
+								Ihr steht ganz am Beginn eurer Startup Journey. Das ist eine spannende Phase, in der ihr die Grundlagen für euren künftigen Erfolg legt.
+							{/if}
 						</div>
 					</div>
 				</Card.Content>
