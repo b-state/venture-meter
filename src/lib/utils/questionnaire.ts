@@ -59,7 +59,7 @@ export async function loadQuestionsFromCSV(fetch: fetch): Promise<Question[]> {
     }
 }
 
-export function getStoredData(): { questions: Question[], version: string } | null {
+export function getStoredData(): { questions: Question[], version: string, startupInfo?: StartupInfo } | null {
     if (!isBrowser) return null;
 
     const stored = localStorage.getItem(STORAGE_KEY);
@@ -71,9 +71,13 @@ export function getStoredData(): { questions: Question[], version: string } | nu
     }
 }
 
-function storeData(questions: Question[], version: string): void {
+function storeData(questions: Question[], version: string, startupInfo?: StartupInfo): void {
     if (!isBrowser) return;
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ questions, version }));
+    const data: { questions: Question[], version: string, startupInfo?: StartupInfo } = { questions, version };
+    if (startupInfo) {
+        data.startupInfo = startupInfo;
+    }
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
 
 export async function initializeQuestionnaire(): Promise<void> {
@@ -87,8 +91,6 @@ export async function initializeQuestionnaire(): Promise<void> {
     }
 }
 
-
-
 export async function saveProgress(questionId: number, score: number): Promise<void> {
     if (!isBrowser) return;
 
@@ -99,7 +101,7 @@ export async function saveProgress(questionId: number, score: number): Promise<v
     const question = questions.find(q => q.id === questionId);
     if (question) {
         question.selectedScore = score;
-        storeData(questions, stored.version);
+        storeData(questions, stored.version, stored.startupInfo);
     }
 }
 
@@ -117,14 +119,12 @@ export function importProgress(data: string): void {
     try {
         const parsed = JSON.parse(data);
         if (parsed.questions && parsed.version) {
-            storeData(parsed.questions, parsed.version);
+            storeData(parsed.questions, parsed.version, parsed.startupInfo);
         }
     } catch (error) {
         console.error('Error importing progress:', error);
     }
 }
-
-
 
 export async function updateQuestionnaire(): Promise<void> {
     if (!isBrowser) return;
@@ -146,7 +146,7 @@ export async function updateQuestionnaire(): Promise<void> {
         }
     });
 
-    storeData(newQuestions, '1.1'); // Increment version number
+    storeData(newQuestions, '1.1', stored.startupInfo); // Increment version number
 }
 
 export async function getCategoryStats(): Promise<CategoryStats[]> {
@@ -180,5 +180,12 @@ function calculateCategoryStats(questions: Question[]): CategoryStats[] {
         questionCount: stats.total,
         answeredCount: stats.answered
     }));
+}
+
+export function getStartupInfo(): StartupInfo | null {
+    if (!isBrowser) return null;
+    
+    const stored = getStoredData();
+    return stored?.startupInfo || null;
 }
 

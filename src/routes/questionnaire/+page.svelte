@@ -12,7 +12,7 @@
 
 	const handleStart = () => {
 		localStorage.removeItem(STORAGE_KEY);
-		goto('/questionnaire/question/1');
+		goto('/questionnaire/startup-info');
 	};
 
 	function handleFileSelect(event: Event) {
@@ -30,8 +30,8 @@
 				if (nextQuestionId) {
 					goto(`/questionnaire/question/${nextQuestionId}`);
 				} else {
-					// If all questions are answered, go to the first question
-					goto('/questionnaire/question/1');
+					// If all questions are answered, go to results
+					goto('/questionnaire/results');
 				}
 			};
 			reader.readAsText(file);

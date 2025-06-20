@@ -17,3 +17,9 @@ interface CategoryStats {
     questionCount: number;
     answeredCount: number;
 }
+
+interface StartupInfo {
+    industry: string;
+    technology: string;
+    targetCustomers: string;
+}

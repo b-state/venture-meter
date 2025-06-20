@@ -9,15 +9,18 @@
 	import RadarChart from '$lib/components/RadarChart.svelte';
 	import DetailedAnalysis from '$lib/components/DetailedAnalysis.svelte';
 	import { generatePDF } from '$lib/utils/pdfGenerator';
-	import { getStoredData } from '$lib/utils/questionnaire';
+	import { getStoredData, getStartupInfo } from '$lib/utils/questionnaire';
 	import { Progress } from '$lib/components/ui/progress';
 
 	let loading = true;
 	let results: Record<string, number> = {};
 	let totalScore: number = 0;
+	let startupInfo: StartupInfo | null = null;
 
 	onMount(() => {
 		const storedData = getStoredData();
+		startupInfo = getStartupInfo();
+		
 		if (storedData) {
 			// Calculate average score per category
 			const categoryScores = new Map<string, { total: number; count: number }>();
@@ -122,6 +125,31 @@
 					</div>
 				</Card.Content>
 			</Card.Root>
+
+			<!-- Startup Information -->
+			{#if startupInfo}
+				<Card.Root class="mb-8">
+					<Card.Header>
+						<Card.Title>Über dein Startup</Card.Title>
+					</Card.Header>
+					<Card.Content>
+						<div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+							<div class="space-y-2">
+								<label class="text-sm font-medium text-muted-foreground">Branche</label>
+								<p class="text-sm">{startupInfo.industry}</p>
+							</div>
+							<div class="space-y-2">
+								<label class="text-sm font-medium text-muted-foreground">Technologie</label>
+								<p class="text-sm">{startupInfo.technology}</p>
+							</div>
+							<div class="space-y-2">
+								<label class="text-sm font-medium text-muted-foreground">Zielkunden</label>
+								<p class="text-sm">{startupInfo.targetCustomers}</p>
+							</div>
+						</div>
+					</Card.Content>
+				</Card.Root>
+			{/if}
 
 			<!-- Main Content -->
 			<div class="flex flex-col gap-8">
