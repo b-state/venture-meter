@@ -2,7 +2,7 @@
 	import { onMount } from 'svelte';
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
-	import { Share2, Download, ArrowLeft } from 'lucide-svelte';
+	import { Share2, Download, ArrowLeft, Sparkles } from 'lucide-svelte';
 	import { goto } from '$app/navigation';
 	import { STORAGE_KEY } from '$lib/constants';
 	import CategoryScore from '$lib/components/CategoryScore.svelte';
@@ -86,7 +86,9 @@
 								<div class="relative flex w-full flex-col items-center">
 									<!-- Category Box -->
 									<div
-										class="relative z-10 flex w-full flex-col items-center justify-center rounded-t-md bg-background p-4 text-foreground ring-1 {i + 1 <= totalScore
+										class="relative z-10 flex w-full flex-col items-center justify-center rounded-t-md bg-background p-4 text-foreground ring-1 {i +
+											1 <=
+										totalScore
 											? i === 0
 												? 'bg-gradient-to-t from-blue-200/10 to-transparent ring-blue-200'
 												: i === 1
@@ -105,10 +107,9 @@
 							{/each}
 						</div>
 						<div class="mt-8 text-center text-sm text-muted-foreground">
-
 							{#if totalScore >= 5}
 								{'Text über Kategorie 5 einfügen'}
-								{:else if totalScore >= 4}
+							{:else if totalScore >= 4}
 								{'Text über Kategorie 4 einfügen'}
 							{:else if totalScore >= 3}
 								{'Text über Kategorie 3 einfügen'}
@@ -223,6 +224,27 @@
 						</Card.Content>
 					</Card.Root>
 				</div>
+				<!-- AI Recommendations -->
+				<Card.Root class="col-span-2">
+					<Card.Header>
+						<Card.Title
+							><div class="flex items-center gap-2">
+								Dynamische Empfehlung für dein Startup
+								<Sparkles size="20" />
+							</div>
+						</Card.Title>
+					</Card.Header>
+					<Card.Content>
+						<p class="">
+							Diese Empfehlung wurde mit KI erstellt. Sie ist möglicherweise nicht
+							immer vollständig korrekt oder passend für Deine individuelle Situation.
+						</p>
+						<p class="text-xs text-muted-foreground text-center">
+							Diese Empfehlung wurde mit KI erstellt. Sie ist möglicherweise nicht
+							immer vollständig korrekt oder passend für Deine individuelle Situation.
+						</p>
+					</Card.Content>
+				</Card.Root>
 				<!-- Detailed Analysis -->
 				<Card.Root class="col-span-2">
 					<Card.Header>
