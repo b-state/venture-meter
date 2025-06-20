@@ -86,9 +86,8 @@
 								<div class="relative flex w-full flex-col items-center">
 									<!-- Category Box -->
 									<div
-										class="relative rounded-t-md z-10 flex w-full flex-col items-center justify-center bg-background p-4 text-foreground ring-1 {score < 3 
-											? ' ring-gray-400'
-											: i === 0
+										class="relative z-10 flex w-full flex-col items-center justify-center rounded-t-md bg-background p-4 text-foreground ring-1 {i + 1 <= totalScore
+											? i === 0
 												? 'bg-gradient-to-t from-blue-200/10 to-transparent ring-blue-200'
 												: i === 1
 													? 'bg-gradient-to-t from-sky-300/10 to-transparent ring-sky-300'
@@ -96,23 +95,27 @@
 														? 'bg-gradient-to-t from-sky-500/10 to-transparent ring-sky-500'
 														: i === 3
 															? 'bg-gradient-to-t from-teal-500/10 to-transparent ring-teal-500'
-															: 'bg-gradient-to-t from-emerald-500/10 to-transparent ring-emerald-500'}"
+															: 'bg-gradient-to-t from-emerald-500/10 to-transparent ring-emerald-500'
+											: 'ring-gray-400'}"
 										style="height: {120 + i * 20}px;"
 									>
-										<span class="text-center text-sm font-semibold">{category score funktioniert nicht, wenn score bei 3,9 dann sind trotzdem alle balken farbig}</span>
+										<span class="text-center text-sm font-semibold">{category}</span>
 									</div>
 								</div>
 							{/each}
 						</div>
 						<div class="mt-8 text-center text-sm text-muted-foreground">
-							{#if totalScore >= 4}
-								Ihr seid bereits sehr weit in eurer Startup Journey! Eure Prozesse sind ausgereift und ihr arbeitet systematisch an der Weiterentwicklung.
+
+							{#if totalScore >= 5}
+								{'Text über Kategorie 5 einfügen'}
+								{:else if totalScore >= 4}
+								{'Text über Kategorie 4 einfügen'}
 							{:else if totalScore >= 3}
-								Ihr seid auf einem guten Weg in eurer Startup Journey. Mit weiterer Systematisierung und Validierung könnt ihr das nächste Level erreichen.
+								{'Text über Kategorie 3 einfügen'}
 							{:else if totalScore >= 2}
-								Ihr steht am Anfang eurer Startup Journey. Jetzt ist der richtige Zeitpunkt, um eure Prozesse zu strukturieren und zu dokumentieren.
+								{'Text über Kategorie 2 einfügen'}
 							{:else}
-								Ihr steht ganz am Beginn eurer Startup Journey. Das ist eine spannende Phase, in der ihr die Grundlagen für euren künftigen Erfolg legt.
+								{'Text über Kategorie 1 einfügen'}
 							{/if}
 						</div>
 					</div>
