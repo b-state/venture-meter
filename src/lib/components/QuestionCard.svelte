@@ -16,7 +16,7 @@
 
 	// Ensure we always use the prop value, not local state
 	let currentSelectedScore = $derived(selectedScore);
-	let showHelp = $state(false);
+	let showHelp = $state(true);
 	let helpText = $state<string | null>(null);
 	let isLoadingHelp = $state(false);
 
@@ -87,12 +87,15 @@
 		class="flex w-fit gap-2 text-muted-foreground self-end"
 		onclick={toggleHelp}
 	>
-		<HelpCircle size="20" /> Spickzettel anzeigen
+		<HelpCircle size="20" /> Spickzettel {showHelp ? 'ausblenden' : 'anzeigen'}
 	</Button>
 
 	{#if showHelp}
-		<Card class="mt-10 bg-background text-foreground">
-			<CardContent class="p-4">
+		<Card class="mt-10 bg-background text-foreground relative">
+			<div class="absolute inset-0 rounded-lg bg-gradient-to-r from-pink-400/60 via-violet-400/60 to-pink-400/60 p-[1px]">
+				<div class="h-full w-full rounded-lg bg-background"></div>
+			</div>
+			<CardContent class="p-4 relative z-10 ">
 				<div class="flex items-start gap-2">
 					<Sparkles size="16" class="mt-0.5" />
 					{#if isLoadingHelp}
