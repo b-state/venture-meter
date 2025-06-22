@@ -87,13 +87,15 @@
 	<main class="my-10 flex w-screen flex-col items-center justify-center px-40">
 		<div class="flex h-full w-full max-w-4xl flex-col justify-center">
 			{#if currentQuestion}
-				<QuestionCard
-					question={currentQuestion.question}
-					options={currentQuestion.options}
-					questionId={currentQuestion.id}
-					selectedScore={currentQuestion.selectedScore ?? null}
-					onAnswer={updateCategories}
-				/>
+				{#key currentQuestion.id}
+					<QuestionCard
+						question={currentQuestion.question}
+						options={currentQuestion.options}
+						questionId={currentQuestion.id}
+						selectedScore={currentQuestion.selectedScore ?? null}
+						onAnswer={updateCategories}
+					/>
+				{/key}
 			{:else}
 				<p>Frage nicht gefunden</p>
 			{/if}

@@ -11,11 +11,13 @@
 		onAnswer: () => void;
 	}>();
 
+	// Ensure we always use the prop value, not local state
+	let currentSelectedScore = $derived(selectedScore);
+
 	async function handleAnswer(optionIndex: number) {
 		// optionIndex is 0-based, but score is 1-based
 		const score = optionIndex + 1;
 		await saveProgress(questionId, score);
-		selectedScore = score;
 		onAnswer();
 		goto(`/questionnaire/question/${questionId + 1}`);
 	}
