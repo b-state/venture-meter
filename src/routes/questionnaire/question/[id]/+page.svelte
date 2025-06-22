@@ -9,15 +9,15 @@
 	import { onMount } from 'svelte';
 	import * as Dialog from '$lib/components/ui/dialog';
 	import { goto } from '$app/navigation';
+	import { STORAGE_KEY } from '$lib/constants';
 
 	let { data } = $props();
 	let currentQuestion = $derived(data.question);
 	let totalQuestions = $derived(data.totalQuestions);
 	let currentId = $derived(parseInt(page.params.id));
 	let progress = $derived((currentId / totalQuestions) * 100);
-	let allQuestions = $derived(data.allQuestions);
 	let categories: { title: string; questionCount: number; answeredCount: number }[] = $state([]);
-
+	console.log(data);
 	onMount(async () => {
 		updateCategories();
 	});
@@ -63,7 +63,7 @@
 			<div class="flex flex-col items-center gap-2 text-muted-foreground">
 				<Dialog.Root>
 					<Dialog.Trigger class="w-full">
-						<Button variant="outline" class="w-full ">Fortschritt speichern</Button>
+						<div><Button variant="outline" class="w-full ">Fortschritt speichern</Button></div>
 					</Dialog.Trigger>
 					<Dialog.Content>
 						<Dialog.Header>
@@ -108,22 +108,21 @@
 					<Button variant="outline" onclick={() => goToPreviousQuestion(currentId)}>Zurück</Button>
 				{/if}
 				<Button
-				variant="outline"
-				onclick={() => goToNextQuestion(currentId, totalQuestions, allQuestions)}
-				disabled={currentId >= totalQuestions}
-				class="ml-auto"
-			>
-				Weiter
-			</Button>
+					variant="outline"
+					onclick={() => goToNextQuestion(currentId, totalQuestions)}
+					disabled={currentId >= totalQuestions}
+					class="ml-auto"
+				>
+					Weiter
+				</Button>
 				{#if categories.every((c) => c.answeredCount === c.questionCount)}
 					<Button
-						onclick={() => goto("/questionnaire/results")}
+						onclick={() => goto('/questionnaire/results')}
 						variant="outline"
 						class="bg-[#32CD32] text-sm text-background hover:bg-[#37E637] hover:text-background"
 						>Zur Auswertung</Button
 					>
 				{/if}
-
 			</div>
 		</div>
 	</main>

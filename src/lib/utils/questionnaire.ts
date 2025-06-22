@@ -5,9 +5,22 @@ const isBrowser = typeof window !== 'undefined';
 
 export async function loadQuestionsFromCSV(fetch: fetch): Promise<Question[]> {
     try {
+        console.log('Loading questions from CSV...');
         const response = await fetch('/questionnaire.csv');
+        
+        if (!response.ok) {
+            throw new Error(`Failed to load CSV: ${response.status} ${response.statusText}`);
+        }
+        
         const csvText = await response.text();
+        console.log('CSV text length:', csvText.length);
+        
+        if (!csvText.trim()) {
+            throw new Error('CSV file is empty');
+        }
+        
         const lines = csvText.split('\n');
+        console.log('CSV lines:', lines.length);
         const questions: Question[] = [];
         const usedIds = new Set<number>();
 
@@ -48,6 +61,7 @@ export async function loadQuestionsFromCSV(fetch: fetch): Promise<Question[]> {
             });
         }
 
+        console.log('Parsed questions:', questions.length);
         if (questions.length === 0) {
             throw new Error('No valid questions found in CSV');
         }
@@ -55,54 +69,82 @@ export async function loadQuestionsFromCSV(fetch: fetch): Promise<Question[]> {
         return questions;
     } catch (error) {
         console.error('Error loading questions from CSV:', error);
-        return [];
+        throw error; // Re-throw to allow calling code to handle
     }
 }
 
 export function getStoredData(): { questions: Question[], version: string, startupInfo?: StartupInfo } | null {
     if (!isBrowser) return null;
 
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (!stored) return null;
     try {
-        return JSON.parse(stored);
-    } catch {
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if (!stored) return null;
+        
+        const parsed = JSON.parse(stored);
+        
+        // Validate stored data structure
+        if (!parsed.questions || !Array.isArray(parsed.questions) || !parsed.version) {
+            console.warn('Invalid stored data structure, clearing corrupted data');
+            localStorage.removeItem(STORAGE_KEY);
+            return null;
+        }
+        
+        return parsed;
+    } catch (error) {
+        console.error('Error parsing stored data:', error);
+        localStorage.removeItem(STORAGE_KEY);
         return null;
     }
 }
 
-function storeData(questions: Question[], version: string, startupInfo?: StartupInfo): void {
+export function storeData(questions: Question[], version: string, startupInfo?: StartupInfo): void {
     if (!isBrowser) return;
+    
+    if (!questions || !Array.isArray(questions)) {
+        throw new Error('Invalid questions data');
+    }
+    
+    if (!version || typeof version !== 'string') {
+        throw new Error('Invalid version data');
+    }
+    
     const data: { questions: Question[], version: string, startupInfo?: StartupInfo } = { questions, version };
     if (startupInfo) {
         data.startupInfo = startupInfo;
     }
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-}
-
-export async function initializeQuestionnaire(): Promise<void> {
-    if (!isBrowser) return;
-
-    const stored = getStoredData();
-    if (!stored) {
-        // First time load - get from CSV and store
-        const questions = await loadQuestionsFromCSV(fetch);
-        storeData(questions, '1.0');
+    
+    try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    } catch (error) {
+        console.error('Error storing data:', error);
+        throw error;
     }
 }
 
 export async function saveProgress(questionId: number, score: number): Promise<void> {
     if (!isBrowser) return;
+    
+    if (typeof questionId !== 'number' || questionId <= 0) {
+        throw new Error('Invalid question ID');
+    }
+    
+    if (typeof score !== 'number' || score < 1 || score > 5) {
+        throw new Error('Invalid score value');
+    }
 
     const stored = getStoredData();
-    if (!stored) return;
+    if (!stored) {
+        throw new Error('No questionnaire data found');
+    }
 
     const questions = stored.questions;
     const question = questions.find(q => q.id === questionId);
-    if (question) {
-        question.selectedScore = score;
-        storeData(questions, stored.version, stored.startupInfo);
+    if (!question) {
+        throw new Error(`Question with ID ${questionId} not found`);
     }
+    
+    question.selectedScore = score;
+    storeData(questions, stored.version, stored.startupInfo);
 }
 
 export function exportProgress(): string {
@@ -110,19 +152,32 @@ export function exportProgress(): string {
 
     const stored = getStoredData();
     if (!stored) return '{}';
-    return JSON.stringify(stored);
+    
+    try {
+        return JSON.stringify(stored);
+    } catch (error) {
+        console.error('Error exporting progress:', error);
+        return '{}';
+    }
 }
 
 export function importProgress(data: string): void {
     if (!isBrowser) return;
 
+    if (!data || typeof data !== 'string') {
+        throw new Error('Invalid import data');
+    }
+
     try {
         const parsed = JSON.parse(data);
-        if (parsed.questions && parsed.version) {
-            storeData(parsed.questions, parsed.version, parsed.startupInfo);
+        if (!parsed.questions || !Array.isArray(parsed.questions) || !parsed.version) {
+            throw new Error('Invalid import data structure');
         }
+        
+        storeData(parsed.questions, parsed.version, parsed.startupInfo);
     } catch (error) {
         console.error('Error importing progress:', error);
+        throw error;
     }
 }
 
@@ -130,12 +185,14 @@ export async function updateQuestionnaire(): Promise<void> {
     if (!isBrowser) return;
 
     const stored = getStoredData();
+    const newQuestions = await loadQuestionsFromCSV(fetch);
+    
     if (!stored) {
-        await initializeQuestionnaire();
+        // First time initialization - store questions with default version
+        storeData(newQuestions, '1.0');
         return;
     }
 
-    const newQuestions = await loadQuestionsFromCSV(fetch);
     const oldQuestions = stored.questions;
 
     // Preserve scores for questions that still exist
@@ -157,8 +214,8 @@ export async function getCategoryStats(): Promise<CategoryStats[]> {
 
     const stored = getStoredData();
     if (!stored) {
-        await initializeQuestionnaire();
-        return getCategoryStats();
+        // If no stored data, return empty stats
+        return [];
     }
     return calculateCategoryStats(stored.questions);
 }
@@ -169,7 +226,7 @@ function calculateCategoryStats(questions: Question[]): CategoryStats[] {
     questions.forEach(question => {
         const current = categoryMap.get(question.category) || { total: 0, answered: 0 };
         current.total += 1;
-        if (question.selectedScore) {
+        if (question.selectedScore !== null && question.selectedScore !== undefined) {
             current.answered += 1;
         }
         categoryMap.set(question.category, current);

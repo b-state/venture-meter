@@ -135,15 +135,15 @@
 					<Card.Content>
 						<div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
 							<div class="space-y-2">
-								<label class="text-sm font-medium text-muted-foreground">Branche</label>
+								<p class="text-sm font-medium text-muted-foreground">Branche</p>
 								<p class="text-sm">{startupInfo.industry}</p>
 							</div>
 							<div class="space-y-2">
-								<label class="text-sm font-medium text-muted-foreground">Technologie</label>
+								<p class="text-sm font-medium text-muted-foreground">Technologie</p>
 								<p class="text-sm">{startupInfo.technology}</p>
 							</div>
 							<div class="space-y-2">
-								<label class="text-sm font-medium text-muted-foreground">Zielkunden</label>
+								<p class="text-sm font-medium text-muted-foreground">Zielkunden</p>
 								<p class="text-sm">{startupInfo.targetCustomers}</p>
 							</div>
 						</div>
