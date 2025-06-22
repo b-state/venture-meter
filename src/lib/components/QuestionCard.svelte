@@ -2,7 +2,7 @@
 	import { goto } from '$app/navigation';
 	import { Button } from '$lib/components/ui/button';
 	import { Card, CardContent } from '$lib/components/ui/card';
-	import { saveProgress } from '$lib/utils/questionnaire';
+	import { saveProgress, getStartupInfo } from '$lib/utils/questionnaire';
 	import { HelpCircle, Loader2, Sparkles } from 'lucide-svelte';
 	import { onMount } from 'svelte';
 
@@ -45,7 +45,18 @@
 	async function fetchHelpText() {
 		isLoadingHelp = true;
 		try {
-			const response = await fetch(`/api/help-text/${questionId}`);
+			// Get startup info from localStorage
+			const startupInfo = getStartupInfo();
+			
+			// Build query parameters
+			const params = new URLSearchParams();
+			if (startupInfo) {
+				params.append('industry', startupInfo.industry);
+				params.append('productCategory', startupInfo.productCategory);
+				params.append('targetCustomers', startupInfo.targetCustomers);
+			}
+			
+			const response = await fetch(`/api/help-text/${questionId}?${params.toString()}`);
 			if (response.ok) {
 				const data = await response.json();
 				helpText = data.helpText;

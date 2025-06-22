@@ -6,7 +6,7 @@
 	import { STORAGE_KEY } from '$lib/constants';
 
 	let industry = '';
-	let technology = '';
+	let productCategory = '';
 	let targetCustomers = '';
 	let customIndustry = '';
 
@@ -42,7 +42,7 @@
 	const handleContinue = () => {
 		const finalIndustry = industry === 'Sonstiges (selbst definieren)' ? customIndustry : industry;
 		
-		if (finalIndustry && technology && targetCustomers) {
+		if (finalIndustry && productCategory && targetCustomers) {
 			// Store startup info along with existing data
 			const existingData = localStorage.getItem(STORAGE_KEY);
 			let data = existingData ? JSON.parse(existingData) : { questions: [], version: '1.0' };
@@ -50,7 +50,7 @@
 			// Add startup info to the data
 			data.startupInfo = {
 				industry: finalIndustry,
-				technology,
+				productCategory,
 				targetCustomers
 			};
 			
@@ -111,15 +111,15 @@
 					{/if}
 				</div>
 
-				<!-- Technology -->
+				<!-- productCategory -->
 				<div class="space-y-3">
 					<label class="text-sm font-medium">Welche Art von Technologie/Produkt entwickelt ihr?</label>
 					<div class="grid grid-cols-1 gap-3">
 						{#each technologies as techOption}
 							<Button
-								variant={technology === techOption ? 'default' : 'outline'}
+								variant={productCategory === techOption ? 'default' : 'outline'}
 								class="justify-start text-left"
-								onclick={() => (technology = techOption)}
+								onclick={() => (productCategory = techOption)}
 							>
 								{techOption}
 							</Button>
@@ -150,7 +150,7 @@
 			<Button
 				size="lg"
 				class="gap-2"
-				disabled={!industry || !technology || !targetCustomers || (industry === 'Sonstiges (selbst definieren)' && !customIndustry)}
+				disabled={!industry || !productCategory || !targetCustomers || (industry === 'Sonstiges (selbst definieren)' && !customIndustry)}
 				onclick={handleContinue}
 			>
 				Zum Fragebogen

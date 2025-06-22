@@ -17,7 +17,6 @@
 	let currentId = $derived(parseInt(page.params.id));
 	let progress = $derived((currentId / totalQuestions) * 100);
 	let categories: { title: string; questionCount: number; answeredCount: number }[] = $state([]);
-	console.log(data);
 	onMount(async () => {
 		updateCategories();
 	});
@@ -44,12 +43,12 @@
 	<aside class="flex min-h-[calc(100vh-64px)] w-1/4 flex-col justify-start ring-1 ring-muted">
 		{#each categories as category}
 			<div
-				class="flex h-28 flex-col justify-center gap-2 px-5 py-5 ring-1 ring-muted transition hover:bg-muted {currentQuestion?.category ===
+				class="flex h-28 flex-col justify-center gap-2 px-5 py-5 ring-1 ring-muted transition hover:bg-muted-foreground/10 {currentQuestion?.category ===
 				category.title
 					? 'bg-muted'
 					: ''}"
 			>
-				<a class="text-xl font-bold" href="/">{category.title}</a>
+				<div class="text-xl font-bold">{category.title}</div>
 				<div class="flex items-center gap-1 text-muted-foreground">
 					<p class="text-sm">{category.answeredCount} von {category.questionCount} Fragen</p>
 					{#if category.answeredCount === category.questionCount}

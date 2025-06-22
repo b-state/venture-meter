@@ -140,7 +140,7 @@
 							</div>
 							<div class="space-y-2">
 								<p class="text-sm font-medium text-muted-foreground">Technologie</p>
-								<p class="text-sm">{startupInfo.technology}</p>
+								<p class="text-sm">{startupInfo.productCategory}</p>
 							</div>
 							<div class="space-y-2">
 								<p class="text-sm font-medium text-muted-foreground">Zielkunden</p>

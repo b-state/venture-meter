@@ -21,6 +21,6 @@ interface CategoryStats {
 
 interface StartupInfo {
     industry: string;
-    technology: string;
+    productCategory: string;
     targetCustomers: string;
 }

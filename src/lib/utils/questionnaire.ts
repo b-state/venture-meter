@@ -5,7 +5,6 @@ const isBrowser = typeof window !== 'undefined';
 
 export async function loadQuestionsFromCSV(fetch: fetch): Promise<Question[]> {
     try {
-        console.log('Loading questions from CSV...');
         const response = await fetch('/questionnaire.csv');
         
         if (!response.ok) {
@@ -13,14 +12,12 @@ export async function loadQuestionsFromCSV(fetch: fetch): Promise<Question[]> {
         }
         
         const csvText = await response.text();
-        console.log('CSV text length:', csvText.length);
         
         if (!csvText.trim()) {
             throw new Error('CSV file is empty');
         }
         
         const lines = csvText.split('\n');
-        console.log('CSV lines:', lines.length);
         const questions: Question[] = [];
         const usedIds = new Set<number>();
 
@@ -62,7 +59,6 @@ export async function loadQuestionsFromCSV(fetch: fetch): Promise<Question[]> {
             });
         }
 
-        console.log('Parsed questions:', questions.length);
         if (questions.length === 0) {
             throw new Error('No valid questions found in CSV');
         }
