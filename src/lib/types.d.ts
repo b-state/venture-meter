@@ -7,6 +7,7 @@ interface Question {
     id: number;
     category: string;
     question: string;
+    helpText?: string;
     options: string[];
     followUpId: string | null;
     selectedScore: number | null;

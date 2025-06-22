@@ -29,7 +29,7 @@ export async function loadQuestionsFromCSV(fetch: fetch): Promise<Question[]> {
             const line = lines[i].trim();
             if (!line) continue;
 
-            const [questionId, category, question, ...options] = line.split(';');
+            const [questionId, category, question, helpText, ...options] = line.split(';');
             const id = parseInt(questionId);
 
             // Validate question structure
@@ -55,6 +55,7 @@ export async function loadQuestionsFromCSV(fetch: fetch): Promise<Question[]> {
                 id,
                 category,
                 question,
+                helpText,
                 options: options.slice(0, 5),
                 followUpId: options[5] || null,
                 selectedScore: null
