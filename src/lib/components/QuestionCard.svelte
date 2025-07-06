@@ -2,6 +2,7 @@
 	import { goto } from '$app/navigation';
 	import { Button } from '$lib/components/ui/button';
 	import { Card, CardContent } from '$lib/components/ui/card';
+	import { HELP_VISIBILITY_KEY } from '$lib/constants';
 	import { saveProgress, getStartupInfo } from '$lib/utils/questionnaire';
 	import { HelpCircle, Loader2, Sparkles } from 'lucide-svelte';
 	import { onMount } from 'svelte';
@@ -23,16 +24,29 @@
 	let loadingInterval: ReturnType<typeof setInterval> | undefined;
 
 	const loadingMessages = [
-		"Lade Hilfestellung...",
+		"Lade Spickzettel...",
 		"Kleinen Moment noch..."
 	];
 
+
 	onMount(() => {
+		// Load help visibility state from localStorage
+		const savedHelpVisibility = localStorage.getItem(HELP_VISIBILITY_KEY);
+		if (savedHelpVisibility === 'true') {
+			fetchHelpText();
+			showHelp = true;
+		}
+
 		return () => {
 			if (loadingInterval) {
 				clearInterval(loadingInterval);
 			}
 		};
+	});
+
+	$effect(() => {
+		// Save help visibility state to localStorage whenever it changes
+		localStorage.setItem(HELP_VISIBILITY_KEY, showHelp.toString());
 	});
 
 	$effect(() => {
@@ -164,7 +178,7 @@
 							</div>
 						{:else}
 							<Sparkles size="16" class="mt-0.5 min-w-4" />
-							<p class=" ">Keine Hilfestellung verfügbar.</p>
+							<p class=" ">Kein Spickzettel verfügbar.</p>
 						{/if}
 					</div>
 				</CardContent>

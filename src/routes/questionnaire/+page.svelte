@@ -3,7 +3,7 @@
 	import { Button } from '$lib/components/ui/button';
 	import { ArrowRight, Play, Upload } from 'lucide-svelte';
 	import { goto } from '$app/navigation';
-	import { STORAGE_KEY } from '$lib/constants';
+	import { HELP_VISIBILITY_KEY, STORAGE_KEY } from '$lib/constants';
 	import { getNextUnansweredQuestion } from '$lib/utils/questionHelpers';
 	import { importProgress } from '$lib/utils/questionnaire';
 
@@ -12,6 +12,8 @@
 
 	const handleStart = () => {
 		localStorage.removeItem(STORAGE_KEY);
+		localStorage.removeItem(HELP_VISIBILITY_KEY);
+
 		goto('/questionnaire/startup-info');
 	};
 
