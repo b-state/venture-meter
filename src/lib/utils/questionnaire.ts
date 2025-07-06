@@ -6,7 +6,6 @@ const isBrowser = typeof window !== 'undefined';
 export async function loadQuestionsFromCSV(fetch: fetch): Promise<Question[]> {
     try {
         const response = await fetch('/questionnaire.csv');
-        
         if (!response.ok) {
             throw new Error(`Failed to load CSV: ${response.status} ${response.statusText}`);
         }

@@ -4,6 +4,7 @@
 	import { Card, CardContent } from '$lib/components/ui/card';
 	import { saveProgress, getStartupInfo } from '$lib/utils/questionnaire';
 	import { HelpCircle, Loader2, Sparkles } from 'lucide-svelte';
+	import { onMount } from 'svelte';
 
 	let { question, options, questionId, selectedScore, onAnswer } = $props<{
 		question: string;
@@ -18,6 +19,35 @@
 	let showHelp = $state(false);
 	let helpText = $state<string | null>(null);
 	let isLoadingHelp = $state(false);
+	let loadingMessageIndex = $state(0);
+	let loadingInterval: ReturnType<typeof setInterval> | undefined;
+
+	const loadingMessages = [
+		"Lade Hilfestellung...",
+		"Kleinen Moment noch..."
+	];
+
+	onMount(() => {
+		return () => {
+			if (loadingInterval) {
+				clearInterval(loadingInterval);
+			}
+		};
+	});
+
+	$effect(() => {
+		if (isLoadingHelp) {
+			loadingInterval = setInterval(() => {
+				loadingMessageIndex = (loadingMessageIndex + 1) % loadingMessages.length;
+			}, 3000);
+		} else {
+			if (loadingInterval) {
+				clearInterval(loadingInterval);
+				loadingInterval = undefined;
+			}
+			loadingMessageIndex = 0;
+		}
+	});
 
 	async function handleAnswer(optionIndex: number) {
 		// optionIndex is 0-based, but score is 1-based
@@ -124,11 +154,14 @@
 						{#if isLoadingHelp}
 							<div class="flex items-center gap-2">
 								<Loader2 size="16" class="animate-spin" />
-								<p class="">Lade Hilfestellung...</p>
+								<p class="">{loadingMessages[loadingMessageIndex]}</p>
 							</div>
 						{:else if helpText}
 							<Sparkles size="16" class="mt-0.5 min-w-4" />
-							<p class="overflow-y-auto max-h-96">{helpText}</p>
+							<div class="relative  ">
+								<p class="pb-8 overflow-y-auto max-h-96 whitespace-pre-wrap">{helpText}</p>
+								<div class="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-background to-transparent pointer-events-none"></div>
+							</div>
 						{:else}
 							<Sparkles size="16" class="mt-0.5 min-w-4" />
 							<p class=" ">Keine Hilfestellung verfügbar.</p>

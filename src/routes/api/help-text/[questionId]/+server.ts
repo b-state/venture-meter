@@ -17,7 +17,6 @@ export const GET: RequestHandler = async ({ params, fetch, url }) => {
 
         // Find the specific question by ID
         const question = questions.find(q => q.id === questionId);
-
         if (!question) {
             return json({ error: 'Question not found' }, { status: 404 });
         }
@@ -27,6 +26,16 @@ export const GET: RequestHandler = async ({ params, fetch, url }) => {
         const product_category = url.searchParams.get('productCategory') || '';
         const target_customers = url.searchParams.get('targetCustomers') || '';
 
+        const inputMessage = `
+        Startup Daten:
+        Industry: ${industry}
+        Produkt Kategorie: ${product_category}
+        Zielgruppe: ${target_customers}
+
+        Frage: ${question.question}
+        Antworten: ${question.options.join('\n ')}
+        `;
+        console.log(inputMessage);
 
         const baseUrl = "http://188.245.235.247";
         const apiKey = "sk-21s0AMJgdrb-Uw-4lUD-YJwI_RuUqfaOSfgCuuLNXFQ";
@@ -37,7 +46,7 @@ export const GET: RequestHandler = async ({ params, fetch, url }) => {
         const stream = new ReadableStream({
             async start(controller) {
               try {
-                const response = await flow.stream("Hello, how are you?");
+                const response = await flow.stream(inputMessage);
                 for await (const event of response) {
                   if (event.event === 'token') {
                     controller.enqueue(event.data.chunk); // Text-Chunk hinzufügen
