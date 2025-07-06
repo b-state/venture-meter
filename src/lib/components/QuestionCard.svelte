@@ -4,7 +4,6 @@
 	import { Card, CardContent } from '$lib/components/ui/card';
 	import { saveProgress, getStartupInfo } from '$lib/utils/questionnaire';
 	import { HelpCircle, Loader2, Sparkles } from 'lucide-svelte';
-	import { onMount } from 'svelte';
 
 	let { question, options, questionId, selectedScore, onAnswer } = $props<{
 		question: string;
@@ -70,7 +69,6 @@
 					helpText += chunk;
 					console.log(chunk);
 				}
-
 			} else {
 				isLoadingHelp = false;
 				console.error('Failed to fetch help text');
@@ -79,61 +77,65 @@
 		} catch (error) {
 			console.error('Error fetching help text:', error);
 			helpText = null;
-		} 
+		}
 	}
 </script>
 
-<div class="flex w-full flex-col gap-2">
-	<div
-		class="mb-4 flex items-start justify-between gap-4 rounded bg-muted px-4 py-4 ring-1 ring-muted"
-	>
-		<h2 class="text-wrap text-2xl font-bold">{question}</h2>
+<div class="flex w-full gap-5">
+	<div class="flex w-2/3 grow flex-col gap-2">
+		<div
+			class="mb-4 flex items-start justify-between gap-4 rounded bg-muted px-4 py-4 ring-1 ring-muted"
+		>
+			<h2 class="text-wrap text-2xl font-bold">{question}</h2>
+		</div>
+
+		{#each options as option, index}
+			<Button
+				variant={selectedScore === index + 1 ? 'default' : 'outline'}
+				class="h-fit justify-start text-wrap px-10 text-left text-lg {selectedScore !== index + 1
+					? 'hover:bg-muted'
+					: ''}"
+				onclick={() => handleAnswer(index)}
+			>
+				{option}
+			</Button>
+		{/each}
+
+		<Button
+			variant="ghost"
+			size="sm"
+			class="flex w-fit gap-2 self-end text-muted-foreground"
+			onclick={toggleHelp}
+		>
+			<HelpCircle size="20" /> Spickzettel {showHelp ? 'ausblenden' : 'anzeigen'}
+		</Button>
 	</div>
 
-	{#each options as option, index}
-		<Button
-			variant={selectedScore === index + 1 ? 'default' : 'outline'}
-			class="h-fit justify-start text-wrap px-10 text-left text-lg {selectedScore !== index + 1
-				? 'hover:bg-muted'
-				: ''}"
-			onclick={() => handleAnswer(index)}
-		>
-			{option}
-		</Button>
-	{/each}
-
-	<Button
-		variant="ghost"
-		size="sm"
-		class="flex w-fit gap-2 self-end text-muted-foreground"
-		onclick={toggleHelp}
-	>
-		<HelpCircle size="20" /> Spickzettel {showHelp ? 'ausblenden' : 'anzeigen'}
-	</Button>
-
 	{#if showHelp}
-		<Card class="relative mt-10 bg-background text-foreground">
-			<div
-				class="absolute inset-0 rounded-lg bg-gradient-to-r from-pink-400/60 via-violet-400/60 to-pink-400/60 p-[1px]"
-			>
-				<div class="h-full w-full rounded-lg bg-background"></div>
-			</div>
-			<CardContent class="relative z-10 p-4 ">
-				<div class="flex items-start gap-2">
-					{#if isLoadingHelp}
-						<div class="flex items-center gap-2">
-							<Loader2 size="16" class="animate-spin" />
-							<p class=" ">Lade Hilfestellung...</p>
-						</div>
-					{:else if helpText}
-						<Sparkles size="16" class="mt-0.5 min-w-4" />
-						<p class=" ">{helpText}</p>
-					{:else}
-						<Sparkles size="16" class="mt-0.5 min-w-4" />
-						<p class=" ">Keine Hilfestellung verfügbar.</p>
-					{/if}
+		<div class="w-1/3">
+			<Card class="relative bg-background text-foreground ">
+				<div
+					class="absolute inset-0 rounded-lg bg-gradient-to-r from-pink-400/60 via-violet-400/60 to-pink-400/60 p-[1px]"
+				>
+					<div class="h-full w-full rounded-lg bg-background"></div>
 				</div>
-			</CardContent>
-		</Card>
+				<CardContent class="relative z-10 p-4 max-h-fit">
+					<div class="flex items-start gap-2">
+						{#if isLoadingHelp}
+							<div class="flex items-center gap-2">
+								<Loader2 size="16" class="animate-spin" />
+								<p class="">Lade Hilfestellung...</p>
+							</div>
+						{:else if helpText}
+							<Sparkles size="16" class="mt-0.5 min-w-4" />
+							<p class="overflow-y-auto max-h-96">{helpText}</p>
+						{:else}
+							<Sparkles size="16" class="mt-0.5 min-w-4" />
+							<p class=" ">Keine Hilfestellung verfügbar.</p>
+						{/if}
+					</div>
+				</CardContent>
+			</Card>
+		</div>
 	{/if}
 </div>

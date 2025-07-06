@@ -83,8 +83,8 @@
 			</div>
 		</div>
 	</aside>
-	<main class="my-10 flex w-screen flex-col items-center justify-center px-40">
-		<div class="flex h-full w-full max-w-4xl flex-col justify-center">
+	<main class="my-10 flex w-screen flex-col items-center justify-center px-10">
+		<div class="flex h-full w-full  flex-col justify-center">
 			{#if currentQuestion}
 				{#key currentQuestion.id}
 					<QuestionCard
