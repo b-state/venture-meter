@@ -16,7 +16,7 @@
 
 	// Ensure we always use the prop value, not local state
 	let currentSelectedScore = $derived(selectedScore);
-	let showHelp = $state(true);
+	let showHelp = $state(false);
 	let helpText = $state<string | null>(null);
 	let isLoadingHelp = $state(false);
 
@@ -47,7 +47,7 @@
 		try {
 			// Get startup info from localStorage
 			const startupInfo = getStartupInfo();
-			
+
 			// Build query parameters
 			const params = new URLSearchParams();
 			if (startupInfo) {
@@ -55,21 +55,31 @@
 				params.append('productCategory', startupInfo.productCategory);
 				params.append('targetCustomers', startupInfo.targetCustomers);
 			}
-			
+
 			const response = await fetch(`/api/help-text/${questionId}?${params.toString()}`);
+
 			if (response.ok) {
-				const data = await response.json();
-				helpText = data.helpText;
+				isLoadingHelp = false;
+				const reader = response.body!.getReader();
+				helpText = '';
+
+				while (true) {
+					const { done, value } = await reader.read();
+					if (done) break;
+					const chunk = new TextDecoder().decode(value);
+					helpText += chunk;
+					console.log(chunk);
+				}
+
 			} else {
+				isLoadingHelp = false;
 				console.error('Failed to fetch help text');
 				helpText = null;
 			}
 		} catch (error) {
 			console.error('Error fetching help text:', error);
 			helpText = null;
-		} finally {
-			isLoadingHelp = false;
-		}
+		} 
 	}
 </script>
 
@@ -91,32 +101,35 @@
 			{option}
 		</Button>
 	{/each}
-	
+
 	<Button
 		variant="ghost"
 		size="sm"
-		class="flex w-fit gap-2 text-muted-foreground self-end"
+		class="flex w-fit gap-2 self-end text-muted-foreground"
 		onclick={toggleHelp}
 	>
 		<HelpCircle size="20" /> Spickzettel {showHelp ? 'ausblenden' : 'anzeigen'}
 	</Button>
 
 	{#if showHelp}
-		<Card class="mt-10 bg-background text-foreground relative">
-			<div class="absolute inset-0 rounded-lg bg-gradient-to-r from-pink-400/60 via-violet-400/60 to-pink-400/60 p-[1px]">
+		<Card class="relative mt-10 bg-background text-foreground">
+			<div
+				class="absolute inset-0 rounded-lg bg-gradient-to-r from-pink-400/60 via-violet-400/60 to-pink-400/60 p-[1px]"
+			>
 				<div class="h-full w-full rounded-lg bg-background"></div>
 			</div>
-			<CardContent class="p-4 relative z-10 ">
+			<CardContent class="relative z-10 p-4 ">
 				<div class="flex items-start gap-2">
-					<Sparkles size="16" class="mt-0.5" />
 					{#if isLoadingHelp}
 						<div class="flex items-center gap-2">
 							<Loader2 size="16" class="animate-spin" />
 							<p class=" ">Lade Hilfestellung...</p>
 						</div>
 					{:else if helpText}
+						<Sparkles size="16" class="mt-0.5 min-w-4" />
 						<p class=" ">{helpText}</p>
 					{:else}
+						<Sparkles size="16" class="mt-0.5 min-w-4" />
 						<p class=" ">Keine Hilfestellung verfügbar.</p>
 					{/if}
 				</div>

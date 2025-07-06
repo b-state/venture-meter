@@ -2,6 +2,7 @@ import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { loadQuestionsFromCSV } from '$lib/utils/questionnaire';
 import { LANGFLOW_QUESTION_HELPER_API_URL } from '$env/static/private';
+import { LangflowClient } from "@datastax/langflow-client"
 
 export const GET: RequestHandler = async ({ params, fetch, url }) => {
     const questionId = parseInt(params.questionId);
@@ -26,38 +27,37 @@ export const GET: RequestHandler = async ({ params, fetch, url }) => {
         const product_category = url.searchParams.get('productCategory') || '';
         const target_customers = url.searchParams.get('targetCustomers') || '';
 
-        const payload = {
-            "output_type": "text",
-            "input_type": "text",
 
-            "tweaks": {
-                "TextInput-ypF2F": {
-                    "input_value": `Frage: ${question.question}, Antworten: ${question.options.map((opt, i) => `${i + 1}. ${opt}`).join(', ')}`
-                },
-                "TextInput-LlCwM": {
-                    "input_value": `${industry}`
-                },
-                "TextInput-hv3DB": {
-                    "input_value": `${product_category}`
-                },
-                "TextInput-7Zgtd": {
-                    "input_value": `${target_customers}`
+        const baseUrl = "http://188.245.235.247";
+        const apiKey = "sk-21s0AMJgdrb-Uw-4lUD-YJwI_RuUqfaOSfgCuuLNXFQ";
+        const client = new LangflowClient({baseUrl,apiKey });
+        const flowId = "520c474a-ef2b-49f0-878f-15c3ed0eb9f3";
+        const flow = client.flow(flowId);
+
+        const stream = new ReadableStream({
+            async start(controller) {
+              try {
+                const response = await flow.stream("Hello, how are you?");
+                for await (const event of response) {
+                  if (event.event === 'token') {
+                    controller.enqueue(event.data.chunk); // Text-Chunk hinzufügen
+                  }
                 }
+                controller.close(); // Stream beenden
+              } catch (error) {
+                controller.error(error); // Fehler an Client weitergeben
+              }
             }
-        };
+          });
 
-        const options = {
-            method: 'POST',
+          return new Response(stream, {
             headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(payload)
-        };
+              'Content-Type': 'text/plain',
+              'Transfer-Encoding': 'chunked' // wichtig für echtes Streaming
+            }
+          });
 
-        const helpText = await fetch(`${LANGFLOW_QUESTION_HELPER_API_URL}`, options)
-            .then(response => response.json())
-        console.log(helpText)
-        return json({ helpText });
+
     } catch (error) {
         console.error('Error fetching help text:', error);
         return json({ error: 'Failed to fetch help text' }, { status: 500 });
