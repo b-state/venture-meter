@@ -59,7 +59,7 @@
                 <div class="grid gap-6 md:grid-cols-2">
                     <!-- Low Scores (1-3) -->
                     <div class="space-y-4">
-                        <h3 class="text-lg font-semibold text-blue-500">Verbesserungspotenzial (1-3)</h3>
+                        <h3 class="text-lg font-semibold text-blue-500">Verbesserungspotenzial (Stufen 1 & 2)</h3>
                         {#if category.lowScores.length === 0}
                             <p class="text-sm text-muted-foreground">Keine Fragen in diesem Bereich</p>
                         {:else}
@@ -67,16 +67,16 @@
                                 {#each category.lowScores as question}
                                     <li class="rounded-lg border p-3">
                                         <p class="text-sm">{question.question}</p>
-                                        <p class="mt-1 text-xs text-muted-foreground">Bewertung: {question.selectedScore}/5</p>
+                                        <p class="mt-1 text-xs text-muted-foreground">Bewertung: {question.selectedScore}/4</p>
                                     </li>
                                 {/each}
                             </ul>
                         {/if}
                     </div>
 
-                    <!-- High Scores (4-5) -->
+                    <!-- High Scores (4) -->
                     <div class="space-y-4">
-                        <h3 class="text-lg font-semibold text-green-500">Stärken (4-5)</h3>
+                        <h3 class="text-lg font-semibold text-green-500">Stärken (Stufen 3 & 4)</h3>
                         {#if category.highScores.length === 0}
                             <p class="text-sm text-muted-foreground">Keine Fragen in diesem Bereich</p>
                         {:else}
@@ -84,7 +84,7 @@
                                 {#each category.highScores as question}
                                     <li class="rounded-lg border p-3">
                                         <p class="text-sm">{question.question}</p>
-                                        <p class="mt-1 text-xs text-muted-foreground">Bewertung: {question.selectedScore}/5</p>
+                                        <p class="mt-1 text-xs text-muted-foreground">Bewertung: {question.selectedScore}/4</p>
                                     </li>
                                 {/each}
                             </ul>

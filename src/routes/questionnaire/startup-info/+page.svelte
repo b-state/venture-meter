@@ -85,10 +85,11 @@
 			<Card.Content class="space-y-6">
 				<!-- Industry -->
 				<div class="space-y-3">
-					<label class="text-sm font-medium">In welcher Branche arbeitet dein Startup?</label>
+					<label class="text-sm font-medium" for="industry">In welcher Branche arbeitet dein Startup?</label>
 					<div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
 						{#each industries as industryOption}
 							<Button
+								id="industry"
 								variant={industry === industryOption ? 'default' : 'outline'}
 								class="justify-start text-left"
 								onclick={() => (industry = industryOption)}
@@ -100,9 +101,10 @@
 					
 					{#if industry === 'Sonstiges (selbst definieren)'}
 						<div class="space-y-2">
-							<label class="text-sm font-medium">Bitte definiere deine Branche:</label>
+							<label class="text-sm font-medium" for="customIndustry">Bitte definiere deine Branche:</label>
 							<input
 								type="text"
+								id="customIndustry"
 								bind:value={customIndustry}
 								placeholder="z.B. Gaming, Fashion, etc."
 								class="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
@@ -113,10 +115,11 @@
 
 				<!-- productCategory -->
 				<div class="space-y-3">
-					<label class="text-sm font-medium">Welche Art von Technologie/Produkt entwickelt ihr?</label>
+					<label class="text-sm font-medium" for="productCategory">Welche Art von Technologie/Produkt entwickelt ihr?</label>
 					<div class="grid grid-cols-1 gap-3">
 						{#each technologies as techOption}
 							<Button
+								id="productCategory"
 								variant={productCategory === techOption ? 'default' : 'outline'}
 								class="justify-start text-left"
 								onclick={() => (productCategory = techOption)}
@@ -129,10 +132,11 @@
 
 				<!-- Target Customers -->
 				<div class="space-y-3">
-					<label class="text-sm font-medium">Für wen richtet sich dein Produkt?</label>
+					<label class="text-sm font-medium" for="targetCustomers">Für wen richtet sich dein Produkt?</label>
 					<div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
 						{#each customers as customerOption}
 							<Button
+								id="targetCustomers"
 								variant={targetCustomers === customerOption ? 'default' : 'outline'}
 								class="justify-start text-left"
 								onclick={() => (targetCustomers = customerOption)}

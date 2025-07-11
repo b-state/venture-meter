@@ -4,7 +4,7 @@
 	import * as Card from '$lib/components/ui/card';
 	import { Share2, Download, ArrowLeft, Sparkles } from 'lucide-svelte';
 	import { goto } from '$app/navigation';
-	import { STORAGE_KEY } from '$lib/constants';
+	import { CATEGORY_ORDER, STORAGE_KEY } from '$lib/constants';
 	import CategoryScore from '$lib/components/CategoryScore.svelte';
 	import RadarChart from '$lib/components/RadarChart.svelte';
 	import DetailedAnalysis from '$lib/components/DetailedAnalysis.svelte';
@@ -17,39 +17,44 @@
 	let totalScore: number = 0;
 	let startupInfo: StartupInfo | null = null;
 
+	let unlockedCategories: string[] = [];
+	let totalUnlocked: number = 0;
+
 	onMount(() => {
 		const storedData = getStoredData();
 		startupInfo = getStartupInfo();
 		
 		if (storedData) {
-			// Calculate average score per category
-			const categoryScores = new Map<string, { total: number; count: number }>();
-			let totalQuestions = 0;
-			let totalScoreSum = 0;
-
+			// Group questions by category
+			const categoryQuestions = new Map<string, Question[]>();
+			
 			storedData.questions.forEach((question) => {
-				if (question.selectedScore !== null) {
-					const current = categoryScores.get(question.category) || { total: 0, count: 0 };
-					current.total += question.selectedScore;
-					current.count += 1;
-					categoryScores.set(question.category, current);
-
-					// Add to total score calculation
-					totalScoreSum += question.selectedScore;
-					totalQuestions += 1;
+				if (!categoryQuestions.has(question.category)) {
+					categoryQuestions.set(question.category, []);
 				}
+				categoryQuestions.get(question.category)!.push(question);
 			});
 
-			// Calculate total average score
-			totalScore = totalQuestions > 0 ? Math.round((totalScoreSum / totalQuestions) * 10) / 10 : 0;
+			// Check which categories are unlocked (all questions answered with 3 or 4)
+			unlockedCategories = [];
+			results = {};
 
-			// Convert to 1-5 scale scores
-			results = Object.fromEntries(
-				Array.from(categoryScores.entries()).map(([category, { total, count }]) => [
-					category,
-					Math.round((total / count) * 10) / 10 // Round to 1 decimal place
-				])
-			);
+			CATEGORY_ORDER.forEach((category) => {
+				const questions = categoryQuestions.get(category) || [];
+				const answeredQuestions = questions.filter(q => q.selectedScore !== null);
+				const highScoreQuestions = answeredQuestions.filter(q => q.selectedScore === 3 || q.selectedScore === 4);
+				const isUnlocked = answeredQuestions.length > 0 && 
+					answeredQuestions.length === questions.length && 
+					highScoreQuestions.length === answeredQuestions.length;
+				if (isUnlocked) {
+					unlockedCategories.push(category);
+				}
+				const totalScore = answeredQuestions.reduce((sum, q) => sum + (q.selectedScore || 0), 0);
+				const avgScore = answeredQuestions.length > 0 ? totalScore / answeredQuestions.length : 0;
+				results[category] = Math.round(avgScore * 10) / 10;
+			});
+
+			totalUnlocked = unlockedCategories.length;
 		}
 		loading = false;
 	});
@@ -59,7 +64,7 @@
 	};
 
 	$: scoreColor =
-		totalScore >= 4 ? 'text-green-500' : totalScore >= 3 ? 'text-lime-500' : 'text-blue-700';
+		totalScore >= 3 ? 'text-green-500' : totalScore >= 2 ? 'text-lime-500' : 'text-blue-700';
 </script>
 
 <div class="min-h-screen bg-gradient-to-b from-background to-muted p-6">
@@ -110,9 +115,7 @@
 							{/each}
 						</div>
 						<div class="mt-8 text-center text-sm text-muted-foreground">
-							{#if totalScore >= 5}
-								{'Text über Kategorie 5 einfügen'}
-							{:else if totalScore >= 4}
+							{#if totalScore >= 4}
 								{'Text über Kategorie 4 einfügen'}
 							{:else if totalScore >= 3}
 								{'Text über Kategorie 3 einfügen'}
@@ -162,77 +165,69 @@
 						<Card.Content>
 							<div class="">
 								<p class="text-sm text-muted-foreground">
-									{#if totalScore >= 4.5}
+									{#if totalScore >= 3.5}
 										Eure Antworten zeigen: Ihr arbeitet datenbasiert, nutzerzentriert und mit einem
 										klaren Lernansatz. Ihr lebt kontinuierliche Verbesserung und passt euch aktiv an
 										neue Erkenntnisse und Entwicklungen an – stark!
-									{:else if totalScore >= 4}
+									{:else if totalScore >= 3}
 										Ihr habt klare Prozesse, überprüft eure Annahmen regelmäßig und optimiert aktiv.
 										Nutzerfeedback, Daten und Reflexion fließen systematisch in eure Entscheidungen
 										ein – das ist ein starkes Fundament für Wachstum.
-									{:else if totalScore >= 3}
+									{:else if totalScore >= 2}
 										Euer Startup verfolgt einen klareren Plan – Prozesse, Ziele und Modelle sind
 										ausgearbeitet. Jetzt geht es darum, eure Methoden zu überprüfen und belastbarer
-										zu machen, z. B. durch Nutzerfeedback oder Marktvalidierung.
-									{:else if totalScore >= 2}
+										zu machen, z. B. durch Nutzerfeedback oder Marktvalidierung.
+									{:else}
 										Ihr habt euch bereits Gedanken gemacht und erste Abläufe oder Annahmen
 										entwickelt. Um auf das nächste Level zu kommen, solltet ihr diese nun
 										systematisieren, dokumentieren und im Team abstimmen.
-									{:else}
-										Eure Antworten zeigen, dass ihr viele Themen noch nicht strukturiert angegangen
-										seid. Das ist ganz normal in einer frühen Phase. Jetzt ist ein guter Moment, um
-										erste Zuständigkeiten, Zielbilder und Hypothesen zu definieren.
 									{/if}
 								</p>
-								<p class="text-sm text-muted-foreground">
-									Aktuell befindet sich euer Startup in der Stufe:
+								<p class="text-sm text-muted-foreground mt-6">
+									Aktuell befindet sich das Startup auf der Stufe:
 								</p>
 								<div class="my-3 text-center text-8xl font-bold {scoreColor}">
-									{totalScore.toFixed(1).toString().replace('.', ',')}
+									{totalUnlocked}
 								</div>
 							</div>
+							{#if totalUnlocked > 0}
 							<div class="space-y-4">
-								<div class=" rounded-2xl p-2">
-									<h3 class="font-semibold">Stufe 1 – Initial</h3>
-									<p class="text-sm">
-										Es gibt noch keine klaren Prozesse, Strukturen oder Routinen. Alles ist ad hoc
-										und stark abhängig von einzelnen Personen.
+								<div class="rounded-2xl p-2">
+									<h3 class="font-semibold {unlockedCategories.includes('Ideen- und Teamfindung') ? 'text-white' : 'text-muted'}">1. Ideen- und Teamfindung</h3>
+									<p class="text-sm {unlockedCategories.includes('Ideen- und Teamfindung') ? 'text-white' : 'text-muted'}">
+										Team, Motivation, Zielgruppe, Marktsegmentierung.
 									</p>
 								</div>
-
-								<div class=" rounded-2xl p-2">
-									<h3 class="font-semibold">Stufe 2 – Definiert</h3>
-									<p class="text-sm">
-										Erste Vorstellungen, Modelle oder Zuständigkeiten sind vorhanden. Dinge sind
-										teilweise dokumentiert, aber noch nicht konsequent umgesetzt.
+								<div class="rounded-2xl p-2">
+									<h3 class="font-semibold {unlockedCategories.includes('Chancen Validierung') ? 'text-white' : 'text-muted'}">2. Chancen Validierung</h3>
+									<p class="text-sm {unlockedCategories.includes('Chancen Validierung') ? 'text-white' : 'text-muted'}">
+										Value Proposition, Problem-Solution-Fit, Geschäftsmodell.
 									</p>
 								</div>
-
-								<div class=" rounded-2xl p-2">
-									<h3 class="font-semibold">Stufe 3 – Systematisiert</h3>
-									<p class="text-sm">
-										Prozesse und Vorgehensweisen sind etabliert, regelmäßig im Einsatz und im Team
-										abgestimmt.
+								<div class="rounded-2xl p-2">
+									<h3 class="font-semibold {unlockedCategories.includes('Marktgerechte Lösungsfindung') ? 'text-white' : 'text-muted'}">3. Marktgerechte Lösungsfindung</h3>
+									<p class="text-sm {unlockedCategories.includes('Marktgerechte Lösungsfindung') ? 'text-white' : 'text-muted'}">
+										Nutzerfeedback, Marktvalidierung, Wettbewerbsanalyse.
 									</p>
 								</div>
-
-								<div class=" rounded-2xl p-2">
-									<h3 class="font-semibold">Stufe 4 – Validiert & Reflektiert</h3>
-									<p class="text-sm">
-										Das Vorgehen wird aktiv überprüft, z. B. durch Nutzerfeedback, Daten oder
-										strukturierte Rückmeldeschleifen, und bei Bedarf angepasst.
+								<div class="rounded-2xl p-2">
+									<h3 class="font-semibold {unlockedCategories.includes('Übergang zum Markt-Start') ? 'text-white' : 'text-muted'}">4. Übergang zum Markt-Start</h3>
+									<p class="text-sm {unlockedCategories.includes('Übergang zum Markt-Start') ? 'text-white' : 'text-muted'}">
+										Markteintrittsstrategie, Ressourcenplanung, Teamentwicklung.
 									</p>
 								</div>
-
-								<div class=" rounded-2xl p-2">
-									<h3 class="font-semibold">Stufe 5 – Lernend & Optimierend</h3>
-									<p class="text-sm">
-										Kontinuierliche Verbesserung ist fester Bestandteil der Arbeitsweise.
-										Entscheidungen basieren auf fundierten Erkenntnissen, und Lernen findet aktiv
-										statt – z. B. durch Co-Creation, Experimente oder datenbasierte Optimierung.
+								<div class="rounded-2xl p-2">
+									<h3 class="font-semibold {unlockedCategories.includes('Markteintritt und Wachstum') ? 'text-white' : 'text-muted'}">5. Markteintritt und Wachstum</h3>
+									<p class="text-sm {unlockedCategories.includes('Markteintritt und Wachstum') ? 'text-white' : 'text-muted'}">
+										Skalierung, Wachstum, Qualitätssicherung.
 									</p>
 								</div>
 							</div>
+							{:else}
+								<p class="text-sm text-muted-foreground">
+									Es wurden zu wenig Fragen auf den Antwortstufen 3 und 4 beantwortet. Nur so wird eine Kategorie als erreicht gewertet.
+								</p>
+							{/if}
 						</Card.Content>
 					</Card.Root>
 					<Card.Root>
@@ -242,8 +237,8 @@
 						<Card.Content>
 							<p class="pb-6 text-sm text-muted-foreground">
 								Hier kannst du deine Gesamtbewertung sehen. Je höher die Bewertung, desto besser ist
-								die Kategorie für dich. Ein Score von unter 3 bedeutet, dass du in dieser Kategorie
-								noch Verbesserungspotenzial hast. 4-5 bedeutet, dass du in dieser Kategorie sehr gut
+								die Kategorie für dich. Ein Score von unter 2,5 bedeutet, dass du in dieser Kategorie
+								noch Verbesserungspotenzial hast. 3-4 bedeutet, dass du in dieser Kategorie sehr gut
 								abschneidest.
 							</p>
 							<div class="aspect-square">

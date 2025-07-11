@@ -17,6 +17,9 @@
 	let currentId = $derived(parseInt(page.params.id));
 	let progress = $derived((currentId / totalQuestions) * 100);
 	let categories: { title: string; questionCount: number; answeredCount: number }[] = $state([]);
+
+	let isAfterLastQuestion = $derived(currentId === totalQuestions + 1);
+
 	onMount(async () => {
 		updateCategories();
 	});
@@ -84,7 +87,7 @@
 		</div>
 	</aside>
 	<main class="my-10 flex w-screen flex-col items-center justify-center px-10">
-		<div class="flex h-full w-full  flex-col justify-center">
+		<div class="flex h-full w-full flex-col justify-center">
 			{#if currentQuestion}
 				{#key currentQuestion.id}
 					<QuestionCard
@@ -95,8 +98,14 @@
 						onAnswer={updateCategories}
 					/>
 				{/key}
+			{:else if isAfterLastQuestion}
+				<div class="flex flex-col items-center justify-center">
+					<p>Alle Fragen wurden beantwortet. Unten geht es zur Auswertung.</p>
+				</div>
 			{:else}
-				<p>Frage nicht gefunden</p>
+				<div class="flex flex-col items-center justify-center">
+					<p>Frage nicht gefunden.</p>
+				</div>
 			{/if}
 		</div>
 		<div class="mt-auto flex w-full flex-col gap-2">

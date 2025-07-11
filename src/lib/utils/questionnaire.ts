@@ -25,7 +25,7 @@ export async function loadQuestionsFromCSV(fetch: fetch): Promise<Question[]> {
             const line = lines[i].trim();
             if (!line) continue;
 
-            const [questionId, category, question, helpText, ...options] = line.split(';');
+            const [questionId, category, question, ...options] = line.split(';');
             const id = parseInt(questionId);
 
             // Validate question structure
@@ -41,8 +41,8 @@ export async function loadQuestionsFromCSV(fetch: fetch): Promise<Question[]> {
                 console.error(`Missing question text at line ${i + 1}`);
                 continue;
             }
-            if (options.length < 5) {
-                console.error(`Question ${id} has only ${options.length} answers, expected 5`);
+            if (options.length < 4) {
+                console.error(`Question ${id} has only ${options.length} answers, expected 4`);
                 continue;
             }
 
@@ -51,9 +51,7 @@ export async function loadQuestionsFromCSV(fetch: fetch): Promise<Question[]> {
                 id,
                 category,
                 question,
-                helpText,
-                options: options.slice(0, 5),
-                followUpId: options[5] || null,
+                options: options.slice(0, 4),
                 selectedScore: null
             });
         }
@@ -124,7 +122,7 @@ export async function saveProgress(questionId: number, score: number): Promise<v
         throw new Error('Invalid question ID');
     }
     
-    if (typeof score !== 'number' || score < 1 || score > 5) {
+    if (typeof score !== 'number' || score < 1 || score > 4) {
         throw new Error('Invalid score value');
     }
 

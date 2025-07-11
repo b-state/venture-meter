@@ -1,4 +1,5 @@
 import { goto } from "$app/navigation";
+import { CATEGORY_ORDER } from "$lib/constants";
 import { getStoredData, loadQuestionsFromCSV, storeData } from "./questionnaire";
 
 // Check if we're in a browser environment
@@ -99,5 +100,68 @@ export async function getAllQuestions(fetch: fetch): Promise<Question[]> {
     } catch (error) {
         console.error('Error getting all questions:', error);
         throw error;
+    }
+}
+
+export function isCategoryUnlocked(category: string): boolean {
+    if (!isBrowser) return false;
+
+    try {
+        const stored = getStoredData();
+        if (!stored) return false;
+
+        const categoryQuestions = stored.questions.filter(q => q.category === category);
+        const answeredQuestions = categoryQuestions.filter(q => q.selectedScore !== null);
+        const highScoreQuestions = answeredQuestions.filter(q => q.selectedScore === 3 || q.selectedScore === 4);
+
+        // Category is unlocked if all questions are answered with high scores (3 or 4)
+        return answeredQuestions.length > 0 && 
+               answeredQuestions.length === categoryQuestions.length && 
+               highScoreQuestions.length === answeredQuestions.length;
+    } catch (error) {
+        console.error('Error checking if category is unlocked:', error);
+        return false;
+    }
+}
+
+export function getNextAvailableQuestion(currentQuestionId: number): number | null {
+    if (!isBrowser) return null;
+
+    try {
+        const stored = getStoredData();
+        if (!stored) return null;
+
+        const currentQuestion = stored.questions.find(q => q.id === currentQuestionId);
+        if (!currentQuestion) return null;
+
+        const currentCategory = currentQuestion.category;
+        
+        // If current category is not unlocked, stay in this category
+        if (!isCategoryUnlocked(currentCategory)) {
+            // Find next unanswered question in current category
+            const categoryQuestions = stored.questions.filter(q => q.category === currentCategory);
+            const nextUnanswered = categoryQuestions.find(q => q.selectedScore === null);
+            return nextUnanswered ? nextUnanswered.id : null;
+        }
+
+        // If current category is unlocked, find next category
+        const currentCategoryIndex = CATEGORY_ORDER.indexOf(currentCategory);
+        
+        // Look for next category that needs completion
+        for (let i = currentCategoryIndex + 1; i < CATEGORY_ORDER.length; i++) {
+            const nextCategory = CATEGORY_ORDER[i];
+            if (!isCategoryUnlocked(nextCategory)) {
+                // Find first unanswered question in next category
+                const nextCategoryQuestions = stored.questions.filter(q => q.category === nextCategory);
+                const firstUnanswered = nextCategoryQuestions.find(q => q.selectedScore === null);
+                return firstUnanswered ? firstUnanswered.id : null;
+            }
+        }
+
+        // If all categories are unlocked, return null (go to results)
+        return null;
+    } catch (error) {
+        console.error('Error getting next available question:', error);
+        return null;
     }
 }

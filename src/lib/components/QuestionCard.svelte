@@ -98,9 +98,7 @@
 				params.append('productCategory', startupInfo.productCategory);
 				params.append('targetCustomers', startupInfo.targetCustomers);
 			}
-
 			const response = await fetch(`/api/help-text/${questionId}?${params.toString()}`);
-
 			if (response.ok) {
 				isLoadingHelp = false;
 				const reader = response.body!.getReader();
@@ -111,7 +109,6 @@
 					if (done) break;
 					const chunk = new TextDecoder().decode(value);
 					helpText += chunk;
-					console.log(chunk);
 				}
 			} else {
 				isLoadingHelp = false;
@@ -121,6 +118,8 @@
 		} catch (error) {
 			console.error('Error fetching help text:', error);
 			helpText = null;
+		} finally {
+			isLoadingHelp = false;
 		}
 	}
 </script>
@@ -148,7 +147,7 @@
 		<Button
 			variant="ghost"
 			size="sm"
-			class="flex w-fit gap-2 self-end text-muted-foreground"
+			class="flex w-fit gap-2 self-end text-muted-foreground animate-pulse"
 			onclick={toggleHelp}
 		>
 			<HelpCircle size="20" /> Spickzettel {showHelp ? 'ausblenden' : 'anzeigen'}
