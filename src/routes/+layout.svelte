@@ -10,7 +10,7 @@
 </script>
 
 <ModeWatcher />
-<header class="flex w-full items-center justify-between border-b h-16 px-5 sticky top-0 backdrop-blur-lg bg-background/80">
+<header class="flex w-full items-center justify-between border-b h-16 px-5 sticky top-0 backdrop-blur-lg bg-background/80 z-50">
 	<div class="w-48">
 		<a href="/" class="w-40">
 			<VentureMeterLogo />

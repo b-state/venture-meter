@@ -12,22 +12,22 @@
 	import { getStoredData, getStartupInfo } from '$lib/utils/questionnaire';
 	import { Progress } from '$lib/components/ui/progress';
 
-	let loading = true;
-	let results: Record<string, number> = {};
-	let totalScore: number = 0;
-	let startupInfo: StartupInfo | null = null;
+	let loading = $state(true);
+	let results: Record<string, number> = $state({});
+	let totalScore: number = $state(0);
+	let startupInfo: StartupInfo | null = $state(null);
 
-	let unlockedCategories: string[] = [];
-	let totalUnlocked: number = 0;
+	let unlockedCategories: string[] = $state([]);
+	let totalUnlocked: number = $state(0);
 
 	onMount(() => {
 		const storedData = getStoredData();
 		startupInfo = getStartupInfo();
-		
+
 		if (storedData) {
 			// Group questions by category
 			const categoryQuestions = new Map<string, Question[]>();
-			
+
 			storedData.questions.forEach((question) => {
 				if (!categoryQuestions.has(question.category)) {
 					categoryQuestions.set(question.category, []);
@@ -41,10 +41,13 @@
 
 			CATEGORY_ORDER.forEach((category) => {
 				const questions = categoryQuestions.get(category) || [];
-				const answeredQuestions = questions.filter(q => q.selectedScore !== null);
-				const highScoreQuestions = answeredQuestions.filter(q => q.selectedScore === 3 || q.selectedScore === 4);
-				const isUnlocked = answeredQuestions.length > 0 && 
-					answeredQuestions.length === questions.length && 
+				const answeredQuestions = questions.filter((q) => q.selectedScore !== null);
+				const highScoreQuestions = answeredQuestions.filter(
+					(q) => q.selectedScore === 3 || q.selectedScore === 4
+				);
+				const isUnlocked =
+					answeredQuestions.length > 0 &&
+					answeredQuestions.length === questions.length &&
 					highScoreQuestions.length === answeredQuestions.length;
 				if (isUnlocked) {
 					unlockedCategories.push(category);
@@ -62,9 +65,28 @@
 	const handleDownloadPDF = async () => {
 		await generatePDF();
 	};
+	let scoreColor = $derived(
+		totalScore >= 3 ? 'text-green-500' : totalScore >= 2 ? 'text-lime-500' : 'text-blue-700'
+	);
 
-	$: scoreColor =
-		totalScore >= 3 ? 'text-green-500' : totalScore >= 2 ? 'text-lime-500' : 'text-blue-700';
+	function getCategoryBoxClass(category: string, i: number) {
+		if (unlockedCategories.includes(category)) {
+			// Assign a color based on index or category
+			switch (i) {
+				case 0:
+					return 'bg-gradient-to-t from-blue-200/10 to-transparent ring-blue-200';
+				case 1:
+					return 'bg-gradient-to-t from-sky-300/10 to-transparent ring-sky-300';
+				case 2:
+					return 'bg-gradient-to-t from-sky-500/10 to-transparent ring-sky-500';
+				case 3:
+					return 'bg-gradient-to-t from-teal-500/10 to-transparent ring-teal-500';
+				default:
+					return 'bg-gradient-to-t from-emerald-500/10 to-transparent ring-emerald-500';
+			}
+		}
+		return 'ring-gray-400';
+	}
 </script>
 
 <div class="min-h-screen bg-gradient-to-b from-background to-muted p-6">
@@ -94,19 +116,10 @@
 								<div class="relative flex w-full flex-col items-center">
 									<!-- Category Box -->
 									<div
-										class="relative z-10 flex w-full flex-col items-center justify-center rounded-t-md bg-background p-4 text-foreground ring-1 {i +
-											1 <=
-										totalScore
-											? i === 0
-												? 'bg-gradient-to-t from-blue-200/10 to-transparent ring-blue-200'
-												: i === 1
-													? 'bg-gradient-to-t from-sky-300/10 to-transparent ring-sky-300'
-													: i === 2
-														? 'bg-gradient-to-t from-sky-500/10 to-transparent ring-sky-500'
-														: i === 3
-															? 'bg-gradient-to-t from-teal-500/10 to-transparent ring-teal-500'
-															: 'bg-gradient-to-t from-emerald-500/10 to-transparent ring-emerald-500'
-											: 'ring-gray-400'}"
+										class="relative z-10 flex w-full flex-col items-center justify-center rounded-t-md bg-background p-4 text-foreground ring-1 {getCategoryBoxClass(
+											category,
+											i
+										)}"
 										style="height: {120 + i * 20}px;"
 									>
 										<span class="text-center text-sm font-semibold">{category}</span>
@@ -164,7 +177,7 @@
 						</Card.Header>
 						<Card.Content>
 							<div class="">
-								<p class="text-sm text-muted-foreground">
+								<p class="text-sm text-foreground">
 									{#if totalScore >= 3.5}
 										Eure Antworten zeigen: Ihr arbeitet datenbasiert, nutzerzentriert und mit einem
 										klaren Lernansatz. Ihr lebt kontinuierliche Verbesserung und passt euch aktiv an
@@ -183,7 +196,7 @@
 										systematisieren, dokumentieren und im Team abstimmen.
 									{/if}
 								</p>
-								<p class="text-sm text-muted-foreground mt-6">
+								<p class="mt-6 text-sm text-foreground">
 									Aktuell befindet sich das Startup auf der Stufe:
 								</p>
 								<div class="my-3 text-center text-8xl font-bold {scoreColor}">
@@ -191,41 +204,96 @@
 								</div>
 							</div>
 							{#if totalUnlocked > 0}
-							<div class="space-y-4">
-								<div class="rounded-2xl p-2">
-									<h3 class="font-semibold {unlockedCategories.includes('Ideen- und Teamfindung') ? 'text-white' : 'text-muted'}">1. Ideen- und Teamfindung</h3>
-									<p class="text-sm {unlockedCategories.includes('Ideen- und Teamfindung') ? 'text-white' : 'text-muted'}">
-										Team, Motivation, Zielgruppe, Marktsegmentierung.
-									</p>
+								<div class="space-y-4">
+									<div class="rounded-2xl p-2">
+										<h3
+											class="font-semibold {unlockedCategories.includes('Ideen- und Teamfindung')
+												? 'text-foreground'
+												: 'text-muted'}"
+										>
+											1. Ideen- und Teamfindung
+										</h3>
+										<p
+											class="text-sm {unlockedCategories.includes('Ideen- und Teamfindung')
+												? 'text-foreground'
+												: 'text-muted'}"
+										>
+											Team, Motivation, Zielgruppe, Marktsegmentierung.
+										</p>
+									</div>
+									<div class="rounded-2xl p-2">
+										<h3
+											class="font-semibold {unlockedCategories.includes('Chancen Validierung')
+												? 'text-foreground'
+												: 'text-muted'}"
+										>
+											2. Chancen Validierung
+										</h3>
+										<p
+											class="text-sm {unlockedCategories.includes('Chancen Validierung')
+												? 'text-foreground'
+												: 'text-muted'}"
+										>
+											Value Proposition, Problem-Solution-Fit, Geschäftsmodell.
+										</p>
+									</div>
+									<div class="rounded-2xl p-2">
+										<h3
+											class="font-semibold {unlockedCategories.includes(
+												'Marktgerechte Lösungsfindung'
+											)
+												? 'text-foreground'
+												: 'text-muted'}"
+										>
+											3. Marktgerechte Lösungsfindung
+										</h3>
+										<p
+											class="text-sm {unlockedCategories.includes('Marktgerechte Lösungsfindung')
+												? 'text-foreground'
+												: 'text-muted'}"
+										>
+											Nutzerfeedback, Marktvalidierung, Wettbewerbsanalyse.
+										</p>
+									</div>
+									<div class="rounded-2xl p-2">
+										<h3
+											class="font-semibold {unlockedCategories.includes('Übergang zum Markt-Start')
+												? 'text-foreground'
+												: 'text-muted'}"
+										>
+											4. Übergang zum Markt-Start
+										</h3>
+										<p
+											class="text-sm {unlockedCategories.includes('Übergang zum Markt-Start')
+												? 'text-foreground'
+												: 'text-muted'}"
+										>
+											Markteintrittsstrategie, Ressourcenplanung, Teamentwicklung.
+										</p>
+									</div>
+									<div class="rounded-2xl p-2">
+										<h3
+											class="font-semibold {unlockedCategories.includes(
+												'Markteintritt und Wachstum'
+											)
+												? 'text-foreground'
+												: 'text-muted'}"
+										>
+											5. Markteintritt und Wachstum
+										</h3>
+										<p
+											class="text-sm {unlockedCategories.includes('Markteintritt und Wachstum')
+												? 'text-foreground'
+												: 'text-muted'}"
+										>
+											Skalierung, Wachstum, Qualitätssicherung.
+										</p>
+									</div>
 								</div>
-								<div class="rounded-2xl p-2">
-									<h3 class="font-semibold {unlockedCategories.includes('Chancen Validierung') ? 'text-white' : 'text-muted'}">2. Chancen Validierung</h3>
-									<p class="text-sm {unlockedCategories.includes('Chancen Validierung') ? 'text-white' : 'text-muted'}">
-										Value Proposition, Problem-Solution-Fit, Geschäftsmodell.
-									</p>
-								</div>
-								<div class="rounded-2xl p-2">
-									<h3 class="font-semibold {unlockedCategories.includes('Marktgerechte Lösungsfindung') ? 'text-white' : 'text-muted'}">3. Marktgerechte Lösungsfindung</h3>
-									<p class="text-sm {unlockedCategories.includes('Marktgerechte Lösungsfindung') ? 'text-white' : 'text-muted'}">
-										Nutzerfeedback, Marktvalidierung, Wettbewerbsanalyse.
-									</p>
-								</div>
-								<div class="rounded-2xl p-2">
-									<h3 class="font-semibold {unlockedCategories.includes('Übergang zum Markt-Start') ? 'text-white' : 'text-muted'}">4. Übergang zum Markt-Start</h3>
-									<p class="text-sm {unlockedCategories.includes('Übergang zum Markt-Start') ? 'text-white' : 'text-muted'}">
-										Markteintrittsstrategie, Ressourcenplanung, Teamentwicklung.
-									</p>
-								</div>
-								<div class="rounded-2xl p-2">
-									<h3 class="font-semibold {unlockedCategories.includes('Markteintritt und Wachstum') ? 'text-white' : 'text-muted'}">5. Markteintritt und Wachstum</h3>
-									<p class="text-sm {unlockedCategories.includes('Markteintritt und Wachstum') ? 'text-white' : 'text-muted'}">
-										Skalierung, Wachstum, Qualitätssicherung.
-									</p>
-								</div>
-							</div>
 							{:else}
-								<p class="text-sm text-muted-foreground">
-									Es wurden zu wenig Fragen auf den Antwortstufen 3 und 4 beantwortet. Nur so wird eine Kategorie als erreicht gewertet.
+								<p class="text-sm text-foreground">
+									Es wurden zu wenig Fragen auf den Antwortstufen 3 und 4 beantwortet. Nur so wird
+									eine Kategorie als erreicht gewertet.
 								</p>
 							{/if}
 						</Card.Content>
@@ -235,11 +303,11 @@
 							<Card.Title>Kategoriebewertungen</Card.Title>
 						</Card.Header>
 						<Card.Content>
-							<p class="pb-6 text-sm text-muted-foreground">
+							<p class="pb-6 text-sm text-foreground">
 								Hier kannst du deine Gesamtbewertung sehen. Je höher die Bewertung, desto besser ist
-								die Kategorie für dich. Ein Score von unter 2,5 bedeutet, dass du in dieser Kategorie
-								noch Verbesserungspotenzial hast. 3-4 bedeutet, dass du in dieser Kategorie sehr gut
-								abschneidest.
+								die Kategorie für dich. Ein Score von unter 2,5 bedeutet, dass du in dieser
+								Kategorie noch Verbesserungspotenzial hast. 3-4 bedeutet, dass du in dieser
+								Kategorie sehr gut abschneidest.
 							</p>
 							<div class="aspect-square">
 								<RadarChart data={results} />
@@ -259,12 +327,12 @@
 					</Card.Header>
 					<Card.Content>
 						<p class="">
-							Diese Empfehlung wurde mit KI erstellt. Sie ist möglicherweise nicht
-							immer vollständig korrekt oder passend für Deine individuelle Situation.
+							Diese Empfehlung wurde mit KI erstellt. Sie ist möglicherweise nicht immer vollständig
+							korrekt oder passend für Deine individuelle Situation.
 						</p>
-						<p class="text-xs text-muted-foreground text-center">
-							Diese Empfehlung wurde mit KI erstellt. Sie ist möglicherweise nicht
-							immer vollständig korrekt oder passend für Deine individuelle Situation.
+						<p class="text-center text-xs text-muted-foreground">
+							Diese Empfehlung wurde mit KI erstellt. Sie ist möglicherweise nicht immer vollständig
+							korrekt oder passend für Deine individuelle Situation.
 						</p>
 					</Card.Content>
 				</Card.Root>
