@@ -2,12 +2,13 @@
 	import { onMount } from 'svelte';
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
-	import { Share2, Download, ArrowLeft, Sparkles } from 'lucide-svelte';
+	import { Share2, Download, ArrowLeft, Sparkles, Loader2 } from 'lucide-svelte';
 	import { goto } from '$app/navigation';
 	import { CATEGORY_ORDER, STORAGE_KEY } from '$lib/constants';
 	import CategoryScore from '$lib/components/CategoryScore.svelte';
 	import RadarChart from '$lib/components/RadarChart.svelte';
 	import DetailedAnalysis from '$lib/components/DetailedAnalysis.svelte';
+	import QuestionAnswerReview from '$lib/components/QuestionAnswerReview.svelte';
 	import { generatePDF } from '$lib/utils/pdfGenerator';
 	import { getStoredData, getStartupInfo } from '$lib/utils/questionnaire';
 	import { isCategoryUnlocked } from '$lib/utils/questionHelpers';
@@ -20,8 +21,11 @@
 
 	let unlockedCategories: string[] = $state([]);
 	let totalUnlocked: number = $state(0);
+	
+	let recommendationLoading = $state(false);
+	let recommendation = $state('');
 
-	onMount(() => {
+	onMount(async () => {
 		const storedData = getStoredData();
 		startupInfo = getStartupInfo();
 
@@ -43,7 +47,7 @@
 			CATEGORY_ORDER.forEach((category) => {
 				const questions = categoryQuestions.get(category) || [];
 				const answeredQuestions = questions.filter((q) => q.selectedScore !== null);
-				
+
 				// Use the sequential unlocking logic
 				const isUnlocked = isCategoryUnlocked(category);
 
@@ -58,8 +62,46 @@
 			totalUnlocked = unlockedCategories.length;
 		}
 		loading = false;
-
+		
+		// Fetch AI recommendation
+		await fetchRecommendation();
 	});
+	
+	const fetchRecommendation = async () => {
+		if (!startupInfo) return;
+		
+		recommendationLoading = true;
+		try {
+			const params = new URLSearchParams({
+				industry: startupInfo.industry,
+				productCategory: startupInfo.productCategory,
+				targetCustomers: startupInfo.targetCustomers,
+				results: JSON.stringify(results)
+			});
+			
+			const response = await fetch(`/api/recommendation?${params}`);
+			if (response.ok) {
+				const reader = response.body?.getReader();
+				if (reader) {
+					const decoder = new TextDecoder();
+					let result = '';
+					
+					while (true) {
+						const { done, value } = await reader.read();
+						if (done) break;
+						
+						const chunk = decoder.decode(value, { stream: true });
+						result += chunk;
+						recommendation = result;
+					}
+				}
+			}
+		} catch (error) {
+			console.error('Error fetching recommendation:', error);
+		} finally {
+			recommendationLoading = false;
+		}
+	};
 
 	const handleDownloadPDF = async () => {
 		await generatePDF();
@@ -126,17 +168,6 @@
 								</div>
 							{/each}
 						</div>
-						<div class="mt-8 text-center text-sm text-muted-foreground">
-							{#if totalScore >= 4}
-								{'Text über Kategorie 4 einfügen'}
-							{:else if totalScore >= 3}
-								{'Text über Kategorie 3 einfügen'}
-							{:else if totalScore >= 2}
-								{'Text über Kategorie 2 einfügen'}
-							{:else}
-								{'Text über Kategorie 1 einfügen'}
-							{/if}
-						</div>
 					</div>
 				</Card.Content>
 			</Card.Root>
@@ -177,23 +208,29 @@
 						<Card.Content>
 							<div class="">
 								<p class="text-sm text-foreground">
-									{#if totalScore >= 3.5}
-										Eure Antworten zeigen: Ihr arbeitet datenbasiert, nutzerzentriert und mit einem
-										klaren Lernansatz. Ihr lebt kontinuierliche Verbesserung und passt euch aktiv an
-										neue Erkenntnisse und Entwicklungen an – stark!
-									{:else if totalScore >= 3}
-										Ihr habt klare Prozesse, überprüft eure Annahmen regelmäßig und optimiert aktiv.
-										Nutzerfeedback, Daten und Reflexion fließen systematisch in eure Entscheidungen
-										ein – das ist ein starkes Fundament für Wachstum.
-									{:else if totalScore >= 2}
-										Euer Startup verfolgt einen klareren Plan – Prozesse, Ziele und Modelle sind
-										ausgearbeitet. Jetzt geht es darum, eure Methoden zu überprüfen und belastbarer
-										zu machen, z. B. durch Nutzerfeedback oder Marktvalidierung.
+									{#if (totalScore = 5)}
+										Großartig – euer Produkt ist am Markt angekommen, und ihr arbeitet bereits an
+										Wachstum und Skalierung. Mit klaren Zielgrößen, einer Vertriebsstrategie und
+										ersten Einnahmen geht ihr den nächsten professionellen Schritt.
+									{:else if (totalScore = 4)}
+										Ihr seid bereit für den nächsten Schritt: Die Markteintrittsstrategie steht,
+										interne Strukturen entwickeln sich, erste Pilotkunden sind in Sicht oder schon
+										an Bord. Ihr schafft gerade die Brücke vom Prototyp zur echten Anwendung, ein
+										toller Fortschritt!
+									{:else if (totalScore = 3)}
+										Ihr seid mitten in der aktiven Auseinandersetzung mit dem Markt. Nutzerfeedback,
+										Wettbewerbsanalysen und Marktpotenziale fließen in eure Entwicklung ein, das ist
+										ein großer Meilenstein auf dem Weg zu einem wirklich marktfähigen Produkt.
+										Glückwunsch!
+									{:else if (totalScore = 2)}
+										Ihr habt bereits viel erreicht: Eine klare Value Proposition nimmt Form an, euer
+										Geschäftsmodell ist nicht mehr nur eine Idee und erste Rückmeldungen zeigen,
+										dass ihr ein echtes Problem löst. Eine starke Basis für die nächsten Schritte!
 									{:else}
-										Ihr habt euch bereits Gedanken gemacht und erste Abläufe oder Annahmen
-										entwickelt. Um auf das nächste Level zu kommen, solltet ihr diese nun
-										systematisieren, dokumentieren und im Team abstimmen.
-									{/if}
+										Herzlichen Glückwunsch – ihr habt bereits die erste wichtige Hürde gemeistert:
+										Ihr habt ein motiviertes Team gefunden, erste Ideen konkretisiert und begonnen,
+										eure Zielgruppe und den Markt einzugrenzen. Damit legt ihr das Fundament für
+										alles Weitere.{/if}
 								</p>
 								<p class="mt-6 text-sm text-foreground">
 									Aktuell befindet sich das Startup auf der Stufe:
@@ -314,7 +351,7 @@
 						</Card.Content>
 					</Card.Root>
 				</div>
-				<!-- AI Recommendations -->
+				<!-- AI recommendation -->
 				<Card.Root class="col-span-2">
 					<Card.Header>
 						<Card.Title
@@ -325,11 +362,20 @@
 						</Card.Title>
 					</Card.Header>
 					<Card.Content>
-						<p class="">
-							Diese Empfehlung wurde mit KI erstellt. Sie ist möglicherweise nicht immer vollständig
-							korrekt oder passend für Deine individuelle Situation.
-						</p>
-						<p class="text-center text-xs text-muted-foreground">
+						{#if recommendationLoading}
+							<div class="flex items-center justify-center py-8">
+								<div class="text-sm text-muted-foreground"><Loader2 size="16" class="animate-spin" /> Erstelle Handlungsempfehlung...</div>
+							</div>
+						{:else if recommendation}
+							<div class="prose prose-sm max-w-none">
+								<p class="whitespace-pre-wrap text-sm text-foreground">{recommendation}</p>
+							</div>
+						{:else}
+							<p class="text-sm text-muted-foreground">
+								Keine Empfehlung verfügbar. Bitte stelle sicher, dass alle Startup-Informationen ausgefüllt sind.
+							</p>
+						{/if}
+						<p class="mt-4 text-center text-xs text-muted-foreground">
 							Diese Empfehlung wurde mit KI erstellt. Sie ist möglicherweise nicht immer vollständig
 							korrekt oder passend für Deine individuelle Situation.
 						</p>
@@ -342,9 +388,9 @@
 					</Card.Header>
 					<Card.Content>
 						<p class="pb-6 text-sm text-muted-foreground">
-							Hier sehen Sie eine detaillierte Aufschlüsselung Ihrer Antworten nach Kategorien.
-							Fragen mit einer Bewertung von 1-3 zeigen Verbesserungspotenzial, während Fragen mit
-							einer Bewertung von 4-5 Ihre Stärken darstellen.
+							Hier siehst Du eine detaillierte Aufschlüsselung Deiner Antworten nach Kategorien.
+							Fragen mit einer Bewertung von 1-2 zeigen Verbesserungspotenzial, während Fragen mit
+							einer Bewertung von 3-4 Deine Stärken darstellen.
 						</p>
 						<DetailedAnalysis />
 					</Card.Content>

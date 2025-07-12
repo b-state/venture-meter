@@ -7,6 +7,7 @@
         id: number;
         category: string;
         question: string;
+        options: string[];
         selectedScore: number | null;
     }
 
@@ -47,6 +48,13 @@
 
         analysis = Array.from(categoryMap.values());
     });
+
+    function getSelectedAnswer(question: Question): string {
+        if (question.selectedScore === null || question.selectedScore < 1 || question.selectedScore > question.options.length) {
+            return 'Keine Antwort ausgewählt';
+        }
+        return question.options[question.selectedScore - 1];
+    }
 </script>
 
 <div class="space-y-6">
@@ -57,33 +65,39 @@
             </Card.Header>
             <Card.Content>
                 <div class="grid gap-6 md:grid-cols-2">
-                    <!-- Low Scores (1-3) -->
+                    <!-- Low Scores (1-2) -->
                     <div class="space-y-4">
                         <h3 class="text-lg font-semibold text-blue-500">Verbesserungspotenzial (Stufen 1 & 2)</h3>
                         {#if category.lowScores.length === 0}
-                            <p class="text-sm text-muted-foreground">Keine Fragen in diesem Bereich</p>
+                            <p class="text-sm text-muted-foreground">Keine Antworten in diesem Bereich.</p>
                         {:else}
                             <ul class="space-y-2">
                                 {#each category.lowScores as question}
                                     <li class="rounded-lg border p-3">
-                                        <p class="text-sm">{question.question}</p>
-                                        <p class="mt-1 text-xs text-muted-foreground">Bewertung: {question.selectedScore}/4</p>
+                                        <p class="text-sm font-medium">{question.question}</p>
+                                        <p class="mt-2 text-sm text-muted-foreground">
+                                            <span class="font-medium">Deine Antwort:</span> {getSelectedAnswer(question)}
+                                        </p>
+                                        <p class="mt-1 text-xs text-muted-foreground">Antwortstufe: {question.selectedScore}/4</p>
                                     </li>
                                 {/each}
                             </ul>
                         {/if}
                     </div>
 
-                    <!-- High Scores (4) -->
+                    <!-- High Scores (3-4) -->
                     <div class="space-y-4">
                         <h3 class="text-lg font-semibold text-green-500">Stärken (Stufen 3 & 4)</h3>
                         {#if category.highScores.length === 0}
-                            <p class="text-sm text-muted-foreground">Keine Fragen in diesem Bereich</p>
+                            <p class="text-sm text-muted-foreground">Keine Antworten in diesem Bereich.</p>
                         {:else}
                             <ul class="space-y-2">
                                 {#each category.highScores as question}
                                     <li class="rounded-lg border p-3">
-                                        <p class="text-sm">{question.question}</p>
+                                        <p class="text-sm font-medium">{question.question}</p>
+                                        <p class="mt-2 text-sm text-muted-foreground">
+                                            <span class="font-medium">Deine Antwort:</span> {getSelectedAnswer(question)}
+                                        </p>
                                         <p class="mt-1 text-xs text-muted-foreground">Bewertung: {question.selectedScore}/4</p>
                                     </li>
                                 {/each}

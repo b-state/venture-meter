@@ -13,8 +13,8 @@
 				<VentureMeterLogo></VentureMeterLogo>
 			</div>
 			<p class="mt-6 max-w-2xl text-lg leading-8 text-muted-foreground">
-				Messbarer Erfolg für Ihr Startup. Unser umfassender Reifegrad-Check hilft Ihnen, den
-				aktuellen Status Ihres Unternehmens zu bewerten und den Weg zum Erfolg zu planen.
+				Messbarer Erfolg für Dein Startup. Unser umfassender Reifegrad-Check hilft Dir, den
+				aktuellen Status Deines Unternehmens zu bewerten und den Weg zum Erfolg zu planen.
 			</p>
 			<div class="mt-10 flex items-center gap-x-6">
 				<Button
@@ -38,7 +38,7 @@
 				</div>
 				<h3 class="mt-4 text-xl font-semibold">Umfassende Analyse</h3>
 				<p class="mt-2 text-muted-foreground">
-					Fünf Kategorien mit je 15 Fragen decken alle wichtigen Aspekte Ihres Startups ab.
+					Fünf Kategorien mit je 15 Fragen decken alle wichtigen Aspekte Deines Startups ab.
 				</p>
 			</div>
 			<div class="flex flex-col items-center text-center">
@@ -47,7 +47,7 @@
 				</div>
 				<h3 class="mt-4 text-xl font-semibold">Präzise Bewertung</h3>
 				<p class="mt-2 text-muted-foreground">
-					Erhalten Sie detaillierte Einblicke in Ihre Stärken und Verbesserungspotenziale.
+					Erhalte detaillierte Einblicke in Deine Stärken und Verbesserungspotenziale.
 				</p>
 			</div>
 			<div class="flex flex-col items-center text-center">
@@ -56,7 +56,7 @@
 				</div>
 				<h3 class="mt-4 text-xl font-semibold">Wachstumsplanung</h3>
 				<p class="mt-2 text-muted-foreground">
-					Entwickeln Sie eine klare Roadmap für die nächsten Schritte Ihres Unternehmens.
+					Entwickle eine klare Roadmap für die nächsten Schritte Deines Unternehmens.
 				</p>
 			</div>
 		</div>
@@ -64,9 +64,9 @@
 
 	<!-- Categories Preview -->
 	<div class="container mx-auto px-4 py-20">
-		<h2 class="mb-12 text-center text-3xl font-bold">Unsere Bewertungskategorien</h2>
+		<h2 class="mb-12 text-center text-3xl font-bold">Deine Bewertungskategorien</h2>
 		<div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-			{#each [{ title: 'Vision & Opportunity Check', description: 'Bewertung Ihrer Geschäftsidee und Marktchancen' }, { title: 'Viability-Analysis', description: 'Analyse der wirtschaftlichen Tragfähigkeit' }, { title: 'Solution-Market-Fit', description: 'Überprüfung der Marktakzeptanz Ihrer Lösung' }, { title: 'Transition to Launch', description: 'Vorbereitung auf den Markteintritt' }, { title: 'Launch and Scale-Up', description: 'Strategien für Wachstum und Skalierung' }] as category}
+			{#each [{ title: 'Vision & Opportunity Check', description: 'Bewertung Deiner Geschäftsidee und Marktchancen' }, { title: 'Viability-Analysis', description: 'Analyse der wirtschaftlichen Tragfähigkeit' }, { title: 'Solution-Market-Fit', description: 'Überprüfung der Marktakzeptanz Deiner Lösung' }, { title: 'Transition to Launch', description: 'Vorbereitung auf den Markteintritt' }, { title: 'Launch and Scale-Up', description: 'Strategien für Wachstum und Skalierung' }] as category}
 				<div class="rounded-lg border bg-card p-6 shadow-sm">
 					<h3 class="mb-2 text-xl font-semibold">{category.title}</h3>
 					<p class="text-muted-foreground">{category.description}</p>
@@ -80,8 +80,8 @@
 		<div class="rounded-2xl bg-primary/5 p-8 text-center">
 			<h2 class="mb-4 text-3xl font-bold">Bereit für den nächsten Schritt?</h2>
 			<p class="mx-auto mb-8 max-w-2xl text-muted-foreground">
-				Starten Sie jetzt mit der Bewertung Ihres Startups und erhalten Sie wertvolle Einblicke für
-				Ihre weitere Entwicklung.
+				Starte jetzt mit der Bewertung Deines Startups und erhalte wertvolle Einblicke für
+				Deine weitere Entwicklung.
 			</p>
 				<Button size="lg" class="gap-2" href="/questionnaire">
 					Jetzt Starten

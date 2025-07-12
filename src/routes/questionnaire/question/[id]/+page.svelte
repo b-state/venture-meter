@@ -72,9 +72,9 @@
 							<Dialog.Title>Fortschritt speichern</Dialog.Title>
 							<Dialog.Description>
 								<p class="my-5">
-									Sie können den Fortschrtitt des Fragebogens als Datei herunterladen und ihn somit
-									speichern. Wenn Sie den Fragebogen zu einem späteren Zeitpunkt fortsetzen möchten,
-									können Sie ihn unter dem Menüpunkt "Fragebogen" jederzeit hochladen.
+									Du kannst den Fortschritt des Fragebogens als Datei herunterladen und ihn somit
+									speichern. Wenn Du den Fragebogen zu einem späteren Zeitpunkt fortsetzen möchtest,
+									kannst Du ihn unter dem Menüpunkt "Fragebogen" jederzeit hochladen.
 								</p>
 								<Button class="w-full text-sm" onclick={downloadProgress}
 									>Fortschritt herunterladen</Button
