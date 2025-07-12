@@ -25,7 +25,8 @@
 
 	const loadingMessages = [
 		"Lade Spickzettel...",
-		"Kleinen Moment noch..."
+		"Kleinen Moment noch...",
+		"Einatmen.. und Ausatmen.."
 	];
 
 

@@ -114,8 +114,30 @@ export function isCategoryUnlocked(category: string): boolean {
         const answeredQuestions = categoryQuestions.filter(q => q.selectedScore !== null);
         const hasHighScore = categoryQuestions.some(q => q.selectedScore === 3 || q.selectedScore === 4);
 
-        // Category is unlocked if all questions are answered and at least one has a high score (3 or 4)
-        return answeredQuestions.length === categoryQuestions.length && hasHighScore;
+        // First check if all questions in this category are answered and at least one has a high score
+        const categoryComplete = answeredQuestions.length === categoryQuestions.length && hasHighScore;
+        
+        if (!categoryComplete) return false;
+
+        // Now check if all previous categories are unlocked
+        const currentCategoryIndex = CATEGORY_ORDER.indexOf(category);
+        
+        // Check all previous categories (categories with lower index)
+        for (let i = 0; i < currentCategoryIndex; i++) {
+            const previousCategory = CATEGORY_ORDER[i];
+            const previousCategoryQuestions = stored.questions.filter(q => q.category === previousCategory);
+            const previousAnsweredQuestions = previousCategoryQuestions.filter(q => q.selectedScore !== null);
+            const previousHasHighScore = previousCategoryQuestions.some(q => q.selectedScore === 3 || q.selectedScore === 4);
+            
+            // Previous category must be complete (all answered + at least one high score)
+            const previousCategoryComplete = previousAnsweredQuestions.length === previousCategoryQuestions.length && previousHasHighScore;
+            
+            if (!previousCategoryComplete) {
+                return false; // Previous category not unlocked, so this category cannot be unlocked
+            }
+        }
+
+        return true; // All previous categories are unlocked and this category is complete
     } catch (error) {
         console.error('Error checking if category is unlocked:', error);
         return false;

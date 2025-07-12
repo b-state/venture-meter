@@ -10,6 +10,7 @@
 	import DetailedAnalysis from '$lib/components/DetailedAnalysis.svelte';
 	import { generatePDF } from '$lib/utils/pdfGenerator';
 	import { getStoredData, getStartupInfo } from '$lib/utils/questionnaire';
+	import { isCategoryUnlocked } from '$lib/utils/questionHelpers';
 	import { Progress } from '$lib/components/ui/progress';
 
 	let loading = $state(true);
@@ -35,20 +36,16 @@
 				categoryQuestions.get(question.category)!.push(question);
 			});
 
-			// Check which categories are unlocked (all questions answered with 3 or 4)
+			// Check which categories are unlocked using the sequential unlocking logic
 			unlockedCategories = [];
 			results = {};
 
 			CATEGORY_ORDER.forEach((category) => {
 				const questions = categoryQuestions.get(category) || [];
 				const answeredQuestions = questions.filter((q) => q.selectedScore !== null);
-				const highScoreQuestions = answeredQuestions.filter(
-					(q) => q.selectedScore === 3 || q.selectedScore === 4
-				);
 				
-				const isUnlocked =
-					answeredQuestions.length === questions.length &&
-					highScoreQuestions.length > 0; // ← At least one high score
+				// Use the sequential unlocking logic
+				const isUnlocked = isCategoryUnlocked(category);
 
 				if (isUnlocked) {
 					unlockedCategories.push(category);
@@ -62,11 +59,6 @@
 		}
 		loading = false;
 
-		$inspect('results', results);
-		$inspect('unlockedCategories', unlockedCategories);
-		$inspect('totalUnlocked', totalUnlocked);
-		$inspect('totalScore', totalScore);
-		$inspect('startupInfo', startupInfo);
 	});
 
 	const handleDownloadPDF = async () => {
