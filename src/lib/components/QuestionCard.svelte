@@ -146,9 +146,9 @@
 		{/each}
 
 		<Button
-			variant="ghost"
+			variant="outline"
 			size="sm"
-			class="flex w-fit gap-2 self-end text-muted-foreground animate-pulse"
+			class="flex w-fit gap-2 self-end text-muted-foreground {questionId <= 2 ? 'animate-pulse' : ''}"
 			onclick={toggleHelp}
 		>
 			<HelpCircle size="20" /> Spickzettel {showHelp ? 'ausblenden' : 'anzeigen'}
