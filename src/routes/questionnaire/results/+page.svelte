@@ -369,7 +369,7 @@
 						<Card.Title
 							><div class="flex items-center gap-2">
 								<Sparkles size="20" />
-								Handlungsempfehlung für Dein Startup
+								Verbesserungsvorschläge für Dein Startup
 							</div>
 						</Card.Title>
 					</Card.Header>
