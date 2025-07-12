@@ -38,7 +38,7 @@
                 categoryMap.set(question.category, categoryAnalysis);
             }
 
-            if (question.selectedScore <= 3) {
+            if (question.selectedScore <= 2) {
                 categoryAnalysis.lowScores.push(question);
             } else {
                 categoryAnalysis.highScores.push(question);

@@ -45,10 +45,11 @@
 				const highScoreQuestions = answeredQuestions.filter(
 					(q) => q.selectedScore === 3 || q.selectedScore === 4
 				);
+				
 				const isUnlocked =
-					answeredQuestions.length > 0 &&
 					answeredQuestions.length === questions.length &&
-					highScoreQuestions.length === answeredQuestions.length;
+					highScoreQuestions.length > 0; // ← At least one high score
+
 				if (isUnlocked) {
 					unlockedCategories.push(category);
 				}
@@ -60,6 +61,12 @@
 			totalUnlocked = unlockedCategories.length;
 		}
 		loading = false;
+
+		$inspect('results', results);
+		$inspect('unlockedCategories', unlockedCategories);
+		$inspect('totalUnlocked', totalUnlocked);
+		$inspect('totalScore', totalScore);
+		$inspect('startupInfo', startupInfo);
 	});
 
 	const handleDownloadPDF = async () => {

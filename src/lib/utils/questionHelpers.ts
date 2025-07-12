@@ -112,12 +112,10 @@ export function isCategoryUnlocked(category: string): boolean {
 
         const categoryQuestions = stored.questions.filter(q => q.category === category);
         const answeredQuestions = categoryQuestions.filter(q => q.selectedScore !== null);
-        const highScoreQuestions = answeredQuestions.filter(q => q.selectedScore === 3 || q.selectedScore === 4);
+        const hasHighScore = categoryQuestions.some(q => q.selectedScore === 3 || q.selectedScore === 4);
 
-        // Category is unlocked if all questions are answered with high scores (3 or 4)
-        return answeredQuestions.length > 0 && 
-               answeredQuestions.length === categoryQuestions.length && 
-               highScoreQuestions.length === answeredQuestions.length;
+        // Category is unlocked if all questions are answered and at least one has a high score (3 or 4)
+        return answeredQuestions.length === categoryQuestions.length && hasHighScore;
     } catch (error) {
         console.error('Error checking if category is unlocked:', error);
         return false;
