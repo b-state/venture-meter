@@ -68,7 +68,7 @@
 <div class="space-y-8">
     <div class="text-center">
         <h2 class="text-2xl font-bold mb-2">Fragen und Antworten Übersicht</h2>
-        <p class="text-muted-foreground">Hier findest du alle Fragen und deine ausgewählten Antworten im Überblick.</p>
+        <p class="text-muted-foreground">Hier findest du alle Fragen und Deine ausgewählten Antworten im Überblick.</p>
     </div>
 
     {#each review as category}

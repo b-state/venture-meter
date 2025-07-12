@@ -72,11 +72,26 @@
 		
 		recommendationLoading = true;
 		try {
+			// Get weak answers (stages 1 & 2)
+			const storedData = getStoredData();
+			let weakAnswers = [];
+			
+			if (storedData) {
+				weakAnswers = storedData.questions
+					.filter(q => q.selectedScore !== null && q.selectedScore <= 2)
+					.map(q => ({
+						category: q.category,
+						question: q.question,
+						selectedAnswer: q.options[q.selectedScore - 1],
+						score: q.selectedScore
+					}));
+			}
+			
 			const params = new URLSearchParams({
 				industry: startupInfo.industry,
 				productCategory: startupInfo.productCategory,
 				targetCustomers: startupInfo.targetCustomers,
-				results: JSON.stringify(results)
+				weakAnswers: JSON.stringify(weakAnswers)
 			});
 			
 			const response = await fetch(`/api/recommendation?${params}`);
@@ -176,7 +191,7 @@
 			{#if startupInfo}
 				<Card.Root class="mb-8">
 					<Card.Header>
-						<Card.Title>Über dein Startup</Card.Title>
+						<Card.Title>Über Dein Startup</Card.Title>
 					</Card.Header>
 					<Card.Content>
 						<div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
@@ -201,7 +216,7 @@
 			<div class="flex flex-col gap-8">
 				<div class="flex gap-8">
 					<!-- Overall Score -->
-					<Card.Root>
+					<Card.Root class="w-1/3">
 						<Card.Header>
 							<Card.Title>Ergebnis</Card.Title>
 						</Card.Header>
@@ -334,16 +349,13 @@
 							{/if}
 						</Card.Content>
 					</Card.Root>
-					<Card.Root>
+					<Card.Root class="w-2/3">
 						<Card.Header>
 							<Card.Title>Kategoriebewertungen</Card.Title>
 						</Card.Header>
 						<Card.Content>
 							<p class="pb-6 text-sm text-foreground">
-								Hier kannst du deine Gesamtbewertung sehen. Je höher die Bewertung, desto besser ist
-								die Kategorie für dich. Ein Score von unter 2,5 bedeutet, dass du in dieser
-								Kategorie noch Verbesserungspotenzial hast. 3-4 bedeutet, dass du in dieser
-								Kategorie sehr gut abschneidest.
+								Hier kannst du Deine Gesamtbewertung sehen. Je weiter Außen der Punkt liegt, desto besser ist die Kategorie für dich.
 							</p>
 							<div class="aspect-square">
 								<RadarChart data={results} />
@@ -356,15 +368,15 @@
 					<Card.Header>
 						<Card.Title
 							><div class="flex items-center gap-2">
-								Dynamische Empfehlung für dein Startup
 								<Sparkles size="20" />
+								Handlungsempfehlung für Dein Startup
 							</div>
 						</Card.Title>
 					</Card.Header>
 					<Card.Content>
 						{#if recommendationLoading}
 							<div class="flex items-center justify-center py-8">
-								<div class="text-sm text-muted-foreground"><Loader2 size="16" class="animate-spin" /> Erstelle Handlungsempfehlung...</div>
+								<div class="text-sm text-muted-foreground flex items-center gap-2"><Loader2 size="16" class="animate-spin" /> Erstelle Handlungsempfehlung...</div>
 							</div>
 						{:else if recommendation}
 							<div class="prose prose-sm max-w-none">
