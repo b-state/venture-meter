@@ -125,9 +125,7 @@
 		} catch (error) {
 			console.error('Error fetching help text:', error);
 			helpText = null;
-		} finally {
-			isLoadingHelp = false;
-		}
+		} 
 	}
 </script>
 
