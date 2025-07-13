@@ -115,7 +115,6 @@
 					// Stop loading once we have some content
 					if (helpText.length > 0) {
 						isLoadingHelp = false;
-						console.log("isLoadingHelp loop", isLoadingHelp, helpText);
 					}
 				}
 			} else {
@@ -177,7 +176,7 @@
 								<Loader2 size="16" class="animate-spin" />
 								<p class="">{loadingMessages[loadingMessageIndex]}</p>
 							</div>
-						{:else if helpText}
+						{:else if helpText && helpText.length > 0}
 							<Sparkles size="16" class="mt-0.5 min-w-4" />
 							<div class="relative  ">
 								<p class="pb-8 overflow-y-auto max-h-96 whitespace-pre-wrap">{helpText}</p>
