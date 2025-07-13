@@ -120,6 +120,7 @@
 			console.error('Error fetching help text:', error);
 			helpText = null;
 		} finally {
+			console.log('finally');
 			isLoadingHelp = false;
 		}
 	}
