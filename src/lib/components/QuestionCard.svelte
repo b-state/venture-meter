@@ -115,6 +115,7 @@
 					if (done) break;
 					const chunk = new TextDecoder().decode(value);
 					helpText += chunk;
+					console.log("helpText loop", helpText);
 				}
 			} else {
 				isLoadingHelp = false;
