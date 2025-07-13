@@ -84,8 +84,6 @@
 		if (helpText === null && !isLoadingHelp) {
 			await fetchHelpText();
 		}
-		console.log("isLoadingHelp", isLoadingHelp);
-		console.log("helpText", helpText);
 
 	}
 
@@ -105,8 +103,6 @@
 			}
 			const response = await fetch(`/api/help-text/${questionId}?${params.toString()}`);
 			if (response.ok) {
-				isLoadingHelp = false;
-				console.log("isLoadingHelp after fetch", isLoadingHelp);
 				const reader = response.body!.getReader();
 				helpText = '';
 
@@ -115,11 +111,14 @@
 					if (done) break;
 					const chunk = new TextDecoder().decode(value);
 					helpText += chunk;
-					console.log("helpText loop", helpText);
+					
+					// Stop loading once we have some content
+					if (helpText.length > 0) {
+						isLoadingHelp = false;
+					}
 				}
 			} else {
 				isLoadingHelp = false;
-				console.log("isLoadingHelp after fetch error", isLoadingHelp);
 				console.error('Failed to fetch help text');
 				helpText = null;
 			}
@@ -127,7 +126,6 @@
 			console.error('Error fetching help text:', error);
 			helpText = null;
 		} finally {
-			console.log('finally isLoadingHelp', isLoadingHelp);
 			isLoadingHelp = false;
 		}
 	}
@@ -178,7 +176,7 @@
 								<Loader2 size="16" class="animate-spin" />
 								<p class="">{loadingMessages[loadingMessageIndex]}</p>
 							</div>
-						{:else if helpText !== null}
+						{:else if helpText}
 							<Sparkles size="16" class="mt-0.5 min-w-4" />
 							<div class="relative  ">
 								<p class="pb-8 overflow-y-auto max-h-96 whitespace-pre-wrap">{helpText}</p>
