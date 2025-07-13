@@ -91,6 +91,7 @@
 
 	async function fetchHelpText() {
 		isLoadingHelp = true;
+		console.log("isLoadingHelp before fetch", isLoadingHelp);
 		try {
 			// Get startup info from localStorage
 			const startupInfo = getStartupInfo();
@@ -105,6 +106,7 @@
 			const response = await fetch(`/api/help-text/${questionId}?${params.toString()}`);
 			if (response.ok) {
 				isLoadingHelp = false;
+				console.log("isLoadingHelp after fetch", isLoadingHelp);
 				const reader = response.body!.getReader();
 				helpText = '';
 
@@ -116,6 +118,7 @@
 				}
 			} else {
 				isLoadingHelp = false;
+				console.log("isLoadingHelp after fetch error", isLoadingHelp);
 				console.error('Failed to fetch help text');
 				helpText = null;
 			}
@@ -123,7 +126,7 @@
 			console.error('Error fetching help text:', error);
 			helpText = null;
 		} finally {
-			console.log('finally');
+			console.log('finally isLoadingHelp', isLoadingHelp);
 			isLoadingHelp = false;
 		}
 	}
