@@ -115,6 +115,7 @@
 					// Stop loading once we have some content
 					if (helpText.length > 0) {
 						isLoadingHelp = false;
+						console.log("isLoadingHelp loop", isLoadingHelp, helpText);
 					}
 				}
 			} else {
