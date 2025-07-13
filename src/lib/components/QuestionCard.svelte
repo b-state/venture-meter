@@ -84,6 +84,9 @@
 		if (helpText === null && !isLoadingHelp) {
 			await fetchHelpText();
 		}
+		console.log("isLoadingHelp", isLoadingHelp);
+		console.log("helpText", helpText);
+
 	}
 
 	async function fetchHelpText() {
