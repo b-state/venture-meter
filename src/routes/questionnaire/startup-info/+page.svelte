@@ -77,9 +77,9 @@
 		<!-- Main Content -->
 		<Card.Root class="mb-8">
 			<Card.Header>
-				<Card.Title>Über Dein Startup</Card.Title>
+				<Card.Title>Über dein Startup</Card.Title>
 				<Card.Description>
-					Erzähle uns kurz etwas über Dein Startup, damit wir dir passendere Empfehlungen geben
+					Erzähle uns kurz etwas über dein Startup, damit wir dir passendere Empfehlungen geben
 					können.
 				</Card.Description>
 			</Card.Header>
@@ -87,7 +87,7 @@
 				<!-- Industry -->
 				<div class="space-y-3">
 					<label class="text-sm font-medium" for="industry"
-						>In welcher Branche arbeitet Dein Startup?</label
+						>In welcher Branche arbeitet dein Startup?</label
 					>
 					<div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
 						{#each industries as industryOption}
@@ -105,7 +105,7 @@
 					{#if industry === 'Sonstiges (selbst definieren)'}
 						<div class="space-y-2">
 							<label class="text-sm font-medium" for="customIndustry"
-								>Bitte definiere Deine Branche:</label
+								>Bitte definiere deine Branche:</label
 							>
 							<input
 								type="text"
@@ -140,7 +140,7 @@
 				<!-- Target Customers -->
 				<div class="space-y-3">
 					<label class="text-sm font-medium" for="targetCustomers"
-						>Für wen richtet sich Dein Produkt?</label
+						>Für wen richtet sich dein Produkt?</label
 					>
 					<div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
 						{#each customers as customerOption}

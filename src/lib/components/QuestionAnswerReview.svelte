@@ -71,7 +71,7 @@
 	<div class="text-center">
 		<h2 class="mb-2 text-2xl font-bold">Fragen und Antworten Übersicht</h2>
 		<p class="text-muted-foreground">
-			Hier findest du alle Fragen und Deine ausgewählten Antworten im Überblick.
+			Hier findest du alle Fragen und deine ausgewählten Antworten im Überblick.
 		</p>
 	</div>
 

@@ -21,8 +21,7 @@
 
 	let unlockedCategories: string[] = $state([]);
 	let totalUnlocked: number = $state(0);
-	$inspect('totalUnlocked', totalUnlocked);
-	$inspect('unlockedCategories', unlockedCategories.length);
+
 
 	let recommendationLoading = $state(false);
 	let recommendation = $state('');
@@ -194,7 +193,7 @@
 			{#if startupInfo}
 				<Card.Root class="mb-8">
 					<Card.Header>
-						<Card.Title>Über Dein Startup</Card.Title>
+						<Card.Title>Über dein Startup</Card.Title>
 					</Card.Header>
 					<Card.Content>
 						<div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
@@ -358,7 +357,7 @@
 						</Card.Header>
 						<Card.Content>
 							<p class="pb-6 text-sm text-foreground">
-								Hier kannst du Deine Gesamtbewertung sehen. Je weiter Außen der Punkt liegt, desto
+								Hier kannst du deine Gesamtbewertung sehen. Je weiter Außen der Punkt liegt, desto
 								besser ist die Kategorie für dich.
 							</p>
 							<div class="aspect-square">
@@ -373,7 +372,7 @@
 						<Card.Title
 							><div class="flex items-center gap-2">
 								<Sparkles size="20" />
-								Verbesserungsvorschläge für Dein Startup
+								Verbesserungsvorschläge für dein Startup
 							</div>
 						</Card.Title>
 					</Card.Header>
@@ -396,7 +395,7 @@
 						{/if}
 						<p class="mt-4 text-center text-xs text-muted-foreground">
 							Diese Empfehlung wurde mit KI erstellt. Sie ist möglicherweise nicht immer vollständig
-							korrekt oder passend für Deine individuelle Situation.
+							korrekt oder passend für deine individuelle Situation.
 						</p>
 					</Card.Content>
 				</Card.Root>
@@ -407,9 +406,9 @@
 					</Card.Header>
 					<Card.Content>
 						<p class="pb-6 text-sm text-muted-foreground">
-							Hier siehst Du eine detaillierte Aufschlüsselung Deiner Antworten nach Kategorien.
+							Hier siehst Du eine detaillierte Aufschlüsselung deiner Antworten nach Kategorien.
 							Fragen mit einer Bewertung von 1-2 zeigen Verbesserungspotenzial, während Fragen mit
-							einer Bewertung von 3-4 Deine Stärken darstellen.
+							einer Bewertung von 3-4 deine Stärken darstellen.
 						</p>
 						<DetailedAnalysis />
 					</Card.Content>

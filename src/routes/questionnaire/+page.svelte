@@ -65,7 +65,7 @@
 				<div>
 					<h2 class="mb-2 text-xl font-semibold">Fragebogen fortsetzen</h2>
 					<p class="text-muted-foreground">
-						Lade Deinen Speicherstand hoch und setze Deinen bereits begonnenen Fragebogen fort.
+						Lade deinen Speicherstand hoch und setze deinen bereits begonnenen Fragebogen fort.
 					</p>
 				</div>
 				<div class="flex flex-col items-center gap-4">

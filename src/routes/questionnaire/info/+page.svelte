@@ -16,14 +16,16 @@
 				Mit dem Ausfüllen dieses Fragebogens bekommst du ein Gefühl dafür, wo du in deiner
 				Startup-Journey stehst. Es ist völlig in Ordnung, wenn du nicht überall die höchste
 				Antwortstufe auswählen kannst. Viel wichtiger ist, dass du ihn immer wieder machst, um
-				deinen Fortschritt zu sehen. Sieh den Fragebogen als deinen Begleiter und Orientierungshilfe.
+				deinen Fortschritt zu sehen. Sieh den Fragebogen als deinen Orientierungshilfe und deine
+				Begleiter.
 			</p>
 			<div class="mb-8 grid grid-cols-1 gap-6 md:grid-cols-3">
 				<div class="flex flex-col items-center rounded-lg bg-muted p-4">
 					<Info size="32" class="mb-2 text-primary" />
 					<span class="mb-1 font-semibold">Ehrlichkeit</span>
 					<span class="text-center text-sm text-muted-foreground"
-						>Beantworte die Fragen so ehrlich wie möglich, um ein realistisches Bild zu erhalten. Coaches und Investoren werden es dir danken.</span
+						>Beantworte die Fragen so ehrlich wie möglich, um ein realistisches Bild zu erhalten.
+						Coaches und Investoren werden es Dir danken.</span
 					>
 				</div>
 				<div class="flex flex-col items-center rounded-lg bg-muted p-4">
@@ -38,8 +40,8 @@
 					<CheckCircle size="32" class="mb-2 text-primary" />
 					<span class="mb-1 font-semibold">Vollständigkeit</span>
 					<span class="text-center text-sm text-muted-foreground"
-						>Schau dir die Auswertung am Ende an, sie gibt dir individuelle Verbesserungsvorschläge
-						und zeigt dir deine Stärken und Schwächen.</span
+						>Schau Dir die Auswertung am Ende an, sie gibt Dir individuelle Verbesserungsvorschläge
+						und zeigt Dir deine Stärken und Schwächen.</span
 					>
 				</div>
 			</div>

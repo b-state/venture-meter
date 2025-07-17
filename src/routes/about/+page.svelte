@@ -11,7 +11,7 @@
 		<h1 class="mb-4 text-3xl font-bold text-primary">Über VentureMeter</h1>
 		<p class="mb-4 text-lg text-muted-foreground">
 			VentureMeter ist ein moderner Reifegrad-Check für Startups und Gründer. Unser Ziel ist
-			es, Dir eine klare, strukturierte Einschätzung über den aktuellen Stand Deines Unternehmens zu
+			es, Dir eine klare, strukturierte Einschätzung über den aktuellen Stand deines Unternehmens zu
 			geben und Dir individuelle Empfehlungen für die nächsten Schritte zu liefern.
 		</p>
 		<ul class="mb-6 list-disc pl-6 text-muted-foreground">
