@@ -22,6 +22,7 @@
 		'Lebensmittel',
 		'Medizin & Chemie',
 		'Immobilien',
+		'Medien & Entertainment',
 		'Sonstiges (selbst definieren)'
 	];
 
