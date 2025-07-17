@@ -15,7 +15,7 @@
 		const categories = Object.keys(data);
 		const scores = Object.values(data);
 
-		chart = new Chart(ctx, { 
+		chart = new Chart(ctx, {
 			type: 'radar',
 			data: {
 				labels: categories,
@@ -41,18 +41,18 @@
 						ticks: {
 							stepSize: 1,
 							font: {
-								size: 14,
+								size: 14
 							}
 						},
 						pointLabels: {
 							font: {
-								size: 14,
+								size: 14
 							}
 						},
 						grid: {
 							display: true,
 							circular: true,
-							color: '#45556C' 
+							color: '#45556C'
 						}
 					}
 				},
@@ -61,8 +61,7 @@
 						display: false
 					}
 				},
-				maintainAspectRatio: false,
-
+				maintainAspectRatio: false
 			}
 		});
 

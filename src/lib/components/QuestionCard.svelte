@@ -24,11 +24,10 @@
 	let loadingInterval: ReturnType<typeof setInterval> | undefined;
 
 	const loadingMessages = [
-		"Lade Spickzettel...",
-		"Kleinen Moment noch...",
-		"Einatmen.. und Ausatmen.."
+		'Lade Spickzettel...',
+		'Kleinen Moment noch...',
+		'Einatmen.. und Ausatmen..'
 	];
-
 
 	onMount(() => {
 		// Load help visibility state from localStorage
@@ -84,12 +83,11 @@
 		if (helpText === null && !isLoadingHelp) {
 			await fetchHelpText();
 		}
-
 	}
 
 	async function fetchHelpText() {
 		isLoadingHelp = true;
-		console.log("isLoadingHelp before fetch", isLoadingHelp);
+		console.log('isLoadingHelp before fetch', isLoadingHelp);
 		try {
 			// Get startup info from localStorage
 			const startupInfo = getStartupInfo();
@@ -111,7 +109,7 @@
 					if (done) break;
 					const chunk = new TextDecoder().decode(value);
 					helpText += chunk;
-					
+
 					// Stop loading once we have some content
 					if (helpText.length > 0) {
 						isLoadingHelp = false;
@@ -125,7 +123,7 @@
 		} catch (error) {
 			console.error('Error fetching help text:', error);
 			helpText = null;
-		} 
+		}
 	}
 </script>
 
@@ -152,7 +150,9 @@
 		<Button
 			variant="outline"
 			size="sm"
-			class="flex w-fit gap-2 self-end text-muted-foreground {questionId <= 2 ? 'animate-pulse' : ''}"
+			class="flex w-fit gap-2 self-end text-muted-foreground {questionId <= 2
+				? 'animate-pulse'
+				: ''}"
 			onclick={toggleHelp}
 		>
 			<HelpCircle size="20" /> Spickzettel {showHelp ? 'ausblenden' : 'anzeigen'}
@@ -167,7 +167,7 @@
 				>
 					<div class="h-full w-full rounded-lg bg-background"></div>
 				</div>
-				<CardContent class="relative z-10 p-4 max-h-fit">
+				<CardContent class="relative z-10 max-h-fit p-4">
 					<div class="flex items-start gap-2">
 						{#if isLoadingHelp}
 							<div class="flex items-center gap-2">
@@ -176,9 +176,11 @@
 							</div>
 						{:else if helpText && helpText.length > 0}
 							<Sparkles size="16" class="mt-0.5 min-w-4" />
-							<div class="relative  ">
-								<p class="pb-8 overflow-y-auto max-h-96 whitespace-pre-wrap">{helpText}</p>
-								<div class="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-background to-transparent pointer-events-none"></div>
+							<div class="relative">
+								<p class="max-h-96 overflow-y-auto whitespace-pre-wrap pb-8">{helpText}</p>
+								<div
+									class="pointer-events-none absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-background to-transparent"
+								></div>
 							</div>
 						{:else}
 							<Sparkles size="16" class="mt-0.5 min-w-4" />

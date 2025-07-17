@@ -41,19 +41,19 @@
 
 	const handleContinue = () => {
 		const finalIndustry = industry === 'Sonstiges (selbst definieren)' ? customIndustry : industry;
-		
+
 		if (finalIndustry && productCategory && targetCustomers) {
 			// Store startup info along with existing data
 			const existingData = localStorage.getItem(STORAGE_KEY);
 			let data = existingData ? JSON.parse(existingData) : { questions: [], version: '1.0' };
-			
+
 			// Add startup info to the data
 			data.startupInfo = {
 				industry: finalIndustry,
 				productCategory,
 				targetCustomers
 			};
-			
+
 			localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 			goto('/questionnaire/question/1');
 		}
@@ -79,13 +79,16 @@
 			<Card.Header>
 				<Card.Title>Über Dein Startup</Card.Title>
 				<Card.Description>
-					Erzähle uns kurz etwas über Dein Startup, damit wir dir passendere Empfehlungen geben können.
+					Erzähle uns kurz etwas über Dein Startup, damit wir dir passendere Empfehlungen geben
+					können.
 				</Card.Description>
 			</Card.Header>
 			<Card.Content class="space-y-6">
 				<!-- Industry -->
 				<div class="space-y-3">
-					<label class="text-sm font-medium" for="industry">In welcher Branche arbeitet Dein Startup?</label>
+					<label class="text-sm font-medium" for="industry"
+						>In welcher Branche arbeitet Dein Startup?</label
+					>
 					<div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
 						{#each industries as industryOption}
 							<Button
@@ -98,10 +101,12 @@
 							</Button>
 						{/each}
 					</div>
-					
+
 					{#if industry === 'Sonstiges (selbst definieren)'}
 						<div class="space-y-2">
-							<label class="text-sm font-medium" for="customIndustry">Bitte definiere Deine Branche:</label>
+							<label class="text-sm font-medium" for="customIndustry"
+								>Bitte definiere Deine Branche:</label
+							>
 							<input
 								type="text"
 								id="customIndustry"
@@ -115,7 +120,9 @@
 
 				<!-- productCategory -->
 				<div class="space-y-3">
-					<label class="text-sm font-medium" for="productCategory">Welche Art von Technologie/Produkt entwickelt ihr?</label>
+					<label class="text-sm font-medium" for="productCategory"
+						>Welche Art von Technologie/Produkt entwickelt ihr?</label
+					>
 					<div class="grid grid-cols-1 gap-3">
 						{#each technologies as techOption}
 							<Button
@@ -132,7 +139,9 @@
 
 				<!-- Target Customers -->
 				<div class="space-y-3">
-					<label class="text-sm font-medium" for="targetCustomers">Für wen richtet sich Dein Produkt?</label>
+					<label class="text-sm font-medium" for="targetCustomers"
+						>Für wen richtet sich Dein Produkt?</label
+					>
 					<div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
 						{#each customers as customerOption}
 							<Button
@@ -154,7 +163,10 @@
 			<Button
 				size="lg"
 				class="gap-2"
-				disabled={!industry || !productCategory || !targetCustomers || (industry === 'Sonstiges (selbst definieren)' && !customIndustry)}
+				disabled={!industry ||
+					!productCategory ||
+					!targetCustomers ||
+					(industry === 'Sonstiges (selbst definieren)' && !customIndustry)}
 				onclick={handleContinue}
 			>
 				Zum Fragebogen
@@ -162,4 +174,4 @@
 			</Button>
 		</div>
 	</div>
-</div> 
+</div>

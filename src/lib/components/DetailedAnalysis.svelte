@@ -1,111 +1,123 @@
 <script lang="ts">
-    import { getStoredData } from '$lib/utils/questionnaire';
-    import * as Card from '$lib/components/ui/card';
-    import { onMount } from 'svelte';
+	import { getStoredData } from '$lib/utils/questionnaire';
+	import * as Card from '$lib/components/ui/card';
+	import { onMount } from 'svelte';
 
-    interface Question {
-        id: number;
-        category: string;
-        question: string;
-        options: string[];
-        selectedScore: number | null;
-    }
+	interface Question {
+		id: number;
+		category: string;
+		question: string;
+		options: string[];
+		selectedScore: number | null;
+	}
 
-    interface CategoryAnalysis {
-        category: string;
-        lowScores: Question[];
-        highScores: Question[];
-    }
+	interface CategoryAnalysis {
+		category: string;
+		lowScores: Question[];
+		highScores: Question[];
+	}
 
-    let analysis: CategoryAnalysis[] = [];
+	let analysis: CategoryAnalysis[] = [];
 
-    onMount(() => {
-        const storedData = getStoredData();
-        if (!storedData) return;
+	onMount(() => {
+		const storedData = getStoredData();
+		if (!storedData) return;
 
-        // Group questions by category and score range
-        const categoryMap = new Map<string, CategoryAnalysis>();
-        
-        storedData.questions.forEach(question => {
-            if (question.selectedScore === null) return;
-            
-            let categoryAnalysis = categoryMap.get(question.category);
-            if (!categoryAnalysis) {
-                categoryAnalysis = {
-                    category: question.category,
-                    lowScores: [],
-                    highScores: []
-                };
-                categoryMap.set(question.category, categoryAnalysis);
-            }
+		// Group questions by category and score range
+		const categoryMap = new Map<string, CategoryAnalysis>();
 
-            if (question.selectedScore <= 2) {
-                categoryAnalysis.lowScores.push(question);
-            } else {
-                categoryAnalysis.highScores.push(question);
-            }
-        });
+		storedData.questions.forEach((question) => {
+			if (question.selectedScore === null) return;
 
-        analysis = Array.from(categoryMap.values());
-    });
+			let categoryAnalysis = categoryMap.get(question.category);
+			if (!categoryAnalysis) {
+				categoryAnalysis = {
+					category: question.category,
+					lowScores: [],
+					highScores: []
+				};
+				categoryMap.set(question.category, categoryAnalysis);
+			}
 
-    function getSelectedAnswer(question: Question): string {
-        if (question.selectedScore === null || question.selectedScore < 1 || question.selectedScore > question.options.length) {
-            return 'Keine Antwort ausgewählt';
-        }
-        return question.options[question.selectedScore - 1];
-    }
+			if (question.selectedScore <= 2) {
+				categoryAnalysis.lowScores.push(question);
+			} else {
+				categoryAnalysis.highScores.push(question);
+			}
+		});
+
+		analysis = Array.from(categoryMap.values());
+	});
+
+	function getSelectedAnswer(question: Question): string {
+		if (
+			question.selectedScore === null ||
+			question.selectedScore < 1 ||
+			question.selectedScore > question.options.length
+		) {
+			return 'Keine Antwort ausgewählt';
+		}
+		return question.options[question.selectedScore - 1];
+	}
 </script>
 
 <div class="space-y-6">
-    {#each analysis as category}
-        <Card.Root>
-            <Card.Header>
-                <Card.Title>{category.category}</Card.Title>
-            </Card.Header>
-            <Card.Content>
-                <div class="grid gap-6 md:grid-cols-2">
-                    <!-- Low Scores (1-2) -->
-                    <div class="space-y-4">
-                        <h3 class="text-lg font-semibold text-blue-500">Verbesserungspotenzial (Stufen 1 & 2)</h3>
-                        {#if category.lowScores.length === 0}
-                            <p class="text-sm text-muted-foreground">Keine Antworten in diesem Bereich.</p>
-                        {:else}
-                            <ul class="space-y-2">
-                                {#each category.lowScores as question}
-                                    <li class="rounded-lg border p-3">
-                                        <p class="text-sm font-medium">{question.question}</p>
-                                        <p class="mt-2 text-sm text-muted-foreground">
-                                            <span class="font-medium">Deine Antwort:</span> {getSelectedAnswer(question)}
-                                        </p>
-                                        <p class="mt-1 text-xs text-muted-foreground">Antwortstufe: {question.selectedScore}/4</p>
-                                    </li>
-                                {/each}
-                            </ul>
-                        {/if}
-                    </div>
+	{#each analysis as category}
+		<Card.Root>
+			<Card.Header>
+				<Card.Title>{category.category}</Card.Title>
+			</Card.Header>
+			<Card.Content>
+				<div class="grid gap-6 md:grid-cols-2">
+					<!-- Low Scores (1-2) -->
+					<div class="space-y-4">
+						<h3 class="text-lg font-semibold text-blue-500">
+							Verbesserungspotenzial (Stufen 1 & 2)
+						</h3>
+						{#if category.lowScores.length === 0}
+							<p class="text-sm text-muted-foreground">Keine Antworten in diesem Bereich.</p>
+						{:else}
+							<ul class="space-y-2">
+								{#each category.lowScores as question}
+									<li class="rounded-lg border p-3">
+										<p class="text-sm font-medium">{question.question}</p>
+										<p class="mt-2 text-sm text-muted-foreground">
+											<span class="font-medium">Deine Antwort:</span>
+											{getSelectedAnswer(question)}
+										</p>
+										<p class="mt-1 text-xs text-muted-foreground">
+											Antwortstufe: {question.selectedScore}/4
+										</p>
+									</li>
+								{/each}
+							</ul>
+						{/if}
+					</div>
 
-                    <!-- High Scores (3-4) -->
-                    <div class="space-y-4">
-                        <h3 class="text-lg font-semibold text-green-500">Stärken (Stufen 3 & 4)</h3>
-                        {#if category.highScores.length === 0}
-                            <p class="text-sm text-muted-foreground">Keine Antworten in diesem Bereich.</p>
-                        {:else}
-                            <ul class="space-y-2">
-                                {#each category.highScores as question}
-                                    <li class="rounded-lg border p-3">
-                                        <p class="text-sm font-medium">{question.question}</p>
-                                        <p class="mt-2 text-sm text-muted-foreground">
-                                            <span class="font-medium">Deine Antwort:</span> {getSelectedAnswer(question)}
-                                        </p>
-                                        <p class="mt-1 text-xs text-muted-foreground">Bewertung: {question.selectedScore}/4</p>
-                                    </li>
-                                {/each}
-                            </ul>
-                        {/if}
-                    </div>
-                </div>
-            </Card.Content>
-        </Card.Root>
-    {/each}
-</div> 
+					<!-- High Scores (3-4) -->
+					<div class="space-y-4">
+						<h3 class="text-lg font-semibold text-green-500">Stärken (Stufen 3 & 4)</h3>
+						{#if category.highScores.length === 0}
+							<p class="text-sm text-muted-foreground">Keine Antworten in diesem Bereich.</p>
+						{:else}
+							<ul class="space-y-2">
+								{#each category.highScores as question}
+									<li class="rounded-lg border p-3">
+										<p class="text-sm font-medium">{question.question}</p>
+										<p class="mt-2 text-sm text-muted-foreground">
+											<span class="font-medium">Deine Antwort:</span>
+											{getSelectedAnswer(question)}
+										</p>
+										<p class="mt-1 text-xs text-muted-foreground">
+											Bewertung: {question.selectedScore}/4
+										</p>
+									</li>
+								{/each}
+							</ul>
+						{/if}
+					</div>
+				</div>
+			</Card.Content>
+		</Card.Root>
+	{/each}
+</div>

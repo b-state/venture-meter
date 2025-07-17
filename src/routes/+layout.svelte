@@ -10,7 +10,9 @@
 </script>
 
 <ModeWatcher />
-<header class="flex w-full items-center justify-between border-b h-16 px-5 sticky top-0 backdrop-blur-lg bg-background/80 z-50">
+<header
+	class="sticky top-0 z-50 flex h-16 w-full items-center justify-between border-b bg-background/80 px-5 backdrop-blur-lg"
+>
 	<div class="w-48">
 		<a href="/" class="w-40">
 			<VentureMeterLogo />
@@ -18,25 +20,33 @@
 	</div>
 	<nav class="flex gap-10">
 		<a
-			class="transition hover:text-primary {currentPath === '/' ? 'text-primary' : 'text-muted-foreground'}"
+			class="transition hover:text-primary {currentPath === '/'
+				? 'text-primary'
+				: 'text-muted-foreground'}"
 			href="/"
 		>
 			Start
 		</a>
 		<a
-			class="transition hover:text-primary {currentPath.startsWith('/questionnaire') ? 'text-primary' : 'text-muted-foreground'}"
+			class="transition hover:text-primary {currentPath.startsWith('/questionnaire')
+				? 'text-primary'
+				: 'text-muted-foreground'}"
 			href="/questionnaire"
 		>
 			Fragebogen
 		</a>
 		<a
-			class="transition hover:text-primary {currentPath === '/about' ? 'text-primary' : 'text-muted-foreground'}"
+			class="transition hover:text-primary {currentPath === '/about'
+				? 'text-primary'
+				: 'text-muted-foreground'}"
 			href="/about"
 		>
 			Über
 		</a>
 		<a
-			class="transition hover:text-primary {currentPath === '/contact' ? 'text-primary' : 'text-muted-foreground'}"
+			class="transition hover:text-primary {currentPath === '/contact'
+				? 'text-primary'
+				: 'text-muted-foreground'}"
 			href="/contact"
 		>
 			Kontakt

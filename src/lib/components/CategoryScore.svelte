@@ -14,4 +14,4 @@
 		<span class="text-sm text-muted-foreground">{score.toFixed(1)}/4</span>
 	</div>
 	<Progress value={percentage} class={colorClass} />
-</div> 
+</div>

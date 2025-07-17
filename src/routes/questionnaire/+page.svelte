@@ -20,13 +20,13 @@
 	function handleFileSelect(event: Event) {
 		const input = event.target as HTMLInputElement;
 		const file = input.files?.[0];
-		
+
 		if (file) {
 			const reader = new FileReader();
 			reader.onload = (e) => {
 				const content = e.target?.result as string;
 				importProgress(content);
-				
+
 				// Get the next unanswered question and navigate to it
 				const nextQuestionId = getNextUnansweredQuestion();
 				if (nextQuestionId) {
@@ -65,8 +65,7 @@
 				<div>
 					<h2 class="mb-2 text-xl font-semibold">Fragebogen fortsetzen</h2>
 					<p class="text-muted-foreground">
-						Lade Deinen Speicherstand hoch und setze Deinen bereits begonnenen Fragebogen
-						fort.
+						Lade Deinen Speicherstand hoch und setze Deinen bereits begonnenen Fragebogen fort.
 					</p>
 				</div>
 				<div class="flex flex-col items-center gap-4">
@@ -77,12 +76,7 @@
 						bind:this={fileInput}
 						onchange={handleFileSelect}
 					/>
-					<Button 
-						size="lg" 
-						class="gap-2" 
-						variant="outline"
-						onclick={() => fileInput.click()}
-					>
+					<Button size="lg" class="gap-2" variant="outline" onclick={() => fileInput.click()}>
 						Zum Upload
 						<Upload size="20" />
 					</Button>

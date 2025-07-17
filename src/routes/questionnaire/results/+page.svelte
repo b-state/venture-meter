@@ -21,7 +21,7 @@
 
 	let unlockedCategories: string[] = $state([]);
 	let totalUnlocked: number = $state(0);
-	
+
 	let recommendationLoading = $state(false);
 	let recommendation = $state('');
 
@@ -62,49 +62,49 @@
 			totalUnlocked = unlockedCategories.length;
 		}
 		loading = false;
-		
+
 		// Fetch AI recommendation
 		await fetchRecommendation();
 	});
-	
+
 	const fetchRecommendation = async () => {
 		if (!startupInfo) return;
-		
+
 		recommendationLoading = true;
 		try {
 			// Get weak answers (stages 1 & 2)
 			const storedData = getStoredData();
 			let weakAnswers = [];
-			
+
 			if (storedData) {
 				weakAnswers = storedData.questions
-					.filter(q => q.selectedScore !== null && q.selectedScore <= 2)
-					.map(q => ({
+					.filter((q) => q.selectedScore !== null && q.selectedScore <= 2)
+					.map((q) => ({
 						category: q.category,
 						question: q.question,
 						selectedAnswer: q.options[q.selectedScore - 1],
 						score: q.selectedScore
 					}));
 			}
-			
+
 			const params = new URLSearchParams({
 				industry: startupInfo.industry,
 				productCategory: startupInfo.productCategory,
 				targetCustomers: startupInfo.targetCustomers,
 				weakAnswers: JSON.stringify(weakAnswers)
 			});
-			
+
 			const response = await fetch(`/api/recommendation?${params}`);
 			if (response.ok) {
 				const reader = response.body?.getReader();
 				if (reader) {
 					const decoder = new TextDecoder();
 					let result = '';
-					
+
 					while (true) {
 						const { done, value } = await reader.read();
 						if (done) break;
-						
+
 						const chunk = decoder.decode(value, { stream: true });
 						result += chunk;
 						recommendation = result;
@@ -355,7 +355,8 @@
 						</Card.Header>
 						<Card.Content>
 							<p class="pb-6 text-sm text-foreground">
-								Hier kannst du Deine Gesamtbewertung sehen. Je weiter Außen der Punkt liegt, desto besser ist die Kategorie für dich.
+								Hier kannst du Deine Gesamtbewertung sehen. Je weiter Außen der Punkt liegt, desto
+								besser ist die Kategorie für dich.
 							</p>
 							<div class="aspect-square">
 								<RadarChart data={results} />
@@ -376,7 +377,9 @@
 					<Card.Content>
 						{#if recommendationLoading}
 							<div class="flex items-center justify-center py-8">
-								<div class="text-sm text-muted-foreground flex items-center gap-2"><Loader2 size="16" class="animate-spin" /> Erstelle Handlungsempfehlung...</div>
+								<div class="flex items-center gap-2 text-sm text-muted-foreground">
+									<Loader2 size="16" class="animate-spin" /> Erstelle Handlungsempfehlung...
+								</div>
 							</div>
 						{:else if recommendation}
 							<div class="prose prose-sm max-w-none">
@@ -384,7 +387,8 @@
 							</div>
 						{:else}
 							<p class="text-sm text-muted-foreground">
-								Keine Empfehlung verfügbar. Bitte stelle sicher, dass alle Startup-Informationen ausgefüllt sind.
+								Keine Empfehlung verfügbar. Bitte stelle sicher, dass alle Startup-Informationen
+								ausgefüllt sind.
 							</p>
 						{/if}
 						<p class="mt-4 text-center text-xs text-muted-foreground">

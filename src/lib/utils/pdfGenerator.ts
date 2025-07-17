@@ -27,4 +27,4 @@ export async function generatePDF() {
 	} catch (error) {
 		console.error('Error generating PDF:', error);
 	}
-} 
+}
