@@ -38,7 +38,6 @@ export const GET: RequestHandler = async ({ url }) => {
 				weakAnswersText += `   Antwort: ${answer.selectedAnswer} (Stufe ${answer.score})\n\n`;
 			});
 		}
-
 		const inputMessage = `
         Startup Daten:
         Industry: ${industry}

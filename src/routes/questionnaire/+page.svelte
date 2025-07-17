@@ -14,7 +14,7 @@
 		localStorage.removeItem(STORAGE_KEY);
 		localStorage.removeItem(HELP_VISIBILITY_KEY);
 
-		goto('/questionnaire/startup-info');
+		goto('/questionnaire/info');
 	};
 
 	function handleFileSelect(event: Event) {

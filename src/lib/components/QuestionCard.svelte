@@ -87,7 +87,6 @@
 
 	async function fetchHelpText() {
 		isLoadingHelp = true;
-		console.log('isLoadingHelp before fetch', isLoadingHelp);
 		try {
 			// Get startup info from localStorage
 			const startupInfo = getStartupInfo();

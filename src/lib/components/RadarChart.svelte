@@ -37,7 +37,7 @@
 				scales: {
 					r: {
 						beginAtZero: true,
-						max: 5,
+						max: 4,
 						ticks: {
 							stepSize: 1,
 							font: {

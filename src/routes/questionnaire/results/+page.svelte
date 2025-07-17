@@ -21,6 +21,8 @@
 
 	let unlockedCategories: string[] = $state([]);
 	let totalUnlocked: number = $state(0);
+	$inspect('totalUnlocked', totalUnlocked);
+	$inspect('unlockedCategories', unlockedCategories.length);
 
 	let recommendationLoading = $state(false);
 	let recommendation = $state('');
@@ -65,6 +67,7 @@
 
 		// Fetch AI recommendation
 		await fetchRecommendation();
+
 	});
 
 	const fetchRecommendation = async () => {
@@ -223,21 +226,21 @@
 						<Card.Content>
 							<div class="">
 								<p class="text-sm text-foreground">
-									{#if (totalScore = 5)}
+									{#if (totalUnlocked === 5)}
 										Großartig – euer Produkt ist am Markt angekommen, und ihr arbeitet bereits an
 										Wachstum und Skalierung. Mit klaren Zielgrößen, einer Vertriebsstrategie und
 										ersten Einnahmen geht ihr den nächsten professionellen Schritt.
-									{:else if (totalScore = 4)}
+									{:else if (totalUnlocked === 4)}
 										Ihr seid bereit für den nächsten Schritt: Die Markteintrittsstrategie steht,
 										interne Strukturen entwickeln sich, erste Pilotkunden sind in Sicht oder schon
 										an Bord. Ihr schafft gerade die Brücke vom Prototyp zur echten Anwendung, ein
 										toller Fortschritt!
-									{:else if (totalScore = 3)}
+									{:else if (totalUnlocked === 3)}
 										Ihr seid mitten in der aktiven Auseinandersetzung mit dem Markt. Nutzerfeedback,
 										Wettbewerbsanalysen und Marktpotenziale fließen in eure Entwicklung ein, das ist
 										ein großer Meilenstein auf dem Weg zu einem wirklich marktfähigen Produkt.
 										Glückwunsch!
-									{:else if (totalScore = 2)}
+									{:else if (totalUnlocked === 2)}
 										Ihr habt bereits viel erreicht: Eine klare Value Proposition nimmt Form an, euer
 										Geschäftsmodell ist nicht mehr nur eine Idee und erste Rückmeldungen zeigen,
 										dass ihr ein echtes Problem löst. Eine starke Basis für die nächsten Schritte!
