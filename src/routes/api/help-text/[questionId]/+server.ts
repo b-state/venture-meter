@@ -31,15 +31,14 @@ export const GET: RequestHandler = async ({ params, fetch, url }) => {
 		const target_customers = url.searchParams.get('targetCustomers') || '';
 
 		const inputMessage = `
-        Startup Daten:
-        Industry: ${industry}
-        Produkt Kategorie: ${product_category}
-        Zielgruppe: ${target_customers}
-
-        Frage: ${question.question}
-        Antworten: ${question.options.join('\n ')}
-        `;
-
+    Startup Daten:
+    Industry: ${industry}
+    Produkt Kategorie: ${product_category}
+    Zielgruppe: ${target_customers}
+   	Startup-Phase: ${question.category}
+    Frage: ${question.question}
+    Antworten: ${question.options.join('\n ')}
+    `;
 		const client = new LangflowClient({ baseUrl: LANGFLOW_BASE_URL, apiKey: LANGFLOW_API_KEY });
 		const flow = client.flow(LANGFLOW_SPICKZETTEL_FLOW_ID);
 

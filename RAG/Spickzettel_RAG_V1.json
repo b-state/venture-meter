@@ -320,7 +320,6 @@
             "is_input": null,
             "is_output": null,
             "legacy": false,
-            "lf_version": "1.4.3",
             "metadata": {},
             "minimized": false,
             "name": "",
@@ -423,7 +422,7 @@
                 "title_case": false,
                 "trace_as_input": true,
                 "type": "prompt",
-                "value": "Du bist in der Rolle eines erfahrenen Startup-Coaches, der einem Startup individuelle Handlungsempfehlungen gibt. Nachfolgend findest du:\n\n– Die aktuelle Phase des Startups in der Startup-Journey (z. B. Idee, Konzept, Prototyp, MVP, Markteintritt, Skalierung)\n– Eine aus einem Reifegradmodell, die das Startup beantworten muss\n- Kontext aus durchgeführten Experteninterviews\n\nStarup Informationen:\n\n{input}\n\nGib eine realistische, kurze Handlungsempfehlung, die dem Startup in seiner aktuellen Phase hilft, in diese Frage auf Antwortstufe 3 oder 4 beantworten zu können.\n\nWichtig:\n– Passe die Empfehlung an die frühe Phase an (z. B. keine KPIs oder Skalierungsstrategien für ein Startup ohne Produkt).\n– Bleibe konstruktiv und pragmatisch.\n– Keine Floskeln oder generischen Aussagen.\n– Maximal 4–5 Sätze.\n– Kein Schluss-Satz wie „Viel Erfolg“ oder „Das ist ein wichtiger Schritt“.\n\nHier der Kontext aus den Experteninterviews:\n\n{context}"
+                "value": "Du bist in der Rolle eines erfahrenen Startup-Coaches, der einem Startup individuelle Handlungsempfehlungen gibt. Nachfolgend findest du:\n\n– Die aktuelle Phase des Startups in der Startup-Journey (z. B. Idee, Konzept, Prototyp, MVP, Markteintritt, Skalierung)\n– Eine aus einem Reifegradmodell, die das Startup beantworten muss\n- Kontext aus durchgeführten Experteninterviews\n\n{input}\n\nGib eine realistische, kurze Handlungsempfehlung, die dem Startup in seiner aktuellen Phase hilft, in diese Frage auf Antwortstufe 3 oder 4 beantworten zu können.\n\nWichtig:\n– Passe die Empfehlung an die frühe Phase an (z. B. keine KPIs oder Skalierungsstrategien für ein Startup ohne Produkt).\n– Bleibe konstruktiv und pragmatisch.\n- Gib konkrete, realitätsnahe Beispiele am Ende.\n– Keine Floskeln oder generischen Aussagen.\n– Maximal 4–5 Sätze.\n– Kein Schluss-Satz wie „Viel Erfolg“ oder „Das ist ein wichtiger Schritt“.\n- Beginne deine Antwort mit: „Bei den letzten beiden Antwortstufen erwarten Coaches und Investoren typischerweise“\n- Arbeite mit Zeilenumbrüchen für bessere Lesbarkeit\n\nHier der Kontext aus den Experteninterviews:\n\n{context}"
               },
               "tool_placeholder": {
                 "_input_type": "MessageTextInput",
@@ -467,7 +466,7 @@
           "x": 1977.9097981422992,
           "y": 640.5656416923846
         },
-        "selected": false,
+        "selected": true,
         "type": "genericNode",
         "width": 320
       },
@@ -1897,7 +1896,7 @@
                   "a420da5e-034d-40c8-a9a1-30c737593e14/10ef5836-40e6-42a2-baad-356066315ed1.docx",
                   "a420da5e-034d-40c8-a9a1-30c737593e14/ee83675f-a921-473d-be0a-5f74c98d5ff6.docx",
                   "a420da5e-034d-40c8-a9a1-30c737593e14/b0021e60-0e5e-44ef-9c85-1c885973aed4.docx",
-                  "a420da5e-034d-40c8-a9a1-30c737593e14/138bfc84-2bdd-4301-979f-55642a19561e.pdf"
+                  "a420da5e-034d-40c8-a9a1-30c737593e14/0e510162-840d-44ac-a025-adcb00b7a50b.pdf"
                 ],
                 "info": "Supported file extensions: txt, md, mdx, csv, json, yaml, yml, xml, html, htm, pdf, docx, py, sh, sql, js, ts, tsx; optionally bundled in file extensions: zip, tar, tgz, bz2, gz",
                 "list": true,
@@ -2408,7 +2407,7 @@
           "x": 2584.166170179242,
           "y": 1062.312523052104
         },
-        "selected": true,
+        "selected": false,
         "type": "genericNode"
       },
       {
@@ -3743,7 +3742,7 @@
                     "icon": "vectorstores",
                     "model": null,
                     "provider": null,
-                    "records": 2897
+                    "records": 3284
                   }
                 ],
                 "placeholder": "",
