@@ -4,7 +4,11 @@
 	import { Button } from '$lib/components/ui/button';
 	import { page } from '$app/state';
 	import { CircleCheckBig } from 'lucide-svelte';
-	import { goToNextQuestion, goToPreviousQuestion } from '$lib/utils/questionHelpers.js';
+	import {
+		goToNextQuestion,
+		goToPreviousQuestion,
+		getFirstRelevantQuestionIdForCategory
+	} from '$lib/utils/questionHelpers.js';
 	import { getCategoryStats, exportProgress } from '$lib/utils/questionnaire';
 	import { onMount } from 'svelte';
 	import * as Dialog from '$lib/components/ui/dialog';
@@ -40,20 +44,30 @@
 		document.body.removeChild(a);
 		URL.revokeObjectURL(url);
 	}
+
+	function jumpToCategory(categoryTitle: string) {
+		const questionId = getFirstRelevantQuestionIdForCategory(categoryTitle);
+		if (questionId) {
+			goto(`/questionnaire/question/${questionId}`);
+		}
+	}
 </script>
 
 <div class="flex">
 	<aside class="flex min-h-[calc(100vh-64px)] w-1/4 flex-col justify-start ring-1 ring-muted">
-		{#each categories as category}
+		{#each categories as category, index}
 			<div
-				class="flex h-28 flex-col justify-center gap-2 px-5 py-5 ring-1 ring-muted transition hover:bg-muted-foreground/10 {currentQuestion?.category ===
+				class="flex h-full flex-col justify-center gap-2 px-5 py-5 ring-1 ring-muted transition hover:bg-muted-foreground/10 {currentQuestion?.category ===
 				category.title
 					? 'bg-muted'
 					: ''}"
 			>
-				<div class="text-xl font-bold">{category.title}</div>
+				<button
+					class="cursor-pointer text-left text-xl font-bold hover:underline"
+					onclick={() => jumpToCategory(category.title)}>{category.title}</button
+				>
 				<div class="flex items-center gap-1 text-muted-foreground">
-					<p class="text-sm">{category.answeredCount} von {category.questionCount} Fragen</p>
+					<p class="text-sm">{category.answeredCount} von {category.questionCount} Fragen beantwortet</p>
 					{#if category.answeredCount === category.questionCount}
 						<CircleCheckBig size="18" color="#32CD32" />
 					{/if}

@@ -197,3 +197,29 @@ export function getNextAvailableQuestion(currentQuestionId: number): number | nu
 		return null;
 	}
 }
+
+/**
+ * Returns the id of the first unanswered question in the given category.
+ * If all are answered, returns the id of the first question in the category.
+ * Returns null if no questions found for the category.
+ */
+export function getFirstRelevantQuestionIdForCategory(category: string): number | null {
+	if (!isBrowser) return null;
+
+	try {
+		const stored = getStoredData();
+		if (!stored) return null;
+
+		const categoryQuestions = stored.questions.filter((q) => q.category === category);
+		if (categoryQuestions.length === 0) return null;
+
+		const firstUnanswered = categoryQuestions.find((q) => q.selectedScore === null || q.selectedScore === undefined);
+		if (firstUnanswered) return firstUnanswered.id;
+
+		// All answered, return first question in category
+		return categoryQuestions[0].id;
+	} catch (error) {
+		console.error('Error getting first relevant question for category:', error);
+		return null;
+	}
+}
