@@ -146,16 +146,19 @@
 			</Button>
 		{/each}
 
-		<Button
-			variant="outline"
-			size="sm"
-			class="flex w-fit gap-2 self-end text-muted-foreground {questionId <= 2
-				? 'animate-pulse'
-				: ''}"
-			onclick={toggleHelp}
-		>
-			<HelpCircle size="20" /> Spickzettel {showHelp ? 'ausblenden' : 'anzeigen'}
-		</Button>
+		<div class="relative self-end">
+			<div
+				class="absolute inset-0 rounded-md bg-gradient-to-r from-pink-400/60 via-violet-400/60 to-pink-400/60 p-[1px]"
+			>
+				<div class="h-full w-full rounded-md bg-background"></div>
+			</div>
+			<button
+				class="relative z-10 flex w-fit items-center gap-2 rounded-md p-2 text-sm text-muted-foreground transition hover:text-primary"
+				onclick={toggleHelp}
+			>
+				<HelpCircle size="20" /> Spickzettel {showHelp ? 'ausblenden' : 'anzeigen'}
+			</button>
+		</div>
 	</div>
 
 	{#if showHelp}
