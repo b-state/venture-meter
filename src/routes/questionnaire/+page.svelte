@@ -1,8 +1,9 @@
 <script lang="ts">
 	import type { PageData } from './$types';
 	import { Button } from '$lib/components/ui/button';
-	import { ArrowRight, Play, Upload } from 'lucide-svelte';
+	import { ArrowRight, Play, Upload, LogOut } from 'lucide-svelte';
 	import { goto } from '$app/navigation';
+	import { logout } from '$lib/utils/auth';
 	import { HELP_VISIBILITY_KEY, STORAGE_KEY } from '$lib/constants';
 	import { getNextUnansweredQuestion } from '$lib/utils/questionHelpers';
 	import { importProgress } from '$lib/utils/questionnaire';
@@ -42,6 +43,14 @@
 </script>
 
 <div class="flex h-screen justify-center bg-gradient-to-b from-background to-muted">
+	<!-- Logout Button -->
+	<div class="absolute right-4 top-4">
+		<Button variant="outline" size="sm" onclick={() => { logout(); goto('/login'); }}>
+			<LogOut size="16" class="mr-2" />
+			Logout
+		</Button>
+	</div>
+	
 	<div class="flex w-screen max-w-2xl flex-col justify-center gap-6">
 		<h1 class="text-center text-3xl font-bold">Wie möchtest Du fortfahren?</h1>
 

@@ -1,7 +1,9 @@
 <script>
 	import VentureMeterLogo from '$lib/assets/VentureMeterLogo.svelte';
 	import { Button } from '$lib/components/ui/button';
-	import { ArrowRight, CheckCircle2, ChartColumn, Target, Rocket, Sparkles } from 'lucide-svelte';
+	import { logout } from '$lib/utils/auth';
+	import { goto } from '$app/navigation';
+	import { ArrowRight, CheckCircle2, ChartColumn, Target, Rocket, Sparkles, LogOut } from 'lucide-svelte';
 
 	const categories = [
 		{
@@ -22,6 +24,11 @@
 </script>
 
 <div class="min-h-screen bg-gradient-to-b from-background to-muted px-10">
+	<!-- Logout Button -->
+	<div class=" right-4 top-4">
+
+	</div>
+	
 	<!-- Hero Section -->
 	<div class="container mx-auto px-4 py-20">
 		<div class="flex flex-col items-center text-center">
@@ -34,7 +41,7 @@
 			</p>
 			<div class="mt-10 flex items-center gap-x-6">
 				<Button size="lg" class="gap-2" href="/questionnaire">
-					Jetzt Starten
+					Zum Fragebogen
 					<ArrowRight size="20" />
 				</Button>
 			</div>
@@ -98,7 +105,7 @@
 				weitere Entwicklung.
 			</p>
 			<Button size="lg" class="gap-2" href="/questionnaire">
-				Jetzt Starten
+				Zum Fragebogen
 				<ArrowRight size="20" />
 			</Button>
 		</div>
