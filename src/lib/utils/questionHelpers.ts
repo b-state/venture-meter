@@ -38,9 +38,15 @@ export async function goToNextQuestion(currentQuestionId: number, totalQuestions
 		throw new Error('Invalid total questions count');
 	}
 
-	if (currentQuestionId < totalQuestions) {
+	if (currentQuestionId <= totalQuestions) {
 		const nextUnanswered = getNextUnansweredQuestion();
-		const nextId = nextUnanswered || currentQuestionId + 1;
+		let nextId;
+		console.log('nextUnanswered', nextUnanswered);
+		if (nextUnanswered && nextUnanswered > currentQuestionId) {
+			nextId = nextUnanswered;
+		} else {
+			nextId = currentQuestionId + 1;
+		}
 		goto(`/questionnaire/question/${nextId}`);
 	}
 }
@@ -113,15 +119,15 @@ export function isCategoryUnlocked(category: string): boolean {
 		if (!stored) return false;
 
 		const categoryQuestions = stored.questions.filter((q) => q.category === category);
-		const answeredQuestions = categoryQuestions.filter((q) => q.selectedScore !== null);
-		const hasHighScore = categoryQuestions.some(
+		const highScoreQuestions = categoryQuestions.filter(
 			(q) => q.selectedScore === 3 || q.selectedScore === 4
 		);
+		
+		// Check if 50% of questions in this category have high scores (3 or 4)
+		const requiredHighScoreCount = Math.ceil(categoryQuestions.length * 0.5);
+		const hasEnoughHighScores = highScoreQuestions.length >= requiredHighScoreCount;
 
-		// First check if all questions in this category are answered and at least one has a high score
-		const categoryComplete = answeredQuestions.length === categoryQuestions.length && hasHighScore;
-
-		if (!categoryComplete) return false;
+		if (!hasEnoughHighScores) return false;
 
 		// Now check if all previous categories are unlocked
 		const currentCategoryIndex = CATEGORY_ORDER.indexOf(category);
@@ -132,24 +138,19 @@ export function isCategoryUnlocked(category: string): boolean {
 			const previousCategoryQuestions = stored.questions.filter(
 				(q) => q.category === previousCategory
 			);
-			const previousAnsweredQuestions = previousCategoryQuestions.filter(
-				(q) => q.selectedScore !== null
-			);
-			const previousHasHighScore = previousCategoryQuestions.some(
+			const previousHighScoreQuestions = previousCategoryQuestions.filter(
 				(q) => q.selectedScore === 3 || q.selectedScore === 4
 			);
+			
+			const previousRequiredHighScoreCount = Math.ceil(previousCategoryQuestions.length * 0.5);
+			const previousHasEnoughHighScores = previousHighScoreQuestions.length >= previousRequiredHighScoreCount;
 
-			// Previous category must be complete (all answered + at least one high score)
-			const previousCategoryComplete =
-				previousAnsweredQuestions.length === previousCategoryQuestions.length &&
-				previousHasHighScore;
-
-			if (!previousCategoryComplete) {
+			if (!previousHasEnoughHighScores) {
 				return false; // Previous category not unlocked, so this category cannot be unlocked
 			}
 		}
 
-		return true; // All previous categories are unlocked and this category is complete
+		return true; // All previous categories are unlocked and this category has enough high scores
 	} catch (error) {
 		console.error('Error checking if category is unlocked:', error);
 		return false;

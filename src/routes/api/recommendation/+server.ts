@@ -14,6 +14,7 @@ export const GET: RequestHandler = async ({ url }) => {
 		const product_category = url.searchParams.get('productCategory') || '';
 		const target_customers = url.searchParams.get('targetCustomers') || '';
 		const weakAnswers = url.searchParams.get('weakAnswers') || '[]';
+		const finalPhase = url.searchParams.get('finalPhase') || '';
 
 		// Parse weak answers
 		let weakAnswersData: Array<{
@@ -38,13 +39,13 @@ export const GET: RequestHandler = async ({ url }) => {
 				weakAnswersText += `   Antwort: ${answer.selectedAnswer} (Stufe ${answer.score})\n\n`;
 			});
 		}
-		console.log('weakAnswersText', weakAnswersText);
+
 		const inputMessage = `
         Startup Daten:
         Industry: ${industry}
         Produkt Kategorie: ${product_category}
         Zielgruppe: ${target_customers}
-
+        Aktuelle Phase des Startups: ${finalPhase}
         Bewertungsergebnisse: ${weakAnswersText}`;
 
 		const client = new LangflowClient({ baseUrl: LANGFLOW_BASE_URL, apiKey: LANGFLOW_API_KEY });

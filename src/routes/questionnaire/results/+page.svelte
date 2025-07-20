@@ -93,7 +93,8 @@
 				industry: startupInfo.industry,
 				productCategory: startupInfo.productCategory,
 				targetCustomers: startupInfo.targetCustomers,
-				weakAnswers: JSON.stringify(weakAnswers)
+				weakAnswers: JSON.stringify(weakAnswers),
+				finalPhase: CATEGORY_ORDER[totalUnlocked - 1]
 			});
 
 			const response = await fetch(`/api/recommendation?${params}`);
@@ -276,14 +277,14 @@
 									</div>
 									<div class="rounded-2xl p-2">
 										<h3
-											class="font-semibold {unlockedCategories.includes('Chancen Validierung')
+											class="font-semibold {unlockedCategories.includes('Chancen-Validierung')
 												? 'text-foreground'
 												: 'text-muted'}"
 										>
-											2. Chancen Validierung
+											2. Chancen-Validierung
 										</h3>
 										<p
-											class="text-sm {unlockedCategories.includes('Chancen Validierung')
+											class="text-sm {unlockedCategories.includes('Chancen-Validierung')
 												? 'text-foreground'
 												: 'text-muted'}"
 										>

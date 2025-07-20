@@ -16,7 +16,7 @@
 				Mit dem Ausfüllen dieses Fragebogens bekommst du ein Gefühl dafür, wo du in deiner
 				Startup-Journey stehst. Es ist völlig in Ordnung, wenn du nicht überall die höchste
 				Antwortstufe auswählen kannst. Viel wichtiger ist, dass du ihn immer wieder machst, um
-				deinen Fortschritt zu sehen. Sieh den Fragebogen als deinen Orientierungshilfe und deine
+				deinen Fortschritt zu sehen. Sieh den Fragebogen als eine Orientierungshilfe und deinen
 				Begleiter.
 			</p>
 			<div class="mb-8 grid grid-cols-1 gap-6 md:grid-cols-3">

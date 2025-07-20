@@ -67,7 +67,9 @@
 					onclick={() => jumpToCategory(category.title)}>{category.title}</button
 				>
 				<div class="flex items-center gap-1 text-muted-foreground">
-					<p class="text-sm">{category.answeredCount} von {category.questionCount} Fragen beantwortet</p>
+					<p class="text-sm">
+						{category.answeredCount} von {category.questionCount} Fragen beantwortet
+					</p>
 					{#if category.answeredCount === category.questionCount}
 						<CircleCheckBig size="18" color="#32CD32" />
 					{/if}
@@ -101,7 +103,7 @@
 		</div>
 	</aside>
 	<main class="my-10 flex w-screen flex-col items-center justify-center px-10">
-		<div class="flex h-full w-full flex-col justify-center">
+		<div class="my-auto flex w-full flex-col justify-center">
 			{#if currentQuestion}
 				{#key currentQuestion.id}
 					<QuestionCard
@@ -114,7 +116,13 @@
 				{/key}
 			{:else if isAfterLastQuestion}
 				<div class="flex flex-col items-center justify-center">
-					<p>Alle Fragen wurden beantwortet. Unten geht es zur Auswertung.</p>
+					{#if categories.every((c) => c.answeredCount === c.questionCount)}
+						<p>Alle Fragen wurden beantwortet. Unten geht es zur Auswertung.</p>
+					{:else}
+						<p class="">
+							Nicht alle Fragen wurden beantwortet. Bitte beantworte alle Fragen, um zur Auswertung zu kommen.
+						</p>
+					{/if}
 				</div>
 			{:else}
 				<div class="flex flex-col items-center justify-center">
@@ -122,7 +130,7 @@
 				</div>
 			{/if}
 		</div>
-		<div class="mt-auto flex w-full flex-col gap-2">
+		<div class="flex w-full flex-col gap-2">
 			<div class="w-full">
 				<p>Fortschritt</p>
 				<Progress value={progress} class="h-2" />
@@ -131,14 +139,15 @@
 				{#if currentId > 1}
 					<Button variant="outline" onclick={() => goToPreviousQuestion(currentId)}>Zurück</Button>
 				{/if}
-				<Button
-					variant="outline"
-					onclick={() => goToNextQuestion(currentId, totalQuestions)}
-					disabled={currentId >= totalQuestions}
-					class="ml-auto"
-				>
-					Weiter
-				</Button>
+				{#if currentId < totalQuestions + 1}
+					<Button
+						variant="outline"
+						onclick={() => goToNextQuestion(currentId, totalQuestions)}
+						class="ml-auto"
+					>
+						Weiter
+					</Button>
+				{/if}
 				{#if categories.every((c) => c.answeredCount === c.questionCount)}
 					<Button
 						onclick={() => goto('/questionnaire/results')}
