@@ -22,7 +22,6 @@
 	let unlockedCategories: string[] = $state([]);
 	let totalUnlocked: number = $state(0);
 
-
 	let recommendationLoading = $state(false);
 	let recommendation = $state('');
 
@@ -66,7 +65,6 @@
 
 		// Fetch AI recommendation
 		await fetchRecommendation();
-
 	});
 
 	const fetchRecommendation = async () => {
@@ -226,21 +224,21 @@
 						<Card.Content>
 							<div class="">
 								<p class="text-sm text-foreground">
-									{#if (totalUnlocked === 5)}
+									{#if totalUnlocked === 5}
 										Großartig – euer Produkt ist am Markt angekommen, und ihr arbeitet bereits an
 										Wachstum und Skalierung. Mit klaren Zielgrößen, einer Vertriebsstrategie und
 										ersten Einnahmen geht ihr den nächsten professionellen Schritt.
-									{:else if (totalUnlocked === 4)}
+									{:else if totalUnlocked === 4}
 										Ihr seid bereit für den nächsten Schritt: Die Markteintrittsstrategie steht,
 										interne Strukturen entwickeln sich, erste Pilotkunden sind in Sicht oder schon
 										an Bord. Ihr schafft gerade die Brücke vom Prototyp zur echten Anwendung, ein
 										toller Fortschritt!
-									{:else if (totalUnlocked === 3)}
+									{:else if totalUnlocked === 3}
 										Ihr seid mitten in der aktiven Auseinandersetzung mit dem Markt. Nutzerfeedback,
 										Wettbewerbsanalysen und Marktpotenziale fließen in eure Entwicklung ein, das ist
 										ein großer Meilenstein auf dem Weg zu einem wirklich marktfähigen Produkt.
 										Glückwunsch!
-									{:else if (totalUnlocked === 2)}
+									{:else if totalUnlocked === 2}
 										Ihr habt bereits viel erreicht: Eine klare Value Proposition nimmt Form an, euer
 										Geschäftsmodell ist nicht mehr nur eine Idee und erste Rückmeldungen zeigen,
 										dass ihr ein echtes Problem löst. Eine starke Basis für die nächsten Schritte!
@@ -358,8 +356,9 @@
 						</Card.Header>
 						<Card.Content>
 							<p class="pb-6 text-sm text-foreground">
-								Hier kannst du deine Gesamtbewertung sehen. Je weiter Außen der Punkt liegt, desto
-								besser ist die Kategorie für dich.
+								Hier siehst du auf einen Blick, wie du in den einzelnen Bereichen abgeschnitten
+								hast. Je weiter außen ein Punkt liegt, desto besser ist dein Ergebnis in dieser
+								Kategorie.
 							</p>
 							<div class="aspect-square">
 								<RadarChart data={results} />

@@ -76,3 +76,9 @@
 		@apply bg-background text-foreground;
 	}
 }
+
+@layer components {
+	.page-height {
+		@apply min-h-[calc(100vh-64px)];
+	}
+}

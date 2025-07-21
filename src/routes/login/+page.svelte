@@ -21,7 +21,7 @@
 
 	async function handleSubmit() {
 		if (!password.trim()) {
-			error = 'Please enter a password';
+			error = 'Bitte geben Sie ein Passwort ein';
 			return;
 		}
 
@@ -29,7 +29,7 @@
 		error = '';
 
 		// Simulate a small delay for better UX
-		await new Promise(resolve => setTimeout(resolve, 500));
+		await new Promise((resolve) => setTimeout(resolve, 500));
 
 		if (authenticate(password)) {
 			goto('/');
@@ -48,19 +48,29 @@
 	}
 </script>
 
-<div class="flex min-h-screen items-center justify-center bg-gradient-to-b from-background to-muted p-4">
+<div
+	class="page-height flex items-center justify-center bg-gradient-to-b from-background to-muted p-4"
+>
 	<Card class="w-full max-w-md">
 		<CardHeader class="text-center">
-			<div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
+			<div
+				class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10"
+			>
 				<Lock class="h-8 w-8 text-primary" />
 			</div>
 			<CardTitle class="text-2xl">Venture Meter</CardTitle>
-			<p class="text-muted-foreground">Enter password to access the questionnaire</p>
+			<p class="text-muted-foreground">Passwort eingeben um den Fragebogen zu starten.</p>
 		</CardHeader>
 		<CardContent class="space-y-4">
-			<form onsubmit={(e) => { e.preventDefault(); handleSubmit(); }} class="space-y-4">
+			<form
+				onsubmit={(e) => {
+					e.preventDefault();
+					handleSubmit();
+				}}
+				class="space-y-4"
+			>
 				<div class="space-y-2">
-					<label for="password" class="text-sm font-medium">Password</label>
+					<label for="password" class="text-sm font-medium">Passwort</label>
 					<div class="relative">
 						<input
 							id="password"
@@ -68,7 +78,7 @@
 							bind:value={password}
 							onkeypress={handleKeyPress}
 							class="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-							placeholder="Enter password"
+							placeholder="Passwort eingeben"
 							disabled={isLoading}
 						/>
 						<button
@@ -93,11 +103,13 @@
 
 				<Button type="submit" class="w-full" disabled={isLoading}>
 					{#if isLoading}
-						<div class="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"></div>
+						<div
+							class="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"
+						></div>
 					{/if}
-					{isLoading ? 'Checking...' : 'Access Questionnaire'}
+					{isLoading ? 'Checking...' : 'Einloggen'}
 				</Button>
 			</form>
 		</CardContent>
 	</Card>
-</div> 
+</div>
