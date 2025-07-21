@@ -177,13 +177,20 @@
 								<p class="">{loadingMessages[loadingMessageIndex]}</p>
 							</div>
 						{:else if helpText && helpText.length > 0}
-							<Sparkles size="16" class="mt-0.5 min-w-4" />
-							<div class="relative">
-								<p class="max-h-96 overflow-y-auto whitespace-pre-wrap pb-8">{helpText}</p>
-								<div
-									class="pointer-events-none absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-background to-transparent"
-								></div>
+						<div class="flex flex-col gap-2 ">
+							<div class="flex gap-2">
+								<Sparkles size="16" class="mt-0.5 min-w-4" />
+								<div class="relative w-full ">
+									<p class="max-h-96 overflow-y-auto whitespace-pre-wrap pb-8">{helpText}</p>
+									<div
+										class="pointer-events-none absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-background to-transparent"
+									></div>
+								</div>
 							</div>
+							<p class="w-full text-center text-xs text-muted-foreground">
+								Von KI erstellt – Irrtümer möglich.
+							</p>
+						</div>
 						{:else}
 							<Sparkles size="16" class="mt-0.5 min-w-4" />
 							<p class=" ">Kein Spickzettel verfügbar.</p>

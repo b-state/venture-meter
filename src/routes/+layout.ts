@@ -8,9 +8,11 @@ export const load: LayoutLoad = async ({ url }) => {
 		return {};
 	}
 
-	// Check if user is authenticated
-	if (!isAuthenticated()) {
-		throw redirect(302, '/login');
+	// Wait for browser environment before checking authentication
+	if (typeof window !== 'undefined') {
+		if (!isAuthenticated()) {
+			throw redirect(302, '/login');
+		}
 	}
 
 	return {};
