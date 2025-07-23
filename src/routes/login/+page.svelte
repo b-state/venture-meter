@@ -34,7 +34,7 @@
 		if (authenticate(password)) {
 			goto('/');
 		} else {
-			error = 'Incorrect password';
+			error = 'Falsches Passwort';
 			password = '';
 		}
 
@@ -107,7 +107,7 @@
 							class="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"
 						></div>
 					{/if}
-					{isLoading ? 'Checking...' : 'Einloggen'}
+					{isLoading ? 'Überprüfen...' : 'Einloggen'}
 				</Button>
 			</form>
 		</CardContent>
