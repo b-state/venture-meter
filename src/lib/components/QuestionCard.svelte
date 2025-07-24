@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { Button } from '$lib/components/ui/button';
-	import { Card, CardContent } from '$lib/components/ui/card';
 	import { HELP_VISIBILITY_KEY } from '$lib/constants';
-	import { saveProgress, getStartupInfo } from '$lib/utils/questionnaire';
+	import { saveProgress } from '$lib/utils/questionnaire';
+	import { streamHelpText } from '$lib/utils/fetchingHelpers';
 	import { HelpCircle, Loader2, Sparkles } from 'lucide-svelte';
 	import { onMount } from 'svelte';
 
@@ -19,7 +19,7 @@
 	let currentSelectedScore = $derived(selectedScore);
 	let showHelp = $state(false);
 	let helpText = $state<string | null>(null);
-	let isLoadingHelp = $state(false);
+	let isLoadingHelp = $state(true);
 	let loadingMessageIndex = $state(0);
 	let loadingInterval: ReturnType<typeof setInterval> | undefined;
 
@@ -33,7 +33,7 @@
 		// Load help visibility state from localStorage
 		const savedHelpVisibility = localStorage.getItem(HELP_VISIBILITY_KEY);
 		if (savedHelpVisibility === 'true') {
-			fetchHelpText();
+			fetchHelpText(questionId);
 			showHelp = true;
 		}
 
@@ -81,48 +81,18 @@
 
 		// Only fetch help text if we haven't already
 		if (helpText === null && !isLoadingHelp) {
-			await fetchHelpText();
+			await fetchHelpText(questionId);
 		}
 	}
 
-	async function fetchHelpText() {
+	async function fetchHelpText(questionId: number) {
+		helpText = '';
 		isLoadingHelp = true;
-		try {
-			// Get startup info from localStorage
-			const startupInfo = getStartupInfo();
-
-			// Build query parameters
-			const params = new URLSearchParams();
-			if (startupInfo) {
-				params.append('industry', startupInfo.industry);
-				params.append('productCategory', startupInfo.productCategory);
-				params.append('targetCustomers', startupInfo.targetCustomers);
-			}
-			const response = await fetch(`/api/help-text/${questionId}?${params.toString()}`);
-			if (response.ok) {
-				const reader = response.body!.getReader();
-				helpText = '';
-
-				while (true) {
-					const { done, value } = await reader.read();
-					if (done) break;
-					const chunk = new TextDecoder().decode(value);
-					helpText += chunk;
-
-					// Stop loading once we have some content
-					if (helpText.length > 0) {
-						isLoadingHelp = false;
-					}
-				}
-			} else {
-				isLoadingHelp = false;
-				console.error('Failed to fetch help text');
-				helpText = null;
-			}
-		} catch (error) {
-			console.error('Error fetching help text:', error);
-			helpText = null;
+		for await (const partial of streamHelpText(questionId)) {
+			helpText = partial; // This will update as new chunks arrive
+			// Optionally, trigger Svelte reactivity here
 		}
+		isLoadingHelp = false;
 	}
 </script>
 
@@ -169,7 +139,7 @@
 				<div class="h-full w-full rounded-md bg-background"></div>
 			</div>
 			<div class="relative z-10 h-full">
-				{#if isLoadingHelp}
+				{#if isLoadingHelp && helpText?.length === 0}
 					<div class="flex items-center gap-2">
 						<Loader2 size="16" class="animate-spin" />
 						<p class="">{loadingMessages[loadingMessageIndex]}</p>
@@ -190,8 +160,10 @@
 						</p>
 					</div>
 				{:else}
-					<Sparkles size="16" class="mt-0.5 min-w-4" />
-					<p class=" ">Kein Spickzettel verfügbar.</p>
+					<div class="flex items-center gap-2">
+						<Sparkles size="16" class="mt-0.5 min-w-4" />
+						<p class=" ">Kein Spickzettel verfügbar.</p>
+					</div>
 				{/if}
 			</div>
 		</div>
