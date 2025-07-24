@@ -126,8 +126,8 @@
 	}
 </script>
 
-<div class="flex w-full gap-5">
-	<div class="flex w-2/3 grow flex-col gap-2">
+<div class="flex h-[500px] w-full gap-5">
+	<div class="flex h-full w-2/3 grow flex-col gap-2">
 		<div
 			class="mb-4 flex items-start justify-between gap-4 rounded bg-muted px-4 py-4 ring-1 ring-muted"
 		>
@@ -162,42 +162,38 @@
 	</div>
 
 	{#if showHelp}
-		<div class="w-1/3">
-			<Card class="relative bg-background text-foreground ">
-				<div
-					class="absolute inset-0 rounded-lg bg-gradient-to-r from-pink-400/60 via-violet-400/60 to-pink-400/60 p-[1px]"
-				>
-					<div class="h-full w-full rounded-lg bg-background"></div>
-				</div>
-				<CardContent class="relative z-10 max-h-fit p-4">
-					<div class="flex items-start gap-2">
-						{#if isLoadingHelp}
-							<div class="flex items-center gap-2">
-								<Loader2 size="16" class="animate-spin" />
-								<p class="">{loadingMessages[loadingMessageIndex]}</p>
-							</div>
-						{:else if helpText && helpText.length > 0}
-						<div class="flex flex-col gap-2 ">
-							<div class="flex gap-2">
-								<Sparkles size="16" class="mt-0.5 min-w-4" />
-								<div class="relative w-full ">
-									<p class="max-h-96 overflow-y-auto whitespace-pre-wrap pb-8">{helpText}</p>
-									<div
-										class="pointer-events-none absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-background to-transparent"
-									></div>
-								</div>
-							</div>
-							<p class="w-full text-center text-xs text-muted-foreground">
-								Von KI erstellt – Irrtümer möglich.
-							</p>
-						</div>
-						{:else}
-							<Sparkles size="16" class="mt-0.5 min-w-4" />
-							<p class=" ">Kein Spickzettel verfügbar.</p>
-						{/if}
+		<div class="relative flex h-full w-1/3 items-start gap-2 rounded-md bg-background p-4">
+			<div
+				class="absolute inset-0 rounded-md bg-gradient-to-r from-pink-400/60 via-violet-400/60 to-pink-400/60 p-[1px]"
+			>
+				<div class="h-full w-full rounded-md bg-background"></div>
+			</div>
+			<div class="relative z-10 h-full">
+				{#if isLoadingHelp}
+					<div class="flex items-center gap-2">
+						<Loader2 size="16" class="animate-spin" />
+						<p class="">{loadingMessages[loadingMessageIndex]}</p>
 					</div>
-				</CardContent>
-			</Card>
+				{:else if helpText && helpText.length > 0}
+					<div class="flex h-full flex-col justify-between">
+						<div class="flex gap-2">
+							<Sparkles size="16" class="mt-0.5 min-w-4" />
+							<div class="relative w-full">
+								<p class="max-h-[450px] overflow-y-auto whitespace-pre-wrap pb-8">{helpText}</p>
+								<div
+									class="pointer-events-none absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-background to-transparent"
+								></div>
+							</div>
+						</div>
+						<p class="w-full text-center text-xs text-muted-foreground">
+							Von KI erstellt – Irrtümer möglich.
+						</p>
+					</div>
+				{:else}
+					<Sparkles size="16" class="mt-0.5 min-w-4" />
+					<p class=" ">Kein Spickzettel verfügbar.</p>
+				{/if}
+			</div>
 		</div>
 	{/if}
 </div>

@@ -131,7 +131,7 @@
 			{/if}
 		</div>
 		<div class="flex w-full flex-col gap-2">
-			<div class="w-full">
+			<div class="w-full gap-2 flex flex-col">
 				<p>Fortschritt</p>
 				<Progress value={progress} class="h-2" />
 			</div>
