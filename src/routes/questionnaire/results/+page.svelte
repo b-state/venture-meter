@@ -242,11 +242,15 @@
 										Ihr habt bereits viel erreicht: Eine klare Value Proposition nimmt Form an, euer
 										Geschäftsmodell ist nicht mehr nur eine Idee und erste Rückmeldungen zeigen,
 										dass ihr ein echtes Problem löst. Eine starke Basis für die nächsten Schritte!
-									{:else}
+									{:else if totalUnlocked === 1}
 										Herzlichen Glückwunsch – ihr habt bereits die erste wichtige Hürde gemeistert:
 										Ihr habt ein motiviertes Team gefunden, erste Ideen konkretisiert und begonnen,
 										eure Zielgruppe und den Markt einzugrenzen. Damit legt ihr das Fundament für
-										alles Weitere.{/if}
+										alles Weitere.
+									{:else}
+										Es wurden zu wenig Fragen auf den Antwortstufen 3 und 4 beantwortet. Nur so wird
+										eine Kategorie als erreicht gewertet.
+									{/if}
 								</p>
 								<p class="mt-6 text-sm text-foreground">
 									Aktuell befindet sich das Startup auf der Stufe:
@@ -342,11 +346,6 @@
 										</p>
 									</div>
 								</div>
-							{:else}
-								<p class="text-sm text-foreground">
-									Es wurden zu wenig Fragen auf den Antwortstufen 3 und 4 beantwortet. Nur so wird
-									eine Kategorie als erreicht gewertet.
-								</p>
 							{/if}
 						</Card.Content>
 					</Card.Root>

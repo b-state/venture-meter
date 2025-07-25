@@ -20,7 +20,7 @@
 				Begleiter.
 			</p>
 			<div class="mb-8 grid grid-cols-1 gap-6 md:grid-cols-3">
-				<div class="flex flex-col items-center rounded-lg bg-muted p-4">
+				<div class="flex flex-col items-center rounded-lg p-4 ring-2 ring-muted">
 					<Info size="32" class="mb-2 text-primary" />
 					<span class="mb-1 font-semibold">Ehrlichkeit</span>
 					<span class="text-center text-sm text-muted-foreground"
@@ -28,15 +28,22 @@
 						Coaches und Investoren werden es Dir danken.</span
 					>
 				</div>
-				<div class="flex flex-col items-center rounded-lg bg-muted p-4">
-					<Sparkles size="32" class="mb-2 text-primary" />
-					<span class="mb-1 font-semibold">Spickzettel</span>
-					<span class="text-center text-sm text-muted-foreground"
-						>Nutze die Spickzettelfunktion, um Hilfestellungen zu den Fragen zu bekommen und dich
-						selbst besser einschätzen zu können.</span
+				<div class="relative">
+					<div
+						class="absolute inset-0 rounded-md bg-gradient-to-r from-pink-400/60 via-violet-400/60 to-pink-400/60 p-[1px]"
 					>
+						<div class="h-full w-full rounded-md bg-background"></div>
+					</div>
+					<div class="relative z-10 flex flex-col items-center rounded-lg p-4">
+						<Sparkles size="32" class="mb-2 text-primary" />
+						<span class="mb-1 font-semibold">Spickzettel</span>
+						<span class="text-center text-sm text-muted-foreground"
+							>Nutze die Spickzettelfunktion, um Hilfestellungen zu den Fragen zu bekommen und dich
+							selbst besser einschätzen zu können.</span
+						>
+					</div>
 				</div>
-				<div class="flex flex-col items-center rounded-lg bg-muted p-4">
+				<div class="flex flex-col items-center rounded-lg p-4 ring-2 ring-muted">
 					<CheckCircle size="32" class="mb-2 text-primary" />
 					<span class="mb-1 font-semibold">Vollständigkeit</span>
 					<span class="text-center text-sm text-muted-foreground"
