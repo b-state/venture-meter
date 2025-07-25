@@ -19,7 +19,7 @@
 	let currentSelectedScore = $derived(selectedScore);
 	let showHelp = $state(false);
 	let helpText = $state<string | null>(null);
-	let isLoadingHelp = $state(true);
+	let isLoadingHelp = $state(false);
 	let loadingMessageIndex = $state(0);
 	let loadingInterval: ReturnType<typeof setInterval> | undefined;
 
@@ -80,7 +80,7 @@
 		showHelp = true;
 
 		// Only fetch help text if we haven't already
-		if (helpText === null && !isLoadingHelp) {
+		if (!helpText && !isLoadingHelp) {
 			await fetchHelpText(questionId);
 		}
 	}
@@ -94,6 +94,8 @@
 		}
 		isLoadingHelp = false;
 	}
+
+	$inspect(isLoadingHelp && helpText?.length, isLoadingHelp, helpText);
 </script>
 
 <div class="flex h-[500px] w-full gap-5">
