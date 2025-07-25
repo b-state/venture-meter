@@ -94,8 +94,6 @@
 		}
 		isLoadingHelp = false;
 	}
-
-	$inspect(isLoadingHelp && helpText?.length, isLoadingHelp, helpText);
 </script>
 
 <div class="flex h-[500px] w-full gap-5">

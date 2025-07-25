@@ -17,7 +17,6 @@ function setHelpTextInStore(questionId: number, helpText: string | null) {
 
 // New async generator for streaming help text
 export async function* streamHelpText(questionId: number) {
-    console.log('streaming help text for question', questionId);
     const helpText = getHelpTextFromStore(questionId);
 
     // prefetch the next question's help text
