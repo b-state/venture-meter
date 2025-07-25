@@ -149,10 +149,10 @@
 <div class="min-h-screen bg-gradient-to-b from-background to-muted p-6">
 	<div class="mx-auto max-w-6xl">
 		<!-- Header -->
-		<div class="mb-8 flex items-center justify-between">
-			<Button variant="ghost" onclick={() => history.back()} class="gap-2">
+		<div class=" mb-8 flex items-center justify-between">
+			<Button variant="outline" onclick={() => history.back()} class="gap-2">
 				<ArrowLeft size="20" />
-				Zurück
+				Zurück zur Fragebogen
 			</Button>
 		</div>
 
