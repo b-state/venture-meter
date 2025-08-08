@@ -41,6 +41,7 @@ export async function* streamHelpText(questionId: number) {
             const reader = response.body!.getReader();
             let helpText = '';
             const decoder = new TextDecoder();
+            let hasYielded = false;
 
             while (true) {
                 const { done, value } = await reader.read();
@@ -49,15 +50,25 @@ export async function* streamHelpText(questionId: number) {
                 helpText += chunk;
                 setHelpTextInStore(questionId, helpText);
                 yield helpText; // Yield the current state of helpText
+                hasYielded = true;
+            }
+            
+            // If we didn't yield anything (empty response), yield null
+            if (!hasYielded) {
+                console.log('No content received from stream, yielding null');
+                setHelpTextInStore(questionId, null);
+                yield null;
             }
         } else {
-            console.error('Failed to fetch help text');
+            console.error('Failed to fetch help text, status:', response.status);
             setHelpTextInStore(questionId, null);
+            yield null; // Yield null to indicate failure
         }
 
     } catch (error) {
         console.error('Error fetching help text:', error);
         setHelpTextInStore(questionId, null);
+        yield null; // Yield null to indicate failure
     }
 }
 

@@ -88,11 +88,16 @@
 	async function fetchHelpText(questionId: number) {
 		helpText = '';
 		isLoadingHelp = true;
-		for await (const partial of streamHelpText(questionId)) {
-			helpText = partial; // This will update as new chunks arrive
-			// Optionally, trigger Svelte reactivity here
+		try {
+			for await (const partial of streamHelpText(questionId)) {
+				helpText = partial; // This will update as new chunks arrive
+			}
+		} catch (error) {
+			console.error('Error fetching help text:', error);
+			helpText = null;
+		} finally {
+			isLoadingHelp = false;
 		}
-		isLoadingHelp = false;
 	}
 </script>
 
@@ -139,7 +144,7 @@
 				<div class="h-full w-full rounded-md bg-background"></div>
 			</div>
 			<div class="relative z-10 h-full">
-				{#if isLoadingHelp && helpText?.length === 0}
+				{#if isLoadingHelp && (!helpText || helpText.length === 0)}
 					<div class="flex items-center gap-2">
 						<Loader2 size="16" class="animate-spin" />
 						<p class="">{loadingMessages[loadingMessageIndex]}</p>
