@@ -5,7 +5,7 @@ type HelpTextStore = {
     [key: string]: string | null;
 };
 
-const helpTextStore: HelpTextStore = {};
+let helpTextStore: HelpTextStore = {};
 
 function getHelpTextFromStore(questionId: number) {
     return helpTextStore[questionId];
@@ -14,6 +14,11 @@ function getHelpTextFromStore(questionId: number) {
 function setHelpTextInStore(questionId: number, helpText: string | null) {
     helpTextStore[questionId] = helpText;
 }
+
+export function clearHelpTextStore() {
+    helpTextStore = {};
+}
+
 
 // New async generator for streaming help text
 export async function* streamHelpText(questionId: number) {

@@ -388,13 +388,11 @@
 							</div>
 						{:else}
 							<p class="text-sm text-muted-foreground">
-								Keine Empfehlung verfügbar. Bitte stelle sicher, dass alle Startup-Informationen
-								ausgefüllt sind.
+								Keine Empfehlung verfügbar. Versuche die Seite neu zu laden.
 							</p>
 						{/if}
 						<p class="mt-4 text-center text-xs text-muted-foreground">
-							Diese Empfehlung wurde mit KI erstellt. Sie ist möglicherweise nicht immer vollständig
-							korrekt oder passend für deine individuelle Situation.
+							Diese Empfehlung wurde mit KI erstellt. Irrtümer sind möglich.
 						</p>
 					</Card.Content>
 				</Card.Root>

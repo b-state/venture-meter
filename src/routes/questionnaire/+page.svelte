@@ -7,6 +7,7 @@
 	import { HELP_VISIBILITY_KEY, STORAGE_KEY } from '$lib/constants';
 	import { getNextUnansweredQuestion } from '$lib/utils/questionHelpers';
 	import { importProgress } from '$lib/utils/questionnaire';
+	import { clearHelpTextStore } from '$lib/utils/fetchingHelpers';
 
 	let { data }: { data: PageData } = $props();
 	let fileInput: HTMLInputElement;
@@ -14,7 +15,8 @@
 	const handleStart = () => {
 		localStorage.removeItem(STORAGE_KEY);
 		localStorage.removeItem(HELP_VISIBILITY_KEY);
-
+		clearHelpTextStore();
+		
 		goto('/questionnaire/info');
 	};
 

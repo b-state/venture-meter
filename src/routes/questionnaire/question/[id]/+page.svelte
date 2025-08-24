@@ -28,6 +28,13 @@
 		updateCategories();
 	});
 
+	// Update categories when the current question changes
+	$effect(() => {
+		if (currentId) {
+			updateCategories();
+		}
+	});
+
 	async function updateCategories() {
 		categories = await getCategoryStats();
 	}

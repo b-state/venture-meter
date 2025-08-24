@@ -144,7 +144,7 @@
 				<div class="h-full w-full rounded-md bg-background"></div>
 			</div>
 			<div class="relative z-10 h-full">
-				{#if isLoadingHelp && (!helpText || helpText.length === 0)}
+				{#if isLoadingHelp && (!helpText || (helpText && helpText.length === 0))}
 					<div class="flex items-center gap-2">
 						<Loader2 size="16" class="animate-spin" />
 						<p class="">{loadingMessages[loadingMessageIndex]}</p>
@@ -167,7 +167,7 @@
 				{:else}
 					<div class="flex items-center gap-2">
 						<Sparkles size="16" class="mt-0.5 min-w-4" />
-						<p class=" ">Kein Spickzettel verfügbar.</p>
+						<p class=" ">Kein Spickzettel verfügbar. Versuche die Seite neu zu laden.</p>
 					</div>
 				{/if}
 			</div>
