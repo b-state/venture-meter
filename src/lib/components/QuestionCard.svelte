@@ -16,7 +16,6 @@
 	}>();
 
 	// Ensure we always use the prop value, not local state
-	let currentSelectedScore = $derived(selectedScore);
 	let showHelp = $state(false);
 	let helpText = $state<string | null>(null);
 	let isLoadingHelp = $state(false);
@@ -88,16 +87,24 @@
 	async function fetchHelpText(questionId: number) {
 		helpText = '';
 		isLoadingHelp = true;
+		console.log("Started to fetch question " + questionId + " help text.");
+		const startTime = performance.now();
 		try {
+			console.log("Starting for loop");
 			for await (const partial of streamHelpText(questionId)) {
 				helpText = partial; // This will update as new chunks arrive
 			}
+			console.log("For loop complete, helpText: ", helpText);
 		} catch (error) {
 			console.error('Error fetching help text:', error);
 			helpText = null;
 		} finally {
+			console.log('Help text fetch complete');
 			isLoadingHelp = false;
 		}
+		const endTime = performance.now();
+		const timeTaken = (endTime - startTime) / 1000;
+		console.log("Fetching question ", questionId, " help text took ", timeTaken, " seconds.");
 	}
 </script>
 

@@ -156,11 +156,9 @@
 					</Button>
 				{/if}
 				{#if categories.every((c) => c.answeredCount === c.questionCount)}
-					<Button
-						onclick={() => goto('/questionnaire/results')}
-						variant="outline"
-						class="bg-[#32CD32] text-sm text-background hover:bg-[#37E637] hover:text-background"
-						>Zur Auswertung</Button
+					<a href="/questionnaire/results"
+						class="bg-[#32CD32] text-sm text-background hover:bg-[#37E637] hover:text-background p-2 rounded-md text-center items-center flex"
+						>Zur Auswertung</a
 					>
 				{/if}
 			</div>

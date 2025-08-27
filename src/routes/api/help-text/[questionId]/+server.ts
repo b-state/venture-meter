@@ -57,7 +57,7 @@ export const GET: RequestHandler = async ({ params, fetch, url }) => {
 				}
 			}
 		});
-
+		console.log('Streaming response started for quesitionID: ', questionId);
 		return new Response(stream, {
 			headers: {
 				'Content-Type': 'text/plain',

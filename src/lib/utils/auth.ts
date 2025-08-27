@@ -8,7 +8,6 @@ export function isAuthenticated(): boolean {
 }
 
 export function authenticate(password: string): boolean {
-    console.log('password', password, PUBLIC_AUTH_PASSWORD);
 	if (password === PUBLIC_AUTH_PASSWORD) {
 		localStorage.setItem(PASSWORD_KEY, 'true');
 		return true;

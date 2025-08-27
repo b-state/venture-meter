@@ -57,7 +57,7 @@ export async function* streamHelpText(questionId: number) {
                 yield helpText; // Yield the current state of helpText
                 hasYielded = true;
             }
-            
+
             // If we didn't yield anything (empty response), yield null
             if (!hasYielded) {
                 console.log('No content received from stream, yielding null');
@@ -92,7 +92,7 @@ export async function prefetchHelpText(questionId: number) {
             const text = await response.text();
             setHelpTextInStore(questionId, text);
         } else {
-            console.error('Failed to fetch help text');
+            console.error('Failed to fetch help text: ', response.statusText);
             setHelpTextInStore(questionId, null);
         }
     } catch (error) {

@@ -41,7 +41,6 @@ export async function goToNextQuestion(currentQuestionId: number, totalQuestions
 	if (currentQuestionId <= totalQuestions) {
 		const nextUnanswered = getNextUnansweredQuestion();
 		let nextId;
-		console.log('nextUnanswered', nextUnanswered);
 		if (nextUnanswered && nextUnanswered > currentQuestionId) {
 			nextId = nextUnanswered;
 		} else {
@@ -122,7 +121,7 @@ export function isCategoryUnlocked(category: string): boolean {
 		const highScoreQuestions = categoryQuestions.filter(
 			(q) => q.selectedScore === 3 || q.selectedScore === 4
 		);
-		
+
 		// Check if 50% of questions in this category have high scores (3 or 4)
 		const requiredHighScoreCount = Math.ceil(categoryQuestions.length * 0.5);
 		const hasEnoughHighScores = highScoreQuestions.length >= requiredHighScoreCount;
@@ -141,7 +140,7 @@ export function isCategoryUnlocked(category: string): boolean {
 			const previousHighScoreQuestions = previousCategoryQuestions.filter(
 				(q) => q.selectedScore === 3 || q.selectedScore === 4
 			);
-			
+
 			const previousRequiredHighScoreCount = Math.ceil(previousCategoryQuestions.length * 0.5);
 			const previousHasEnoughHighScores = previousHighScoreQuestions.length >= previousRequiredHighScoreCount;
 
