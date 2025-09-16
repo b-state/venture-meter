@@ -32,7 +32,7 @@ export const GET: RequestHandler = async ({ params, fetch, url }) => {
 
 		const inputMessage = `
     Startup Daten:
-    Industry: ${industry}
+    Industrie: ${industry}
     Produkt Kategorie: ${product_category}
     Zielgruppe: ${target_customers}
    	Startup-Phase: ${question.category}

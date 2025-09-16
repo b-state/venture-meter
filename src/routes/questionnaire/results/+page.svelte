@@ -86,13 +86,13 @@
 						score: q.selectedScore
 					}));
 			}
-
+			const finalPhaseIndex = totalUnlocked > 0 ? totalUnlocked - 1 : 0;
 			const params = new URLSearchParams({
 				industry: startupInfo.industry,
 				productCategory: startupInfo.productCategory,
 				targetCustomers: startupInfo.targetCustomers,
 				weakAnswers: JSON.stringify(weakAnswers),
-				finalPhase: CATEGORY_ORDER[totalUnlocked - 1]
+				finalPhase: CATEGORY_ORDER[finalPhaseIndex]
 			});
 
 			const response = await fetch(`/api/recommendation?${params}`);

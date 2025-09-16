@@ -34,7 +34,7 @@ export const GET: RequestHandler = async ({ url }) => {
 		if (weakAnswersData.length > 0) {
 			weakAnswersText = '\n\nSchwache Bereiche (Antwortstufen 1 & 2):\n';
 			weakAnswersData.forEach((answer, index: number) => {
-				weakAnswersText += `${index + 1}. Kategorie: ${answer.category}\n`;
+				weakAnswersText += `${index + 1}. Phase: ${answer.category}\n`;
 				weakAnswersText += `   Frage: ${answer.question}\n`;
 				weakAnswersText += `   Antwort: ${answer.selectedAnswer} (Stufe ${answer.score})\n\n`;
 			});
@@ -42,7 +42,7 @@ export const GET: RequestHandler = async ({ url }) => {
 
 		const inputMessage = `
         Startup Daten:
-        Industry: ${industry}
+        Industrie: ${industry}
         Produkt Kategorie: ${product_category}
         Zielgruppe: ${target_customers}
         Aktuelle Phase des Startups: ${finalPhase}
